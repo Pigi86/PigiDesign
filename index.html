@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leandro Carlos Pignatta — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="Stylesheet.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <div class="header-inner wrap" style="padding-left:0;padding-right:0;">
+            <div class="mark">
+                <span class="mark-box">LP</span>
+                <span data-i18n="nameShort">Leandro Pignatta</span>
+            </div>
+            <nav>
+                <a class="navlink" href="#sobre-mi" data-i18n="navAbout">Sobre mí</a>
+                <a class="navlink" href="#servicios" data-i18n="navServices">Servicios</a>
+                <a class="navlink" href="#trabajo" data-i18n="navWork">Trabajo</a>
+                <a class="navlink" href="#contacto" data-i18n="navContact">Contacto</a>
+                <div class="langswitch">
+                    <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+                    <button id="btn-en" onclick="setLang('en')">EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <div class="wrap">
+                <div class="hero-grid">
+                    <div>
+                        <div class="hero-eyebrow mono" data-i18n="heroEyebrow">Perfil profesional</div>
+                        <h1>Leandro Carlos Pignatta</h1>
+                        <div class="hero-line"></div>
+                        <p class="hero-pitch" data-i18n="heroPitch">
+                            Diseño y desarrollo interfaces y sistemas digitales: desde sitios y aplicaciones web hasta soluciones de Power Platform, sin perder de vista el detalle visual.
+                        </p>
+                        <div class="hero-badges">
+                            <span class="badge">Power Platform</span>
+                            <span class="badge">Web Development</span>
+                            <span class="badge">UI / Design</span>
+                        </div>
+                    </div>
+                    <div class="hero-meta ticked">
+                        <dl>
+                            <dt data-i18n="metaRole">Rol</dt>
+                            <dd>Senior Programmer Analyst — Power Platform Senior Developer</dd>
+                            <dt data-i18n="metaLocation">Ubicación</dt>
+                            <dd data-i18n="metaLocationValue">Buenos Aires, Argentina</dd>
+                            <dt data-i18n="metaFocus">Enfoque</dt>
+                            <dd data-i18n="metaFocusValue">Desarrollo web · Power Platform · Diseño gráfico</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="sobre-mi">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2 data-i18n="aboutTitle">Sobre mí</h2>
+                    <div class="section-tag mono" data-i18n="aboutTag">Perfil / competencias</div>
+                </div>
+                <div class="about-grid">
+                    <div>
+                        <p data-i18n="aboutP1">
+                            Analista programador senior con foco en Power Platform y desarrollo web. Trabajo tanto en la construcción de aplicaciones y flujos como en la resolución del lado visual de un proyecto, desde interfaces hasta piezas de diseño gráfico.
+                        </p>
+                        <p data-i18n="aboutP2">
+                            Este espacio reúne una selección de trabajos propios: proyectos web y piezas de diseño gráfico realizadas en distintos contextos, personales y profesionales.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="skillgroup">
+                            <h3 data-i18n="skillWeb">Desarrollo web</h3>
+                            <ul>
+                                <li>HTML / CSS / JavaScript</li>
+                                <li>React</li>
+                                <li>Node.js</li>
+                                <li>WordPress</li>
+                            </ul>
+                        </div>
+                        <div class="skillgroup">
+                            <h3 data-i18n="skillPlatform">Power Platform</h3>
+                            <ul>
+                                <li>Power Apps</li>
+                                <li>Power Automate</li>
+                                <li>SharePoint</li>
+                                <li>SQL Server</li>
+                            </ul>
+                        </div>
+                        <div class="skillgroup">
+                            <h3 data-i18n="skillDesign">Diseño gráfico</h3>
+                            <ul>
+                                <li>Illustrator</li>
+                                <li>Photoshop</li>
+                                <li>Figma</li>
+                                <li>InDesign</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="servicios">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2 data-i18n="servicesTitle">Qué puedo hacer</h2>
+                    <div class="section-tag mono" data-i18n="servicesTag">Servicios / soluciones</div>
+                </div>
+                <div class="services">
+                    <article class="service">
+                        <div class="service-num mono">01 / WEB</div>
+                        <h3 data-i18n="serviceWebTitle">Desarrollo web</h3>
+                        <p data-i18n="serviceWebText">Sitios institucionales, landing pages y aplicaciones web rápidas, responsive y pensadas para crecer.</p>
+                    </article>
+                    <article class="service">
+                        <div class="service-num mono">02 / POWER</div>
+                        <h3 data-i18n="servicePowerTitle">Power Platform</h3>
+                        <p data-i18n="servicePowerText">Aplicaciones y automatizaciones con Power Apps, Power Automate, SharePoint y soluciones conectadas.</p>
+                    </article>
+                    <article class="service">
+                        <div class="service-num mono">03 / DESIGN</div>
+                        <h3 data-i18n="serviceDesignTitle">Diseño digital</h3>
+                        <p data-i18n="serviceDesignText">Interfaces, identidad visual y piezas gráficas con foco en claridad, consistencia y detalle.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROCESS -->
+        <section id="proceso">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2 data-i18n="processTitle">Cómo trabajo</h2>
+                    <div class="section-tag mono" data-i18n="processTag">De la idea al resultado</div>
+                </div>
+                <div class="process">
+                    <div class="step"><strong>01</strong><h3 data-i18n="step1Title">Entender</h3><p data-i18n="step1Text">Objetivos, usuarios, necesidades y alcance.</p></div>
+                    <div class="step"><strong>02</strong><h3 data-i18n="step2Title">Diseñar</h3><p data-i18n="step2Text">Estructura, experiencia visual y solución técnica.</p></div>
+                    <div class="step"><strong>03</strong><h3 data-i18n="step3Title">Construir</h3><p data-i18n="step3Text">Desarrollo iterativo, integración y validación.</p></div>
+                    <div class="step"><strong>04</strong><h3 data-i18n="step4Title">Mejorar</h3><p data-i18n="step4Text">Ajustes, rendimiento y evolución del producto.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORK -->
+        <section id="trabajo">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2 data-i18n="workTitle">Trabajo seleccionado</h2>
+                    <div class="work-toggle">
+                        <button class="active" data-filter="all" onclick="setFilter('all', this)" data-i18n="filterAll">Todos</button>
+                        <button data-filter="web" onclick="setFilter('web', this)" data-i18n="filterWeb">Web</button>
+                        <button data-filter="gd" onclick="setFilter('gd', this)" data-i18n="filterGd">Diseño gráfico</button>
+                    </div>
+                </div>
+
+                <div class="grid-cards" id="cards"></div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contacto">
+            <div class="wrap">
+                <div class="contact-grid">
+                    <div>
+                        <h2 data-i18n="contactTitle">Hablemos de un proyecto</h2>
+                        <p data-i18n="contactPitch">
+                            Disponible para proyectos de desarrollo web, soluciones de Power Platform o piezas de diseño gráfico. Escribime y coordinamos.
+                        </p>
+                        <ul class="contact-links">
+                            <li><a href="mailto:leandro.pignatta@live.com"><span><i class="fa fa-envelope icon" aria-hidden="true"></i>leandro.pignatta@live.com</span><span class="arrow mono">→</span></a></li>
+                            <li><a href="https://www.linkedin.com/in/leandro-carlos-pignatta-8379b017/" target="_blank" rel="noopener"><span><i class="fa fa-linkedin icon" aria-hidden="true"></i>LinkedIn</span><span class="arrow mono">→</span></a></li>
+                            <li><a href="https://www.facebook.com/lea.pignatta/" target="_blank" rel="noopener"><span><i class="fa fa-facebook icon" aria-hidden="true"></i>Facebook</span><span class="arrow mono">→</span></a></li>
+                            <li><a href="https://www.instagram.com/lea.pigi86/" target="_blank" rel="noopener"><span><i class="fa fa-instagram icon" aria-hidden="true"></i>Instagram</span><span class="arrow mono">→</span></a></li>
+                            <li><a href="https://x.com/Pigi_86" target="_blank" rel="noopener"><span><i class="fa fa-twitter icon" aria-hidden="true"></i>Twitter/X</span><span class="arrow mono">→</span></a></li>
+                            <li><a href="https://github.com/Pigi86/" target="_blank" rel="noopener"><span><i class="fa fa-github icon" aria-hidden="true"></i>GitHub</span><span class="arrow mono">→</span></a></li>
+                        </ul>
+                    </div>
+                    <div class="contact-note">
+                        <span data-i18n="contactNote">Disponible para conversar sobre nuevos proyectos, colaboraciones y oportunidades profesionales.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        <span>©2026 Leandro Carlos Pignatta</span>
+        <span data-i18n="footerNote">Sitio de portfolio</span>
+    </footer>
+    <br>
+    <script src="JavaScript.js"></script>
+
+</body>
+</html>
