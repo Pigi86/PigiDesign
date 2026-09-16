@@ -86,6 +86,10 @@ header {
     font-weight: 800
 }
 
+    .mark a {
+        text-decoration: none;
+    }
+
 .mark-box {
     width: 36px;
     height: 36px;
@@ -94,7 +98,7 @@ header {
     place-items: center;
     background: linear-gradient(135deg,var(--accent),var(--accent-2));
     color: #07111f;
-    font-size: 12px
+    font-size: 12px;    
 }
 
 nav {
@@ -683,4 +687,42 @@ footer {
 :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px
+}
+
+/* Back to top button */
+.back-to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,var(--accent),var(--accent-2));
+    color: var(--bg);
+    border: 0;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    cursor: pointer;
+    transition: transform .18s, opacity .18s;
+    z-index: 80;
+}
+
+.back-to-top:hover {
+    transform: translateY(-4px);
+}
+
+.back-to-top.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+}
+
+@media(max-width:650px) {
+    .back-to-top {
+        bottom: 18px;
+        right: 18px;
+        width: 44px;
+        height: 44px;
+    }
 }
