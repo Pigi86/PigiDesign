@@ -136,14 +136,14 @@ const projects = [
     },
     {
         id: 4, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
-        title: { es: "El Tiempo Geológico", en: "Brand identit" },
+        title: { es: "El Tiempo Geológico", en: "Geologic Time" },
         desc: { es: "Donde el tiempo geológico se encuentra con el pulso del mañana. Un fragmento de eternidad petrificado en pirita y cristal, ahora convertido en la brújula que traza un rumbo a través de los océanos del tiempo y el espacio profundo. De la materia prima a la proyección de la luz, el tiempo no es solo medida; es la esencia de lo que fuimos y seremos. El viaje comienza en la muñeca.", en: "Complete brand system: logomark, palette and applications for a design studio." },
         tags: ["Adobe Fireworks", "Illustrator"],
         imgUrl: "https://instagram.faep28-2.fna.fbcdn.net/v/t51.82787-15/803323368_18615402526057387_5107416572513340125_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=Mzk4MzQxNDIzOTA5NjYyMTg1MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNTY0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=ycv4xnGE_b0Q7kNvwGHnKAq&_nc_oc=Adp2Q2GC3WYT62enMFB5Glj9ViKe2RCxkmOzrR74pA7ZJ1zvBwtC_WcYhHSpYr7_ZOIEVgLG7FsSIRLNL4k87XhF&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-2.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQIqqDs95AxZIM6ZyCvwdAnHCs6F-VuUP24YoHaq_l2N8w&oe=6AAF8D86"
     },
     {
         id: 5, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
-        title: { es: "Construyendo el Futuro", en: "Icon system" },
+        title: { es: "Construyendo el Futuro", en: "Building the Future" },
         desc: { es: "Entre datos, estrellas y posibilidades infinitas. Construyendo el futuro una línea de código, una idea y un desafío a la vez.", en: "Set of 48 consistent icons for an internal management platform." },
         tags: ["Photoshop", "Adobe Fireworks"],
         imgUrl: "https://instagram.faep28-1.fna.fbcdn.net/v/t51.82787-15/723238858_18588151651057387_7384351274187935941_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=MzkyMTkwMTczODk5OTUzMDI2Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTEyMi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Cx-cL6XuHlsQ7kNvwGTCUjF&_nc_oc=Ado4YFwoatR6dx711FYpRzA-PcFwlaJL3Jbx-x5yxDToYj_lC-AuN7slCIP55kV5wtGv-PVQOKIYnfaawB3DiqLt&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-1.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQIorZsswlUNNULrzOV7R0rUIor7m1eJFfjtg6OcOwC6oA&oe=6AAF62CE"
