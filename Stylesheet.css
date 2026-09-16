@@ -613,6 +613,9 @@ footer {
     .process {
         grid-template-columns: repeat(2,1fr)
     }
+    .mark-box{
+        margin-left:10px;
+    }
 }
 
 @media(max-width:650px) {
