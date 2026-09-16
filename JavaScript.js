@@ -100,44 +100,44 @@
 const projects = [
     {
         id: 1, cat: "web", thumb: "thumb-web-1", ref: "WEB-2021-01",
-        title: { es: "Remoting Coders Sitio Web", en: "Remoting Coders Web Page" },
-        desc: { es: "Aplicación en Power Apps con automatizaciones en Power Automate para digitalizar un proceso interno.", en: "Power Apps application with Power Automate flows to digitize an internal process." },
-        tags: ["Power Apps", "Power Automate", "SharePoint"],
-        url: "https://www.remotingcoders.com/en-US/"
+        title: { es: "Project Vanguard Sitio Web", en: "Project Vanguard Web Page" },
+        desc: { es: "Project Vanguard es un juego que hice en Unity a modo de aprendizaje.", en: "Project Vanguard is a game I made in Unity as a learning experience." },
+        tags: ["Unity", "C#", "Assests"],
+        url: "https://pigi86.github.io/ProjectVanguardWeb/"
     },
     {
         id: 2, cat: "web", thumb: "thumb-web-2", ref: "WEB-2026-03",
-        title: { es: "E-Plastyvial SRL Sitio Web", en: "Plastyvial SRL Web Page" },
+        title: { es: "Plastyvial SRL Sitio Web", en: "Plastyvial SRL Web Page" },
         desc: { es: "Tienda online desarrollada con React y Node.js, con panel de administración propio.", en: "Online store built with React and Node.js, with a custom admin panel." },
-        tags: ["React", "Node.js", "REST API"],
+        tags: ["HTML", "JavaScript", "CSS"],
         url: "https://pigi86.github.io/PlastyvialSRL/"
     },
     {
         id: 3, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-07",
         title: { es: "Argentair Sitio Web", en: "Argentair Web Page" },
         desc: { es: "Sitio corporativo a medida sobre WordPress, con foco en velocidad de carga y accesibilidad.", en: "Custom corporate site built on WordPress, focused on load speed and accessibility." },
-        tags: ["WordPress", "PHP", "SEO"],
+        tags: ["HTML", "JavaScript", "CSS"],
         url: "https://pigi86.github.io/Argentair/"
     },
     {
         id: 4, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
         title: { es: "El Tiempo Geológico", en: "Brand identit" },
         desc: { es: "Donde el tiempo geológico se encuentra con el pulso del mañana. Un fragmento de eternidad petrificado en pirita y cristal, ahora convertido en la brújula que traza un rumbo a través de los océanos del tiempo y el espacio profundo. De la materia prima a la proyección de la luz, el tiempo no es solo medida; es la esencia de lo que fuimos y seremos. El viaje comienza en la muñeca.", en: "Complete brand system: logomark, palette and applications for a design studio." },
-        tags: ["Branding", "Illustrator"],
+        tags: ["Adobe Fireworks", "Illustrator"],
         imgUrl: "https://instagram.faep28-2.fna.fbcdn.net/v/t51.82787-15/803323368_18615402526057387_5107416572513340125_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=Mzk4MzQxNDIzOTA5NjYyMTg1MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNTY0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=ycv4xnGE_b0Q7kNvwGHnKAq&_nc_oc=Adp2Q2GC3WYT62enMFB5Glj9ViKe2RCxkmOzrR74pA7ZJ1zvBwtC_WcYhHSpYr7_ZOIEVgLG7FsSIRLNL4k87XhF&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-2.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQIqqDs95AxZIM6ZyCvwdAnHCs6F-VuUP24YoHaq_l2N8w&oe=6AAF8D86"
     },
     {
         id: 5, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
         title: { es: "Construyendo el Futuro", en: "Icon system" },
         desc: { es: "Entre datos, estrellas y posibilidades infinitas. Construyendo el futuro una línea de código, una idea y un desafío a la vez.", en: "Set of 48 consistent icons for an internal management platform." },
-        tags: ["Figma", "UI"],
+        tags: ["Photoshop", "Adobe Fireworks"],
         imgUrl: "https://instagram.faep28-1.fna.fbcdn.net/v/t51.82787-15/723238858_18588151651057387_7384351274187935941_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=MzkyMTkwMTczODk5OTUzMDI2Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTEyMi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Cx-cL6XuHlsQ7kNvwGTCUjF&_nc_oc=Ado4YFwoatR6dx711FYpRzA-PcFwlaJL3Jbx-x5yxDToYj_lC-AuN7slCIP55kV5wtGv-PVQOKIYnfaawB3DiqLt&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-1.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQIorZsswlUNNULrzOV7R0rUIor7m1eJFfjtg6OcOwC6oA&oe=6AAF62CE"
     },
     {
         id: 6, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
-        title: { es: "IA Imagen", en: "IA Image" },
-        desc: { es: "Diagramación editorial completa de una revista independiente, edición trimestral.", en: "Full editorial layout for an independent quarterly magazine." },
-        tags: ["InDesign", "Layout"],
+        title: { es: "Imagen IA", en: "IA Image" },
+        desc: { es: "Imagen generada usando IA.", en: "Image generated using IA." },
+        tags: ["Adobe Fireworks", "IA"],
         imgUrl: "https://instagram.faep28-1.fna.fbcdn.net/v/t51.82787-15/624653321_18547071205057387_6744616536308423277_n.webp?_nc_cat=100&ig_cache_key=MzgyMjI3OTg3OTY0ODQyNjQ5OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=iA2EJ-J1w4wQ7kNvwEBBZOb&_nc_oc=Adov18_mFvlaubR4F4SIPLMnoMf0BxyMjCdqMjlYQ0L_3sqVuWyCTnRdyKE-FH46mygyYUQuhvpRoGaSIA06EurD&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-1.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQKsqQ9LTYMyDV2QkwpTF_XWUQO2aIeoxx98RQbWQdXKAQ&oe=6AAF850F"
     }
 ];
