@@ -166,7 +166,7 @@ function renderCards() {
     projects
         .filter(p => currentFilter === 'all' || p.cat === currentFilter)
         .forEach(p => {
-            if (p.url != null) {                
+        if (p.url != null) {                
                 const card = document.createElement('div');
                 card.className = 'card ticked';               
                 card.innerHTML = `<a href="${p.url}" target="_blank">
@@ -182,6 +182,8 @@ function renderCards() {
             else {                
                 const card = document.createElement('div');
                 card.className = 'card ticked';
+                card.setAttribute('data-cat', p.cat);
+                card.setAttribute('data-img', p.imgUrl || '');
                 card.innerHTML = `    
     <div class="card-thumb" style="background-image:url('${p.imgUrl}');background-size: cover;">
         <span class="card-ref mono">${p.ref}</span>
@@ -190,6 +192,12 @@ function renderCards() {
     <p>${p.desc[currentLang]}</p>
     <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
     `;                
+                // If this is a graphic design item, open modal on click
+                if (p.cat === 'gd') {
+                    card.addEventListener('click', () => {
+                        openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang]);
+                    });
+                }
                 container.appendChild(card);
             }
         });
@@ -243,3 +251,44 @@ function setLang(lang) {
 }
 
 renderCards();
+
+// Graphic-design modal handling
+const gdModal = document.getElementById('gd-modal');
+const gdModalImg = document.getElementById('gd-modal-img');
+const gdModalTitle = document.getElementById('gd-modal-title');
+const gdModalDesc = document.getElementById('gd-modal-desc');
+
+function openGdModal(imgSrc, title, desc) {
+    if (!gdModal) return;
+    gdModalImg.src = imgSrc || '';
+    gdModalImg.alt = title || '';
+    gdModalTitle.textContent = title || '';
+    gdModalDesc.textContent = desc || '';
+    gdModal.classList.remove('hidden');
+    gdModal.setAttribute('aria-hidden', 'false');
+    // prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeGdModal() {
+    if (!gdModal) return;
+    gdModal.classList.add('hidden');
+    gdModal.setAttribute('aria-hidden', 'true');
+    gdModalImg.src = '';
+    document.body.style.overflow = '';
+}
+
+// Bind modal events
+if (gdModal) {
+    // close buttons / backdrop
+    gdModal.addEventListener('click', (ev) => {
+        const action = ev.target.getAttribute('data-action');
+        if (action === 'close') closeGdModal();
+    });
+    const closeBtn = gdModal.querySelector('.gd-modal-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeGdModal);
+    // ESC to close
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !gdModal.classList.contains('hidden')) closeGdModal();
+    });
+}
