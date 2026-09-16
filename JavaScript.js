@@ -1,4 +1,4 @@
-﻿const translations = {
+const translations = {
     es: {
         nameShort: "Leandro Pignatta",
         navAbout: "Sobre mí",
@@ -11,8 +11,14 @@
         serviceWebText: "Sitios institucionales, landing pages y aplicaciones web rápidas, responsive y pensadas para crecer.",
         servicePowerTitle: "Power Platform",
         servicePowerText: "Aplicaciones y automatizaciones con Power Apps, Power Automate, SharePoint y soluciones conectadas.",
-        serviceDesignTitle: "Diseño digital",
+        serviceDesignTitle: "Diseño Gráfico",
         serviceDesignText: "Interfaces, identidad visual y piezas gráficas con foco en claridad, consistencia y detalle.",
+        serviceCSharpTitle: "C#",
+        serviceCSharpText: "Desarrollo de aplicaciones backend y servicios con C#.",
+        serviceSqlTitle: "SQL Server",
+        serviceSqlText: "Modelado de datos, consultas y optimización en SQL Server.",
+        serviceAiTitle: "Inteligencia Artificial",
+        serviceAiText: "Integración de modelos y soluciones de IA para proyectos.",
         processTitle: "Cómo trabajo",
         processTag: "De la idea al resultado",
         step1Title: "Entender",
@@ -59,8 +65,14 @@
         serviceWebText: "Institutional sites, landing pages and web applications built to be fast, responsive and scalable.",
         servicePowerTitle: "Power Platform",
         servicePowerText: "Apps and automations with Power Apps, Power Automate, SharePoint and connected solutions.",
-        serviceDesignTitle: "Digital design",
+        serviceDesignTitle: "Graphic Design",
         serviceDesignText: "Interfaces, visual identities and graphic pieces focused on clarity, consistency and detail.",
+        serviceCSharpTitle: "C#",
+        serviceCSharpText: "Backend applications and services development with C#.",
+        serviceSqlTitle: "SQL Server",
+        serviceSqlText: "Data modeling, queries and optimization in SQL Server.",
+        serviceAiTitle: "Artificial Intelligence",
+        serviceAiText: "Integration of models and AI solutions into projects.",
         processTitle: "How I work",
         processTag: "From idea to result",
         step1Title: "Understand",
@@ -103,21 +115,24 @@ const projects = [
         title: { es: "Project Vanguard Sitio Web", en: "Project Vanguard Web Page" },
         desc: { es: "Project Vanguard es un juego que hice en Unity a modo de aprendizaje.", en: "Project Vanguard is a game I made in Unity as a learning experience." },
         tags: ["Unity", "C#", "Assests"],
-        url: "https://pigi86.github.io/ProjectVanguardWeb/"
+        url: "https://pigi86.github.io/ProjectVanguardWeb/",
+        imgUrl:"Images/webpage1.png"
     },
     {
         id: 2, cat: "web", thumb: "thumb-web-2", ref: "WEB-2026-03",
         title: { es: "Plastyvial SRL Sitio Web", en: "Plastyvial SRL Web Page" },
         desc: { es: "Página Web de una empresa especializada en Servicio Técnico de Mantenimiento.", en: "Web Page of a company specializing in Technical Maintenance Service." },
         tags: ["HTML", "JavaScript", "CSS"],
-        url: "https://pigi86.github.io/PlastyvialSRL/"
+        url: "https://pigi86.github.io/PlastyvialSRL/",
+        imgUrl: "Images/webpage2.png"
     },
     {
         id: 3, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-07",
         title: { es: "Argentair Sitio Web", en: "Argentair Web Page" },
         desc: { es: "Argentair Service Integral repara y mantiene el aire acondicionado y la calefacción de tu auto, nacional o importado, con técnicos mecánicos y electrónicos en un mismo taller.", en: "Argentair Service Integral repairs and maintains the air conditioning and heating of your car, domestic or imported, with mechanical and electronic technicians in the same workshop." },
         tags: ["HTML", "JavaScript", "CSS"],
-        url: "https://pigi86.github.io/Argentair/"
+        url: "https://pigi86.github.io/Argentair/",
+        imgUrl: "Images/webpage3.png"
     },
     {
         id: 4, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
@@ -155,7 +170,7 @@ function renderCards() {
                 const card = document.createElement('div');
                 card.className = 'card ticked';               
                 card.innerHTML = `<a href="${p.url}" target="_blank">
-    <div class="card-thumb" style="background-image:url('${p.url}');background-size: cover;">
+    <div class="card-thumb" style="background-image:url('${p.imgUrl}');background-size: cover;">
         <span class="card-ref mono">${p.ref}</span>
     </div>
     <h3>${p.title[currentLang]}</h3>
