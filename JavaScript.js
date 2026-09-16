@@ -108,14 +108,14 @@ const projects = [
     {
         id: 2, cat: "web", thumb: "thumb-web-2", ref: "WEB-2026-03",
         title: { es: "Plastyvial SRL Sitio Web", en: "Plastyvial SRL Web Page" },
-        desc: { es: "Tienda online desarrollada con React y Node.js, con panel de administración propio.", en: "Online store built with React and Node.js, with a custom admin panel." },
+        desc: { es: "Página Web de una empresa especializada en Servicio Técnico de Mantenimiento.", en: "Web Page of a company specializing in Technical Maintenance Service." },
         tags: ["HTML", "JavaScript", "CSS"],
         url: "https://pigi86.github.io/PlastyvialSRL/"
     },
     {
         id: 3, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-07",
         title: { es: "Argentair Sitio Web", en: "Argentair Web Page" },
-        desc: { es: "Sitio corporativo a medida sobre WordPress, con foco en velocidad de carga y accesibilidad.", en: "Custom corporate site built on WordPress, focused on load speed and accessibility." },
+        desc: { es: "Argentair Service Integral repara y mantiene el aire acondicionado y la calefacción de tu auto, nacional o importado, con técnicos mecánicos y electrónicos en un mismo taller.", en: "Argentair Service Integral repairs and maintains the air conditioning and heating of your car, domestic or imported, with mechanical and electronic technicians in the same workshop." },
         tags: ["HTML", "JavaScript", "CSS"],
         url: "https://pigi86.github.io/Argentair/"
     },
