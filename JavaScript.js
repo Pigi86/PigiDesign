@@ -202,6 +202,32 @@ function setFilter(filter, btn) {
     renderCards();
 }
 
+// Back to top button behavior
+(function() {
+    const backBtn = document.getElementById('back-to-top');
+    const firstSection = document.querySelector('section.hero') || document.querySelector('main section');
+    if (!backBtn) return;
+
+    function scrollToFirst() {
+        if (firstSection) {
+            firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    backBtn.addEventListener('click', scrollToFirst);
+
+    function updateVisibility() {
+        if (window.scrollY > 220) backBtn.classList.remove('hidden');
+        else backBtn.classList.add('hidden');
+    }
+
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    // initial state
+    updateVisibility();
+})();
+
 function setLang(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
