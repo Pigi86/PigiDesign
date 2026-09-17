@@ -154,7 +154,28 @@ const projects = [
         desc: { es: "Imagen generada usando IA.", en: "Image generated using IA." },
         tags: ["Adobe Fireworks", "IA"],
         imgUrl: "https://instagram.faep28-1.fna.fbcdn.net/v/t51.82787-15/624653321_18547071205057387_6744616536308423277_n.webp?_nc_cat=100&ig_cache_key=MzgyMjI3OTg3OTY0ODQyNjQ5OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=iA2EJ-J1w4wQ7kNvwEBBZOb&_nc_oc=Adov18_mFvlaubR4F4SIPLMnoMf0BxyMjCdqMjlYQ0L_3sqVuWyCTnRdyKE-FH46mygyYUQuhvpRoGaSIA06EurD&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-1.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQKsqQ9LTYMyDV2QkwpTF_XWUQO2aIeoxx98RQbWQdXKAQ&oe=6AAF850F"
-    }
+    },
+    {
+        id: 7, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-03",
+        title: { es: "La Historia", en: "The Story" },
+        desc: { es: "Cada línea cuenta una historia. Cada idea deja una marca.", en: "Every line tells a story. Every idea leaves a mark." },
+        tags: ["Adobe Fireworks", "IA"],
+        imgUrl: "https://instagram.faep36-2.fna.fbcdn.net/v/t51.82787-15/650288053_18561585823057387_4490094408547594968_n.webp?_nc_cat=107&ig_cache_key=Mzg1MTQ5NzA1MjU5NzQ4NDM5OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=bJRxgaHvf9IQ7kNvwGvnsA1&_nc_oc=AdpR7mrR9YFpjHGwGCdQgO1MANCBKfLMFwAnH5YhDJ6JT08BAvh8RJcvaK5EganGnMw&_nc_ad=z-m&_nc_cid=5900&_nc_zt=23&_nc_ht=instagram.faep36-2.fna&_nc_gid=7NYtRrh9kWy6RH40rAiDYQ&_nc_ss=7a22e&oh=00_AQJDcdljbNK-LgcdSOqbgE0l3aX3uzAJJHtGgSsxjAIhoA&oe=6AB2073E"
+    },
+    {
+        id: 8, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-04",
+        title: { es: "La Identidad", en: "The Identity" },
+        desc: { es: "Entre tinta y experiencias, se dibuja la identidad.", en: "Identity takes shape amidst ink and experiences." },
+        tags: ["Adobe Fireworks", "IA"],
+        imgUrl: "https://instagram.faep36-1.fna.fbcdn.net/v/t51.75761-15/492042516_18493622977057387_8673969118512317235_n.webp?_nc_cat=110&ig_cache_key=MzYyMDI4MjUzMjU1MDc3MDIwMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Vld38PVDJb4Q7kNvwGldbaR&_nc_oc=Adrtf02W0YgGB0INl4xbax2qCUzfNZ3fnrv23-5gRUzPTdthOI39_VoIrROuRfaTqmk&_nc_ad=z-m&_nc_cid=5900&_nc_zt=23&_nc_ht=instagram.faep36-1.fna&_nc_gid=7NYtRrh9kWy6RH40rAiDYQ&_nc_ss=7a22e&oh=00_AQIit7deq03JVcUVJbJ-7fioyi2pVDM-pzFITZwUSouTtA&oe=6AB1E36C"
+    },
+    {
+        id: 9, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-01",
+        title: { es: "La Experiencia", en: "The Experience" },
+        desc: { es: "La experiencia no se mide por los años, sino por los desafíos que te animaste a enfrentar.", en: "Experience is not measured by years, but by the challenges you dared to face." },
+        tags: ["Adobe Fireworks", "IA"],
+        imgUrl: "https://instagram.faep36-2.fna.fbcdn.net/v/t51.75761-15/475783606_18476939866057387_694745016303068710_n.webp?_nc_cat=102&ig_cache_key=MzU1Nzk0NjE2NjI2NjAzMzk2Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=0mRt15tbqLwQ7kNvwGXBBQG&_nc_oc=Ado-42GO4ZZR6u83vebfjWK1IWLCgTisAuY0lytVExwFsNJGESBsrLLwEBY-uDG3JKU&_nc_ad=z-m&_nc_cid=5900&_nc_zt=23&_nc_ht=instagram.faep36-2.fna&_nc_gid=7NYtRrh9kWy6RH40rAiDYQ&_nc_ss=7a22e&oh=00_AQI3Y2fCe4sPfskk9UNnB0qMvINC2rkV9TllppqcApfsiw&oe=6AB20A27"
+    }    
 ];
 
 let currentLang = 'es';
