@@ -21,7 +21,12 @@
                     <span data-i18n="nameShort">Leandro Pignatta</span>
                 </a>
             </div>
-            <nav>
+            <button id="nav-toggle" class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="site-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav id="site-nav">
                 <a class="navlink" href="#sobre-mi" data-i18n="navAbout">Sobre mí</a>
                 <a class="navlink" href="#servicios" data-i18n="navServices">Servicios</a>
                 <a class="navlink" href="#trabajo" data-i18n="navWork">Trabajo</a>
@@ -33,6 +38,7 @@
             </nav>
         </div>
     </header>
+    <div id="nav-backdrop" class="nav-backdrop"></div>
 
     <main>
         <!-- HERO -->
@@ -216,8 +222,8 @@
                         <div class="contact-note">
                             <span data-i18n="contactNote">Disponible para conversar sobre nuevos proyectos, colaboraciones y oportunidades profesionales.</span>
                         </div>
-                    </div>                   
-                    <div class="contact-form-card">                        
+                    </div>
+                    <div class="contact-form-card">
                         <div class="form-heading">
                             <span data-i18n="contactTitle2" class="mono">01 / Contacto</span>
                             <h3 data-i18n="formTitle">Enviame un mensaje</h3>
@@ -258,7 +264,7 @@
                             <br>
                             <br>
                             <div class="form-group">
-                                <label id="errorLabel" data-i18n="f-desc"></label>
+                                <label id="errorLabel" data-i18n="fDesc"></label>
                             </div>
                         </form>
                     </div>
