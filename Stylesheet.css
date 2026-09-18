@@ -18,7 +18,16 @@
 }
 
 html {
-    scroll-behavior: smooth
+    scroll-behavior: smooth;
+    /* el panel de nav cerrado queda fuera de pantalla: lo recortamos
+       para que no genere scroll horizontal ni agrande el viewport en mobile */
+    overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+    html {
+        overflow-x: hidden;
+    }
 }
 
 body {
@@ -65,7 +74,7 @@ a {
 header {
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 90;
     background: rgba(7,17,31,.76);
     backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--line)
@@ -145,6 +154,61 @@ nav {
     padding-left: 0;
     padding-right: 0;
 }
+
+/* ===== Mobile nav (hamburger) ===== */
+.nav-toggle {
+    display: none;
+    position: relative;
+    z-index: 95;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(255,255,255,.04);
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+    .nav-toggle span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--text);
+        transition: transform .25s ease, opacity .2s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-toggle.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .nav-toggle.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+.nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(0,0,0,.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+}
+
+    .nav-backdrop.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
 
 .hero {
     padding: 110px 0 90px;
@@ -662,17 +726,78 @@ footer {
         padding: 22px
     }
 
-    nav {
-        gap: 10px
-    }
-
-        nav a.navlink {
-            display: none
-        }
-
     .header-inner {
         padding: 12px 0
     }
+}
+
+/* ===== Drawer nav on small screens ===== */
+@media(max-width:780px) {
+    /* backdrop-filter crea un contenedor para elementos position:fixed,
+       lo que rompería el panel de navegación: lo desactivamos en mobile */
+    header {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(7,17,31,.97);
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-backdrop {
+        display: block;
+        touch-action: none;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(80vw,320px);
+        z-index: 70;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 96px 22px 32px;
+        background: var(--bg-2);
+        border-left: 1px solid var(--line);
+        box-shadow: -20px 0 60px rgba(0,0,0,.45);
+        clip-path: inset(0 0 0 100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: clip-path .3s ease, opacity .25s ease, visibility 0s .3s;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+        nav.open {
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
+            visibility: visible;
+            transition: clip-path .3s ease, opacity .25s ease;
+        }
+
+        nav a.navlink {
+            display: block;
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--text);
+            padding: 14px 2px;
+            border-bottom: 1px solid var(--line);
+        }
+
+    .langswitch {
+        align-self: flex-start;
+        margin-top: 22px;
+    }
+
+        .langswitch button {
+            padding: 9px 16px;
+            font-size: 12px;
+        }
 }
 
 /* GD modal styles */
@@ -742,6 +867,10 @@ footer {
         .gd-modal-body img {
             max-width: 100%;
         }
+
+    .gd-modal-close {        
+        top: -25px;    
+    }
 }
 
 @media(prefers-reduced-motion:reduce) {
