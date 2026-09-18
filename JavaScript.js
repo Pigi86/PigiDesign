@@ -44,7 +44,7 @@ const translations = {
         formInputEmail: "info@empresa.com",
         formInputName: "Su Nombre",
         formInputCompany: "Su Companía",
-        fDesc: "He recibido tu mensaje! Me comunicaré contigo a la brevedad",
+        fDesc: "He recibido tu mensaje! Me comunicaré contigo a la brevedad.",
 
         heroEyebrow: "Perfil profesional",
         heroPitch: "Diseño y desarrollo interfaces y sistemas digitales: desde sitios y aplicaciones web hasta soluciones de Power Platform, sin perder de vista el detalle visual.",
@@ -395,11 +395,13 @@ if (gdModal) {
 }
 
 const errorLabel = document.getElementById('errorLabel');
+errorLabel.style.display = "none";
 
 function handleSubmit(e) {
     e.preventDefault();
 
     errorLabel.innerText = "";
+    errorLabel.style.display = "none";
 
     const myForm = document.querySelector('#contactForm');
 
@@ -439,6 +441,7 @@ function sendEmail(btn) {
 
             errorLabel.innerText = "He recibido tu mensaje! Me comunicaré contigo a la brevedad.";
             //errorLabel.textContent = i18n[currentLang]['fDent'];
+            errorLabel.style.display = "inline";
 
             btn.style.background = '';
             btn.style.color = '';
@@ -448,6 +451,7 @@ function sendEmail(btn) {
             console.error(error);
 
             errorLabel.innerText = error;
+            errorLabel.style.display = "inline";
 
             btn.style.background = '';
             btn.style.color = '';
