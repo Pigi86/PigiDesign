@@ -29,6 +29,21 @@ const translations = {
         step3Text: "Desarrollo iterativo, integración y validación.",
         step4Title: "Mejorar",
         step4Text: "Ajustes, rendimiento y evolución del producto.",
+        contactTitle2: "01 / Contacto",
+        formName: "Nombre *",
+        formCompany: "Empresa *",
+        formEmail: "Email *",
+        formPhone: "Teléfono",
+        formMessage: "Mensaje *",
+        formSubmit: "Enviar mensaje",
+        formTitle: "Enviame un mensaje",
+        formNameError: "Ingrese su Nombre Completo",
+        formCompanyError: "Ingrese su Empresa",
+        formEmailError: "Ingrese su Email",
+        formMessageError: "Ingrese su Mensaje",
+        formInputEmail: "info@empresa.com",
+        formInputName: "Su Nombre",
+        formInputCompany: "Su Companía",
 
         heroEyebrow: "Perfil profesional",
         heroPitch: "Diseño y desarrollo interfaces y sistemas digitales: desde sitios y aplicaciones web hasta soluciones de Power Platform, sin perder de vista el detalle visual.",
@@ -83,6 +98,21 @@ const translations = {
         step3Text: "Iterative development, integration and validation.",
         step4Title: "Improve",
         step4Text: "Refinement, performance and product evolution.",
+        contactTitle2: "01 / Contact",
+        formName: "Fullname *",
+        formCompany: "Company *",
+        formEmail: "Email *",
+        formPhone: "Phone",
+        formMessage: "Message *",
+        formSubmit: "Send message",
+        formTitle: "Send me a message",
+        formNameError: "Enter your Fullname",
+        formCompanyError: "Enter your Company",
+        formEmailError: "Enter your Email",
+        formMessageError: "Enter your Message",
+        formInputEmail: "info@company.com",
+        formInputName: "Your Fullname",
+        formInputCompany: "Your Company",
 
         heroEyebrow: "Professional profile",
         heroPitch: "I design and build digital interfaces and systems: from websites and web apps to Power Platform solutions, without losing sight of visual detail.",
@@ -116,7 +146,7 @@ const projects = [
         desc: { es: "Project Vanguard es un juego que hice en Unity a modo de aprendizaje.", en: "Project Vanguard is a game I made in Unity as a learning experience." },
         tags: ["Unity", "C#", "Assests"],
         url: "https://pigi86.github.io/ProjectVanguardWeb/",
-        imgUrl:"Images/webpage1.png"
+        imgUrl: "Images/webpage1.png"
     },
     {
         id: 2, cat: "web", thumb: "thumb-web-2", ref: "WEB-2026-03",
@@ -175,7 +205,7 @@ const projects = [
         desc: { es: "La experiencia no se mide por los años, sino por los desafíos que te animaste a enfrentar.", en: "Experience is not measured by years, but by the challenges you dared to face." },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "https://instagram.faep36-2.fna.fbcdn.net/v/t51.75761-15/475783606_18476939866057387_694745016303068710_n.webp?_nc_cat=102&ig_cache_key=MzU1Nzk0NjE2NjI2NjAzMzk2Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=0mRt15tbqLwQ7kNvwGXBBQG&_nc_oc=Ado-42GO4ZZR6u83vebfjWK1IWLCgTisAuY0lytVExwFsNJGESBsrLLwEBY-uDG3JKU&_nc_ad=z-m&_nc_cid=5900&_nc_zt=23&_nc_ht=instagram.faep36-2.fna&_nc_gid=7NYtRrh9kWy6RH40rAiDYQ&_nc_ss=7a22e&oh=00_AQI3Y2fCe4sPfskk9UNnB0qMvINC2rkV9TllppqcApfsiw&oe=6AB20A27"
-    }    
+    }
 ];
 
 let currentLang = 'es';
@@ -187,9 +217,9 @@ function renderCards() {
     projects
         .filter(p => currentFilter === 'all' || p.cat === currentFilter)
         .forEach(p => {
-        if (p.url != null) {                
+            if (p.url != null) {
                 const card = document.createElement('div');
-                card.className = 'card ticked';               
+                card.className = 'card ticked';
                 card.innerHTML = `<a href="${p.url}" target="_blank">
     <div class="card-thumb" style="background-image:url('${p.imgUrl}');background-size: cover;">
         <span class="card-ref mono">${p.ref}</span>
@@ -197,10 +227,10 @@ function renderCards() {
     <h3>${p.title[currentLang]}</h3>
     <p>${p.desc[currentLang]}</p><br>
     <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div></a>
-    `;                
+    `;
                 container.appendChild(card);
             }
-            else {                
+            else {
                 const card = document.createElement('div');
                 card.className = 'card ticked';
                 card.setAttribute('data-cat', p.cat);
@@ -212,7 +242,7 @@ function renderCards() {
     <h3>${p.title[currentLang]}</h3>
     <p>${p.desc[currentLang]}</p>
     <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
-    `;                
+    `;
                 // If this is a graphic design item, open modal on click
                 if (p.cat === 'gd') {
                     card.addEventListener('click', () => {
@@ -232,7 +262,7 @@ function setFilter(filter, btn) {
 }
 
 // Back to top button behavior
-(function() {
+(function () {
     const backBtn = document.getElementById('back-to-top');
     const firstSection = document.querySelector('section.hero') || document.querySelector('main section');
     if (!backBtn) return;
@@ -266,6 +296,12 @@ function setLang(lang) {
         const key = el.getAttribute('data-i18n');
         if (translations[lang][key] !== undefined) {
             el.textContent = translations[lang][key];
+        }
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (translations[lang][key] !== undefined) {
+            el.placeholder = translations[lang][key];
         }
     });
     renderCards();
@@ -313,3 +349,36 @@ if (gdModal) {
         if (e.key === 'Escape' && !gdModal.classList.contains('hidden')) closeGdModal();
     });
 }
+
+const errorLabel = document.getElementById('errorLabel');
+
+function handleSubmit(e) {
+    e.preventDefault();
+
+    errorLabel.innerText = "";
+
+    const myForm = document.querySelector('#contactForm');
+
+    const isValid = myForm.reportValidity();
+
+    if (isValid) {
+        const btn = document.getElementById('submit-btn');
+        //btn.textContent = i18n[currentLang]['f-sent'];
+        btn.style.background = '#4a90a4';
+        btn.style.color = '#fff';
+        btn.disabled = true;
+        //sendEmail(btn);
+    }
+}
+
+const inputsRequired = document.querySelectorAll('[required]');
+inputsRequired.forEach(input => {
+    input.addEventListener('blur', () => {
+        input.classList.add('touched');
+    });
+
+    input.addEventListener('invalid', (e) => {
+        e.preventDefault();
+        input.classList.add('touched');
+    });
+});
