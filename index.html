@@ -199,7 +199,7 @@
         <section id="contacto">
             <div class="wrap">
                 <div class="contact-grid">
-                    <div>
+                    <div class="contact-info">
                         <h2 data-i18n="contactTitle">Hablemos de un proyecto</h2>
                         <p data-i18n="contactPitch">
                             Disponible para proyectos de desarrollo web, soluciones de Power Platform o piezas de diseño gráfico. Escribime y coordinamos.
@@ -212,9 +212,55 @@
                             <li><a href="https://x.com/Pigi_86" target="_blank" rel="noopener"><span><i class="fa fa-twitter icon" aria-hidden="true"></i>Twitter/X</span><span class="arrow mono">→</span></a></li>
                             <li><a href="https://github.com/Pigi86/" target="_blank" rel="noopener"><span><i class="fa fa-github icon" aria-hidden="true"></i>GitHub</span><span class="arrow mono">→</span></a></li>
                         </ul>
-                    </div>
-                    <div class="contact-note">
-                        <span data-i18n="contactNote">Disponible para conversar sobre nuevos proyectos, colaboraciones y oportunidades profesionales.</span>
+                        <br>
+                        <div class="contact-note">
+                            <span data-i18n="contactNote">Disponible para conversar sobre nuevos proyectos, colaboraciones y oportunidades profesionales.</span>
+                        </div>
+                    </div>                   
+                    <div class="contact-form-card">                        
+                        <div class="form-heading">
+                            <span data-i18n="contactTitle2" class="mono">01 / Contacto</span>
+                            <h3 data-i18n="formTitle">Enviame un mensaje</h3>
+                        </div>
+                        <form class="contact-form" id="contactForm" action="/submit-data" method="post">
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="contact-name" data-i18n="formName">Nombre *</label>
+                                    <input id="contact-name" data-i18n-placeholder="formInputName" name="name" type="text" placeholder="Su Nombre" autocomplete="name" required>
+                                    <span data-i18n="formNameError" class="error-msg">Ingrese su Nombre Completo</span>
+                                </div>
+                                <div class="form-field">
+                                    <label for="contact-company" data-i18n="formCompany">Empresa *</label>
+                                    <input id="contact-company" data-i18n-placeholder="formInputCompany" name="empresa" type="text" placeholder="Su Companía" autocomplete="organization" required>
+                                    <span data-i18n="formCompanyError" class="error-msg">Ingrese su Empresa</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="contact-email" data-i18n="formEmail">Email *</label>
+                                    <input id="contact-email" data-i18n-placeholder="formInputEmail" name="email" type="email" autocomplete="email" placeholder="info@empresa.com" required>
+                                    <span data-i18n="formEmailError" class="error-msg">Ingrese su Email</span>
+                                </div>
+                                <div class="form-field">
+                                    <label for="contact-phone" data-i18n="formPhone">Teléfono</label>
+                                    <input id="contact-phone" name="phone" type="tel" placeholder="+54 ..." autocomplete="tel">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="contact-message" data-i18n="formMessage">Mensaje *</label>
+                                <textarea id="contact-message" name="message" rows="5" required></textarea>
+                                <span data-i18n="formMessageError" class="error-msg">Ingrese su Mensaje</span>
+                            </div>
+                            <button type="submit" id="submit-btn" class="form-submit" onclick="handleSubmit(event)">
+                                <span data-i18n="formSubmit">Enviar mensaje</span>
+                                <span class="mono">→</span>
+                            </button>
+                            <br>
+                            <br>
+                            <div class="form-group">
+                                <label id="errorLabel" data-i18n="f-desc"></label>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
