@@ -44,6 +44,7 @@ const translations = {
         formInputEmail: "info@empresa.com",
         formInputName: "Su Nombre",
         formInputCompany: "Su Companía",
+        fDesc: "He recibido tu mensaje! Me comunicaré contigo a la brevedad",
 
         heroEyebrow: "Perfil profesional",
         heroPitch: "Diseño y desarrollo interfaces y sistemas digitales: desde sitios y aplicaciones web hasta soluciones de Power Platform, sin perder de vista el detalle visual.",
@@ -113,6 +114,7 @@ const translations = {
         formInputEmail: "info@company.com",
         formInputName: "Your Fullname",
         formInputCompany: "Your Company",
+        fDesc: "I have received your message! I will get in touch with you shortly.",
 
         heroEyebrow: "Professional profile",
         heroPitch: "I design and build digital interfaces and systems: from websites and web apps to Power Platform solutions, without losing sight of visual detail.",
@@ -287,6 +289,48 @@ function setFilter(filter, btn) {
     updateVisibility();
 })();
 
+// Mobile nav (hamburger) behavior
+(function () {
+    const toggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('site-nav');
+    const backdrop = document.getElementById('nav-backdrop');
+    if (!toggle || !nav) return;
+
+    function openNav() {
+        nav.classList.add('open');
+        toggle.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        if (backdrop) backdrop.classList.add('show');
+    }
+
+    function closeNav() {
+        nav.classList.remove('open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        if (backdrop) backdrop.classList.remove('show');
+    }
+
+    toggle.addEventListener('click', function () {
+        if (nav.classList.contains('open')) closeNav();
+        else openNav();
+    });
+
+    if (backdrop) backdrop.addEventListener('click', closeNav);
+
+    // Close after tapping a link or the language switch
+    nav.querySelectorAll('a.navlink, .langswitch button').forEach(el => {
+        el.addEventListener('click', closeNav);
+    });
+
+    window.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeNav();
+    });
+
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 780) closeNav();
+    });
+})();
+
 function setLang(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
@@ -369,6 +413,46 @@ function handleSubmit(e) {
         btn.disabled = true;
         //sendEmail(btn);
     }
+}
+
+function sendEmail(btn) {
+    //debugger;
+    //const selectElement = document.querySelector('#service-select');
+    //const selectedText = selectElement.options[selectElement.selectedIndex].text;
+
+    const parametros = {
+        name: document.getElementById("contact-name").value,
+        email: document.getElementById("contact-email").value,
+        empresa: document.getElementById("contact-company").value,
+        phone: document.getElementById("contact-phone").value,
+        //service: selectedText,
+        mensaje: document.getElementById("contact-message").value
+    };
+
+    emailjs.send(
+        "service_p94piyp",
+        "template_zwh89we",
+        parametros
+    )
+        .then(function (response) {
+            console.log(response);
+
+            errorLabel.innerText = "He recibido tu mensaje! Me comunicaré contigo a la brevedad.";
+            //errorLabel.textContent = i18n[currentLang]['fDent'];
+
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.disabled = false;
+        })
+        .catch(function (error) {
+            console.error(error);
+
+            errorLabel.innerText = error;
+
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.disabled = false;
+        });
 }
 
 const inputsRequired = document.querySelectorAll('[required]');
