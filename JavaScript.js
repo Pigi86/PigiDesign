@@ -68,7 +68,8 @@ const translations = {
         contactTitle: "Hablemos de un proyecto",
         contactPitch: "Disponible para proyectos de desarrollo web, soluciones de Power Platform o piezas de diseño gráfico. Escribime y coordinamos.",
         contactNote: "Disponible para conversar sobre nuevos proyectos, colaboraciones y oportunidades profesionales.",
-        footerNote: "Sitio de portfolio"
+        footerNote: "Sitio de portfolio",
+        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - Todos Los Derechos Reservados"
     },
     en: {
         nameShort: "Leandro Pignatta",
@@ -139,7 +140,8 @@ const translations = {
         contactTitle: "Let's talk about a project",
         contactPitch: "Available for web development projects, Power Platform solutions or graphic design pieces. Get in touch and we'll set up a time.",
         contactNote: "Available to discuss new projects, collaborations, and professional opportunities.",
-        footerNote: "Portfolio site"
+        footerNote: "Portfolio site",
+        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - All Rights Reserved"
     }
 };
 
