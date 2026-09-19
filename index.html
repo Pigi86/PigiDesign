@@ -4,14 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leandro Carlos Pignatta — Portfolio</title>
+    <meta name="description" content="Portfolio de Leandro Carlos Pignatta: desarrollo web, soluciones Power Platform (Power Apps, Power Automate, SharePoint) y diseño gráfico. Buenos Aires, Argentina.">
+    <meta name="author" content="Leandro Carlos Pignatta">
+    <meta name="theme-color" content="#07111f">
+    <link rel="canonical" href="https://pigi86.github.io/Portfolio/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Leandro Carlos Pignatta — Portfolio">
+    <meta property="og:description" content="Desarrollo web, Power Platform y diseño gráfico. Proyectos, servicios y contacto.">
+    <meta property="og:image" content="https://pigi86.github.io/Portfolio/Images/og-cover.jpg">
+    <meta property="og:url" content="https://pigi86.github.io/Portfolio/">
+    <meta property="og:locale" content="es_AR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Leandro Carlos Pignatta — Portfolio">
+    <meta name="twitter:description" content="Desarrollo web, Power Platform y diseño gráfico. Proyectos, servicios y contacto.">
+    <meta name="twitter:image" content="https://pigi86.github.io/Portfolio/Images/og-cover.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link href="Stylesheet.css" rel="stylesheet" />
     <link rel="icon" type="image/x-icon" href="Images/favicon.ico">
+    <link rel="apple-touch-icon" href="Images/favicon.png">
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Leandro Carlos Pignatta",
+            "jobTitle": "Senior Programmer Analyst — Power Platform Senior Developer",
+            "url": "https://pigi86.github.io/Portfolio/",
+            "image": "https://pigi86.github.io/Portfolio/Images/image.jpg",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Buenos Aires",
+                "addressCountry": "AR"
+            },
+            "sameAs": [
+                "https://www.linkedin.com/in/leandro-carlos-pignatta-8379b017/",
+                "https://www.facebook.com/lea.pignatta/",
+                "https://www.instagram.com/lea.pigi86/",
+                "https://x.com/Pigi_86",
+                "https://github.com/Pigi86/"
+            ],
+            "knowsAbout": ["Web development", "Power Platform", "Power Apps", "Power Automate", "SharePoint", "SQL Server", "C#", "Graphic design"]
+        }
+    </script>
 </head>
 <body>
+    <a class="skip-link" href="#main-content" data-i18n="skipToContent">Saltar al contenido</a>
+    <div id="progress-bar" class="progress-bar" aria-hidden="true"></div>
     <header>
         <div class="header-inner wrap">
             <div class="mark">
@@ -33,16 +79,21 @@
                 <a class="navlink" href="#servicios" data-i18n="navServices">Servicios</a>
                 <a class="navlink" href="#trabajo" data-i18n="navWork">Trabajo</a>
                 <a class="navlink" href="#contacto" data-i18n="navContact">Contacto</a>
-                <div class="langswitch">
-                    <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
-                    <button id="btn-en" onclick="setLang('en')">EN</button>
+                <div class="nav-utils">
+                    <div class="langswitch">
+                        <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+                        <button id="btn-en" onclick="setLang('en')">EN</button>
+                    </div>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema" type="button">
+                        <i class="fa fa-moon-o" aria-hidden="true"></i>
+                    </button>
                 </div>
             </nav>
         </div>
     </header>
     <div id="nav-backdrop" class="nav-backdrop"></div>
 
-    <main>
+    <main id="main-content">
         <!-- HERO -->
         <section id="hero" class="hero" data-anim="rise">
             <div class="wrap">
@@ -65,6 +116,13 @@
                             <span class="badge">SQL Server</span>
                             <span class="badge">IA</span>
                         </div>
+                        <div class="hero-cta">
+                            <a class="btn-primary" href="#contacto" data-i18n="heroCtaContact">Hablemos de un proyecto</a>
+                            <a class="btn-ghost" href="CV-Leandro-Pignatta.pdf" download>
+                                <i class="fa fa-download" aria-hidden="true"></i> <span data-i18n="heroCtaCvLabel">Descargar CV</span>
+                            </a>
+                        </div>
+                        <div class="hero-stats" id="hero-stats" aria-hidden="false"></div>
                     </div>
                     <div class="hero-meta ticked">
                         <dl>
@@ -266,7 +324,7 @@
                             <br>
                             <br>
                             <div class="form-group">
-                                <label id="errorLabel" data-i18n="fDesc"></label>
+                                <label id="errorLabel" data-i18n="fDesc" role="status" aria-live="polite"></label>
                             </div>
                         </form>
                     </div>
@@ -276,8 +334,10 @@
     </main>
 
     <footer class="wrap">
-        <span data-i18n="footerNote2">©
-        <script>document.write(new Date().getFullYear());</script> Leandro Carlos Pignatta - Todos Los Derechos Reservados</span>
+        <span data-i18n="footerNote2">
+            ©
+            <script>document.write(new Date().getFullYear());</script> Leandro Carlos Pignatta - Todos Los Derechos Reservados
+        </span>
         <span data-i18n="footerNote">Sitio de portfolio</span>
     </footer>
     <br>
@@ -298,7 +358,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="JavaScript.js"></script>
-
 </body>
 </html>
