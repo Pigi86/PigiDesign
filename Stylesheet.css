@@ -868,8 +868,12 @@ footer {
             max-width: 100%;
         }
 
-    .gd-modal-close {        
-        top: -25px;    
+    .gd-modal-close {
+        top: -25px;
+    }
+
+    .gd-modal-content {
+        max-height: 90%;
     }
 }
 
@@ -1096,4 +1100,150 @@ input:invalid.touched ~ .error-msg {
 input:invalid.touched {
     border-color: darkred;
     outline: none;
+}
+
+/* =========================================================
+   Animaciones de aparicion por seccion (scroll reveal)
+   Cada section usa data-anim="..." y JS agrega .in a sus items
+   ========================================================= */
+.anim-el:not(.in) {
+    opacity: 0;
+}
+
+.anim-el.in {
+    animation-duration: .75s;
+    animation-timing-function: cubic-bezier(.22,.78,.3,1);
+    animation-fill-mode: backwards; /* backwards: no deja transform pegado al terminar */
+    animation-delay: calc(var(--i,0) * 90ms);
+}
+
+/* HERO: subida simple */
+[data-anim="rise"] .anim-el.in {
+    animation-name: revRise;
+}
+
+/* SOBRE MI: las columnas entran desde los costados */
+[data-anim="split"] .anim-el.in {
+    animation-name: revRise;
+}
+
+[data-anim="split"] .about-grid > div:first-child.in {
+    animation-name: revFromLeft;
+}
+
+[data-anim="split"] .about-grid > div:last-child.in {
+    animation-name: revFromRight;
+}
+
+/* SERVICIOS: las tarjetas escalan en cascada */
+[data-anim="pop"] .anim-el.in {
+    animation-name: revPop;
+    animation-duration: .6s;
+    animation-delay: calc(var(--i,0) * 75ms);
+}
+
+/* PROCESO: los pasos se despliegan en 3D uno detras de otro */
+[data-anim="flip"] .anim-el {
+    transform-origin: top center;
+}
+
+    [data-anim="flip"] .anim-el.in {
+        animation-name: revFlip;
+        animation-duration: .7s;
+        animation-delay: calc(var(--i,0) * 130ms);
+    }
+
+/* TRABAJO: las piezas entran desenfocadas y se resuelven */
+[data-anim="blur"] .anim-el.in {
+    animation-name: revBlur;
+    animation-duration: .8s;
+    animation-delay: calc(var(--i,0) * 85ms);
+}
+
+/* CONTACTO: telon que se abre de abajo hacia arriba */
+[data-anim="curtain"] .anim-el.in {
+    animation-name: revCurtain;
+    animation-duration: .85s;
+    animation-delay: calc(var(--i,0) * 110ms);
+}
+
+@keyframes revRise {
+    from {
+        opacity: 0;
+        transform: translateY(26px);
+    }
+}
+
+@keyframes revFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-48px);
+    }
+}
+
+@keyframes revFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(48px);
+    }
+}
+
+@keyframes revPop {
+    from {
+        opacity: 0;
+        transform: translateY(22px) scale(.9);
+    }
+}
+
+@keyframes revFlip {
+    from {
+        opacity: 0;
+        transform: perspective(900px) rotateX(-72deg) translateY(14px);
+    }
+}
+
+@keyframes revBlur {
+    from {
+        opacity: 0;
+        filter: blur(14px);
+        transform: translateY(30px) scale(1.03);
+    }
+}
+
+@keyframes revCurtain {
+    from {
+        opacity: 0;
+        clip-path: inset(100% 0 0 0);
+        transform: translateY(26px);
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .anim-el:not(.in), .anim-el.in {
+        opacity: 1;
+        animation: none !important;
+    }
+}
+
+@media(max-width:780px) {
+    [data-anim="split"] .about-grid > div:first-child.in,
+    [data-anim="split"] .about-grid > div:last-child.in {
+        animation-name: revRise;
+    }
+
+    [data-anim="blur"] .anim-el.in {
+        animation-name: revBlurSoft;
+    }
+}
+
+@keyframes revBlurSoft {
+    from {
+        opacity: 0;
+        filter: blur(12px);
+        transform: translateY(26px);
+    }
 }
