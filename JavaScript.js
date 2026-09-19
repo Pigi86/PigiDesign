@@ -1,3 +1,7 @@
+if (typeof emailjs !== 'undefined') {
+    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+}
+
 const translations = {
     es: {
         nameShort: "Leandro Pignatta",
@@ -69,7 +73,17 @@ const translations = {
         contactPitch: "Disponible para proyectos de desarrollo web, soluciones de Power Platform o piezas de diseño gráfico. Escribime y coordinamos.",
         contactNote: "Disponible para conversar sobre nuevos proyectos, colaboraciones y oportunidades profesionales.",
         footerNote: "Sitio de portfolio",
-        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - Todos Los Derechos Reservados"
+        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - Todos Los Derechos Reservados",
+        skipToContent: "Saltar al contenido",
+        themeToggleAria: "Cambiar a tema claro",
+        themeToggleAriaLight: "Cambiar a tema oscuro",
+        heroCtaContact: "Hablemos de un proyecto",
+        heroCtaCvLabel: "Descargar CV",
+        statProjects: "Proyectos publicados",
+        statAreas: "Áreas de especialización",
+        statLangs: "Idiomas del sitio",
+        fSending: "Enviando...",
+        fError: "No se pudo enviar el mensaje. Probá de nuevo o escribime por mail."
     },
     en: {
         nameShort: "Leandro Pignatta",
@@ -141,7 +155,17 @@ const translations = {
         contactPitch: "Available for web development projects, Power Platform solutions or graphic design pieces. Get in touch and we'll set up a time.",
         contactNote: "Available to discuss new projects, collaborations, and professional opportunities.",
         footerNote: "Portfolio site",
-        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - All Rights Reserved"
+        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - All Rights Reserved",
+        skipToContent: "Skip to content",
+        themeToggleAria: "Switch to light theme",
+        themeToggleAriaLight: "Switch to dark theme",
+        heroCtaContact: "Let's talk about a project",
+        heroCtaCvLabel: "Download CV",
+        statProjects: "Published projects",
+        statAreas: "Areas of expertise",
+        statLangs: "Site languages",
+        fSending: "Sending...",
+        fError: "Couldn't send the message. Try again or email me directly."
     }
 };
 
@@ -226,8 +250,9 @@ function renderCards() {
             if (p.url != null) {
                 const card = document.createElement('div');
                 card.className = 'card ticked';
-                card.innerHTML = `<a href="${p.url}" target="_blank">
-    <div class="card-thumb" style="background-image:url('${p.imgUrl}');background-size: cover;">
+                card.innerHTML = `<a href="${p.url}" target="_blank" rel="noopener">
+    <div class="card-thumb">
+        <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" width="400" height="225" />
         <span class="card-ref mono">${p.ref}</span>
     </div>
     <h3>${p.title[currentLang]}</h3>
@@ -242,7 +267,8 @@ function renderCards() {
                 card.setAttribute('data-cat', p.cat);
                 card.setAttribute('data-img', p.imgUrl || '');
                 card.innerHTML = `    
-    <div class="card-thumb" style="background-image:url('${p.imgUrl}');background-size: cover;">
+    <div class="card-thumb">
+        <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" width="400" height="225" />
         <span class="card-ref mono">${p.ref}</span>
     </div>
     <h3>${p.title[currentLang]}</h3>
@@ -322,7 +348,7 @@ function setFilter(filter, btn) {
     if (backdrop) backdrop.addEventListener('click', closeNav);
 
     // Close after tapping a link or the language switch
-    nav.querySelectorAll('a.navlink, .langswitch button').forEach(el => {
+    nav.querySelectorAll('a.navlink, .langswitch button, #theme-toggle').forEach(el => {
         el.addEventListener('click', closeNav);
     });
 
@@ -352,7 +378,15 @@ function setLang(lang) {
             el.placeholder = translations[lang][key];
         }
     });
+    document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+        const key = el.getAttribute("data-i18n-aria");
+        if (translations[lang][key] !== undefined) {
+            el.setAttribute('aria-label', translations[lang][key]);
+        }
+    });
     renderCards();
+    renderHeroStats();
+    if (typeof window.applyThemeLabels === 'function') window.applyThemeLabels();
 }
 
 renderCards();
@@ -398,6 +432,20 @@ if (gdModal) {
     });
 }
 
+function renderHeroStats() {
+    const el = document.getElementById('hero-stats');
+    if (!el) return;
+    const totalProjects = projects.length;
+    const areas = new Set(projects.map(p => p.cat)).size;
+    const t = translations[currentLang];
+    el.innerHTML = `
+        <div class="stat"><strong>${totalProjects}</strong><span>${t.statProjects}</span></div>
+        <div class="stat"><strong>${areas}</strong><span>${t.statAreas}</span></div>
+        <div class="stat"><strong>2</strong><span>${t.statLangs}</span></div>
+    `;
+}
+renderHeroStats();
+
 const errorLabel = document.getElementById('errorLabel');
 errorLabel.style.display = "none";
 
@@ -406,59 +454,56 @@ function handleSubmit(e) {
 
     errorLabel.innerText = "";
     errorLabel.style.display = "none";
+    errorLabel.classList.remove('is-error');
 
     const myForm = document.querySelector('#contactForm');
-
     const isValid = myForm.reportValidity();
 
     if (isValid) {
         const btn = document.getElementById('submit-btn');
-        //btn.textContent = i18n[currentLang]['f-sent'];
-        btn.style.background = '#4a90a4';
-        btn.style.color = '#fff';
-        btn.disabled = true;
         //sendEmail(btn);
     }
 }
 
 function sendEmail(btn) {
-    //debugger;
-    //const selectElement = document.querySelector('#service-select');
-    //const selectedText = selectElement.options[selectElement.selectedIndex].text;
-
     const parametros = {
         name: document.getElementById("contact-name").value,
         email: document.getElementById("contact-email").value,
         empresa: document.getElementById("contact-company").value,
         phone: document.getElementById("contact-phone").value,
-        //service: selectedText,
         mensaje: document.getElementById("contact-message").value
     };
+
+    if (typeof emailjs === 'undefined') {
+        errorLabel.innerText = translations[currentLang].fError;
+        errorLabel.classList.add('is-error');
+        errorLabel.style.display = "inline";
+        return;
+    }
+
+    const originalLabel = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span>${translations[currentLang].fSending}</span>`;
 
     emailjs.send(
         "service_p94piyp",
         "template_zwh89we",
         parametros
     )
-        .then(function (response) {
-            console.log(response);
-
-            errorLabel.innerText = "He recibido tu mensaje! Me comunicaré contigo a la brevedad.";
-            //errorLabel.textContent = i18n[currentLang]['fDent'];
+        .then(function () {
+            errorLabel.innerText = translations[currentLang].fDesc;
+            errorLabel.classList.remove('is-error');
             errorLabel.style.display = "inline";
-
-            btn.style.background = '';
-            btn.style.color = '';
+            btn.innerHTML = originalLabel;
             btn.disabled = false;
+            document.getElementById('contactForm').reset();
         })
         .catch(function (error) {
             console.error(error);
-
-            errorLabel.innerText = error;
+            errorLabel.innerText = translations[currentLang].fError;
+            errorLabel.classList.add('is-error');
             errorLabel.style.display = "inline";
-
-            btn.style.background = '';
-            btn.style.color = '';
+            btn.innerHTML = originalLabel;
             btn.disabled = false;
         });
 }
@@ -474,6 +519,56 @@ inputsRequired.forEach(input => {
         input.classList.add('touched');
     });
 });
+
+(function () {
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const icon = toggle ? toggle.querySelector('i') : null;
+    const STORAGE_KEY = 'lp-theme';
+
+    function apply(theme) {
+        if (theme === 'light') {
+            root.setAttribute('data-theme', 'light');
+            if (icon) { icon.classList.remove('fa-moon-o'); icon.classList.add('fa-sun-o'); }
+            if (toggle) toggle.setAttribute('aria-label', (translations[currentLang] || translations.es).themeToggleAriaLight);
+        } else {
+            root.removeAttribute('data-theme');
+            if (icon) { icon.classList.remove('fa-sun-o'); icon.classList.add('fa-moon-o'); }
+            if (toggle) toggle.setAttribute('aria-label', (translations[currentLang] || translations.es).themeToggleAria);
+        }
+    }
+
+    let saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (err) { /* storage no disponible */ }
+
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    apply(saved || (prefersLight ? 'light' : 'dark'));
+
+    if (toggle) {
+        toggle.addEventListener('click', function () {
+            const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            apply(next);
+            try { localStorage.setItem(STORAGE_KEY, next); } catch (err) { /* storage no disponible */ }
+        });
+    }
+
+    window.applyThemeLabels = function () { apply(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'); };
+})();
+
+// Barra de progreso de scroll en el header
+(function () {
+    const bar = document.getElementById('progress-bar');
+    if (!bar) return;
+    function update() {
+        const scrollTop = window.scrollY;
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = height > 0 ? (scrollTop / height) * 100 : 0;
+        bar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+})();
 
 (function () {
     var ITEM_SELECTOR = [
@@ -518,7 +613,7 @@ inputsRequired.forEach(input => {
     }
 
     window.applyReveal = applyReveal;
-        
+
     if (typeof window.renderCards === 'function') {
         var originalRenderCards = window.renderCards;
         window.renderCards = function () {
