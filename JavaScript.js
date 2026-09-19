@@ -83,7 +83,9 @@ const translations = {
         statAreas: "Áreas de especialización",
         statLangs: "Idiomas del sitio",
         fSending: "Enviando...",
-        fError: "No se pudo enviar el mensaje. Probá de nuevo o escribime por mail."
+        fError: "No se pudo enviar el mensaje. Probá de nuevo o escribime por mail.",
+        cookieText: "Este sitio usa fuentes y recursos de terceros (Google Fonts, Font Awesome) y guarda tu preferencia de tema en el almacenamiento local de tu navegador. No se usan cookies de seguimiento ni analítica activa.",
+        cookieAccept: "Entendido"
     },
     en: {
         nameShort: "Leandro Pignatta",
@@ -165,7 +167,9 @@ const translations = {
         statAreas: "Areas of expertise",
         statLangs: "Site languages",
         fSending: "Sending...",
-        fError: "Couldn't send the message. Try again or email me directly."
+        fError: "Couldn't send the message. Try again or email me directly.",
+        cookieText: "This site uses third-party fonts and resources (Google Fonts, Font Awesome) and stores your theme preference in your browser's local storage. No tracking cookies or active analytics are used.",
+        cookieAccept: "Got it"
     }
 };
 
@@ -628,4 +632,31 @@ inputsRequired.forEach(input => {
     } else {
         applyReveal();
     }
+})();
+
+(function () {
+    const banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    const STORAGE_KEY = 'lp-cookie-consent';
+    const acceptBtn = document.getElementById('cookie-accept');
+
+    let accepted = null;
+    try { accepted = localStorage.getItem(STORAGE_KEY); } catch (err) { /* storage no disponible */ }
+
+    if (!accepted) {
+        window.setTimeout(function () {
+            banner.classList.remove('hidden');
+            banner.classList.add('show');
+            document.body.classList.add('cookie-banner-visible');
+        }, 900);
+    }
+
+    function dismiss() {
+        banner.classList.remove('show');
+        banner.classList.add('hidden');
+        document.body.classList.remove('cookie-banner-visible');
+        try { localStorage.setItem(STORAGE_KEY, '1'); } catch (err) { /* storage no disponible */ }
+    }
+
+    if (acceptBtn) acceptBtn.addEventListener('click', dismiss);
 })();
