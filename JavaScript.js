@@ -5,7 +5,7 @@
     const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let seen = null;
-    try { seen = sessionStorage.getItem('lp-intro-seen'); } catch (err) { /* storage no disponible */ }
+    try { seen = localStorage.getItem('lp-intro-seen'); } catch (err) { /* storage no disponible */ }
 
     if (reduced || seen) {
         intro.remove();
@@ -20,8 +20,8 @@
         done = true;
         intro.classList.add('intro-done');
         document.documentElement.classList.remove('intro-lock');
-        try { sessionStorage.setItem('lp-intro-seen', '1'); } catch (err) { /* storage no disponible */ }
-        window.setTimeout(function () { intro.remove(); }, 600);
+        try { localStorage.setItem('lp-intro-seen', '1'); } catch (err) { /* storage no disponible */ }
+        window.setTimeout(function () { intro.remove(); }, 1200);
     }
 
     const AUTO_DISMISS_MS = 2000;
@@ -42,6 +42,7 @@ if (typeof emailjs !== 'undefined') {
 
 const translations = {
     es: {
+        introShort: "Desarrollo & Power Platform",
         nameShort: "Leandro Pignatta",
         navAbout: "Sobre mí",
         navWork: "Trabajo",
@@ -126,6 +127,7 @@ const translations = {
         cookieAccept: "Entendido"
     },
     en: {
+        introShort: "Development & Power Platform",
         nameShort: "Leandro Pignatta",
         navAbout: "About",
         navWork: "Work",
@@ -429,7 +431,18 @@ function setLang(lang) {
     renderCards();
     renderHeroStats();
     if (typeof window.applyThemeLabels === 'function') window.applyThemeLabels();
+
+    try { localStorage.setItem('lp-lang', lang); } catch (err) { /* storage no disponible */ }
 }
+
+// Restaura el idioma elegido en esta misma sesion (si lo hay)
+(function () {    
+    let savedLang = null;
+    try { savedLang = localStorage.getItem('lp-lang'); } catch (err) { /* storage no disponible */ }
+    if (savedLang && savedLang !== currentLang && translations[savedLang]) {
+        setLang(savedLang);
+    }
+})();
 
 renderCards();
 
