@@ -1,3 +1,41 @@
+(function () {
+    const intro = document.getElementById('intro');
+    if (!intro) return;
+
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let seen = null;
+    try { seen = sessionStorage.getItem('lp-intro-seen'); } catch (err) { /* storage no disponible */ }
+
+    if (reduced || seen) {
+        intro.remove();
+        return;
+    }
+
+    document.documentElement.classList.add('intro-lock');
+    let done = false;
+
+    function finish() {
+        if (done) return;
+        done = true;
+        intro.classList.add('intro-done');
+        document.documentElement.classList.remove('intro-lock');
+        try { sessionStorage.setItem('lp-intro-seen', '1'); } catch (err) { /* storage no disponible */ }
+        window.setTimeout(function () { intro.remove(); }, 600);
+    }
+
+    const AUTO_DISMISS_MS = 2000;
+    const timer = window.setTimeout(finish, AUTO_DISMISS_MS);
+
+    // Cualquier intento de interactuar salta directo al sitio
+    ['click', 'touchstart', 'keydown', 'wheel'].forEach(function (evt) {
+        window.addEventListener(evt, function onSkip() {
+            window.clearTimeout(timer);
+            finish();
+        }, { once: true, passive: true });
+    });
+})();
+
 if (typeof emailjs !== 'undefined') {
     emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
 }
