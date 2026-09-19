@@ -474,3 +474,63 @@ inputsRequired.forEach(input => {
         input.classList.add('touched');
     });
 });
+
+(function () {
+    var ITEM_SELECTOR = [
+        '.hero-grid > *',
+        '.section-head',
+        '.about-grid > div',
+        '.service',
+        '.step',
+        '.card',
+        '.contact-info',
+        '.contact-form-card'
+    ].join(',');
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var observer = null;
+    if (!reduced && 'IntersectionObserver' in window) {
+        observer = new IntersectionObserver(function (entries, obs) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    }
+
+    function applyReveal() {
+        document.querySelectorAll('section[data-anim]').forEach(function (section) {
+            var items = section.querySelectorAll(ITEM_SELECTOR);
+            var index = 0;
+            items.forEach(function (el) {
+                if (!el.classList.contains('anim-el')) {
+                    el.classList.add('anim-el');
+                    el.style.setProperty('--i', index);
+                    if (observer) observer.observe(el);
+                    else el.classList.add('in');
+                }
+                index++;
+            });
+        });
+    }
+
+    window.applyReveal = applyReveal;
+        
+    if (typeof window.renderCards === 'function') {
+        var originalRenderCards = window.renderCards;
+        window.renderCards = function () {
+            var result = originalRenderCards.apply(this, arguments);
+            applyReveal();
+            return result;
+        };
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyReveal);
+    } else {
+        applyReveal();
+    }
+})();
