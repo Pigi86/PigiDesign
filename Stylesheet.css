@@ -1104,12 +1104,14 @@ footer {
         transform: translateY(10px);
     }
 
-body.cookie-banner-visible .back-to-top {
+/*body.cookie-banner-visible .back-to-top {*/
+body.cookie-banner-visible {
     bottom: 122px;
 }
 
 @media(max-width:480px) {
-    body.cookie-banner-visible .back-to-top {
+    /*body.cookie-banner-visible .back-to-top {*/
+    body.cookie-banner-visible {
         bottom: 190px;
     }
 }
