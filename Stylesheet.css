@@ -1104,14 +1104,12 @@ footer {
         transform: translateY(10px);
     }
 
-/*body.cookie-banner-visible .back-to-top {*/
-body.cookie-banner-visible {
+body.cookie-banner-visible .back-to-top {
     bottom: 122px;
 }
 
 @media(max-width:480px) {
-    /*body.cookie-banner-visible .back-to-top {*/
-    body.cookie-banner-visible {
+    body.cookie-banner-visible .back-to-top {
         bottom: 190px;
     }
 }
@@ -1145,13 +1143,16 @@ body.cookie-banner-visible {
     -webkit-backdrop-filter: blur(14px);
     box-shadow: var(--shadow);
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(16px) translateZ(0);
+    -webkit-transform: translateY(16px) translateZ(0);
+    will-change: transform, opacity;
     transition: opacity .3s ease, transform .3s ease;
 }
 
     .cookie-banner.show {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) translateZ(0);
+        -webkit-transform: translateY(0) translateZ(0);
     }
 
     .cookie-banner.hidden {
