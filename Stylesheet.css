@@ -72,15 +72,6 @@
 
 html {
     scroll-behavior: smooth;
-    /* el panel de nav cerrado queda fuera de pantalla: lo recortamos
-       para que no genere scroll horizontal ni agrande el viewport en mobile */
-    overflow-x: clip;
-}
-
-@supports not (overflow: clip) {
-    html {
-        overflow-x: hidden;
-    }
 }
 
 body {
