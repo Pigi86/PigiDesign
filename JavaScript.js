@@ -5,7 +5,7 @@
     const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let seen = null;
-    try { seen = localStorage.getItem('lp-intro-seen'); } catch (err) { /* storage no disponible */ }
+    try { seen = sessionStorage.getItem('lp-intro-seen'); } catch (err) { /* storage no disponible */ }
 
     if (reduced || seen) {
         intro.remove();
@@ -20,7 +20,7 @@
         done = true;
         intro.classList.add('intro-done');
         document.documentElement.classList.remove('intro-lock');
-        try { localStorage.setItem('lp-intro-seen', '1'); } catch (err) { /* storage no disponible */ }
+        try { sessionStorage.setItem('lp-intro-seen', '1'); } catch (err) { /* storage no disponible */ }
         window.setTimeout(function () { intro.remove(); }, 1200);
     }
 
@@ -37,12 +37,11 @@
 })();
 
 if (typeof emailjs !== 'undefined') {
-    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+    emailjs.init("S9WsrwTxTRrOPivcb");
 }
 
 const translations = {
     es: {
-        introShort: "Desarrollo & Power Platform",
         nameShort: "Leandro Pignatta",
         navAbout: "Sobre mí",
         navWork: "Trabajo",
@@ -127,7 +126,6 @@ const translations = {
         cookieAccept: "Entendido"
     },
     en: {
-        introShort: "Development & Power Platform",
         nameShort: "Leandro Pignatta",
         navAbout: "About",
         navWork: "Work",
@@ -436,7 +434,7 @@ function setLang(lang) {
 }
 
 // Restaura el idioma elegido en esta misma sesion (si lo hay)
-(function () {    
+(function () {
     let savedLang = null;
     try { savedLang = localStorage.getItem('lp-lang'); } catch (err) { /* storage no disponible */ }
     if (savedLang && savedLang !== currentLang && translations[savedLang]) {
@@ -516,11 +514,11 @@ function handleSubmit(e) {
 
     if (isValid) {
         const btn = document.getElementById('submit-btn');
-        //sendEmail(btn);
+        sendEmail(btn);
     }
 }
 
-function sendEmail(btn) {
+function sendEmail(btn) {   
     const parametros = {
         name: document.getElementById("contact-name").value,
         email: document.getElementById("contact-email").value,
@@ -532,7 +530,8 @@ function sendEmail(btn) {
     if (typeof emailjs === 'undefined') {
         errorLabel.innerText = translations[currentLang].fError;
         errorLabel.classList.add('is-error');
-        errorLabel.style.display = "inline";
+        errorLabel.style.display = "block";
+        errorLabel.style.width = "100%";
         return;
     }
 
@@ -541,23 +540,27 @@ function sendEmail(btn) {
     btn.innerHTML = `<span>${translations[currentLang].fSending}</span>`;
 
     emailjs.send(
-        "service_p94piyp",
-        "template_zwh89we",
+        "service_4w6zys5",
+        "template_ioolxbg",
         parametros
     )
         .then(function () {
             errorLabel.innerText = translations[currentLang].fDesc;
             errorLabel.classList.remove('is-error');
-            errorLabel.style.display = "inline";
+            errorLabel.style.display = "block";
+            errorLabel.style.width = "100%";
             btn.innerHTML = originalLabel;
             btn.disabled = false;
-            document.getElementById('contactForm').reset();
+            const form = document.getElementById('contactForm');
+            form.reset();
+            form.querySelectorAll('.touched').forEach(el => el.classList.remove('touched'));
         })
         .catch(function (error) {
             console.error(error);
             errorLabel.innerText = translations[currentLang].fError;
             errorLabel.classList.add('is-error');
-            errorLabel.style.display = "inline";
+            errorLabel.style.display = "block";
+            errorLabel.style.width = "100%";
             btn.innerHTML = originalLabel;
             btn.disabled = false;
         });
