@@ -884,7 +884,8 @@ section {
 
 .step {
     background: var(--bg-2);
-    padding: 26px
+    padding: 26px;
+    cursor: pointer;
 }
 
     .step strong {
