@@ -42,6 +42,7 @@ if (typeof emailjs !== 'undefined') {
 
 const translations = {
     es: {
+        introShort: "Desarrollo & Power Platform",
         nameShort: "Leandro Pignatta",
         navAbout: "Sobre mí",
         navWork: "Trabajo",
@@ -126,6 +127,7 @@ const translations = {
         cookieAccept: "Entendido"
     },
     en: {
+        introShort: "Development & Power Platform",
         nameShort: "Leandro Pignatta",
         navAbout: "About",
         navWork: "Work",
