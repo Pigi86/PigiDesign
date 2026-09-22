@@ -245,42 +245,42 @@ const projects = [
         title: { es: "El Tiempo Geológico", en: "Geologic Time" },
         desc: { es: "Donde el tiempo geológico se encuentra con el pulso del mañana. Un fragmento de eternidad petrificado en pirita y cristal, ahora convertido en la brújula que traza un rumbo a través de los océanos del tiempo y el espacio profundo. De la materia prima a la proyección de la luz, el tiempo no es solo medida; es la esencia de lo que fuimos y seremos. El viaje comienza en la muñeca.", en: "Where geological time meets the pulse of tomorrow. A fragment of eternity—petrified in pyrite and crystal—now transformed into a compass charting a course across the oceans of time and deep space. From raw material to the projection of light, time is not merely a measurement; it is the essence of who we were and who we will become. The journey begins on the wrist." },
         tags: ["Adobe Fireworks", "Illustrator", "IA"],
-        imgUrl: "https://instagram.faep28-2.fna.fbcdn.net/v/t51.82787-15/803323368_18615402526057387_5107416572513340125_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=Mzk4MzQxNDIzOTA5NjYyMTg1MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNTY0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=ycv4xnGE_b0Q7kNvwGHnKAq&_nc_oc=Adp2Q2GC3WYT62enMFB5Glj9ViKe2RCxkmOzrR74pA7ZJ1zvBwtC_WcYhHSpYr7_ZOIEVgLG7FsSIRLNL4k87XhF&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-2.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQIqqDs95AxZIM6ZyCvwdAnHCs6F-VuUP24YoHaq_l2N8w&oe=6AAF8D86"
+        imgUrl: "Images/galery/803323368_18615402526057387_5107416572513340125_n.jpg"
     },
     {
         id: 5, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
         title: { es: "Construyendo el Futuro", en: "Building the Future" },
         desc: { es: "Entre datos, estrellas y posibilidades infinitas. Construyendo el futuro una línea de código, una idea y un desafío a la vez.", en: "Amidst data, stars, and infinite possibilities. Building the future—one line of code, one idea, and one challenge at a time." },
         tags: ["Photoshop", "Adobe Fireworks", "IA"],
-        imgUrl: "https://instagram.faep28-1.fna.fbcdn.net/v/t51.82787-15/723238858_18588151651057387_7384351274187935941_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=MzkyMTkwMTczODk5OTUzMDI2Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTEyMi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Cx-cL6XuHlsQ7kNvwGTCUjF&_nc_oc=Ado4YFwoatR6dx711FYpRzA-PcFwlaJL3Jbx-x5yxDToYj_lC-AuN7slCIP55kV5wtGv-PVQOKIYnfaawB3DiqLt&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-1.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQIorZsswlUNNULrzOV7R0rUIor7m1eJFfjtg6OcOwC6oA&oe=6AAF62CE"
+        imgUrl: "Images/galery/723238858_18588151651057387_7384351274187935941_n.jpg"
     },
     {
         id: 6, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
         title: { es: "Imagen IA", en: "IA Image" },
         desc: { es: "Imagen generada usando IA.", en: "Image generated using IA." },
         tags: ["Adobe Fireworks", "IA"],
-        imgUrl: "https://instagram.faep28-1.fna.fbcdn.net/v/t51.82787-15/624653321_18547071205057387_6744616536308423277_n.webp?_nc_cat=100&ig_cache_key=MzgyMjI3OTg3OTY0ODQyNjQ5OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=iA2EJ-J1w4wQ7kNvwEBBZOb&_nc_oc=Adov18_mFvlaubR4F4SIPLMnoMf0BxyMjCdqMjlYQ0L_3sqVuWyCTnRdyKE-FH46mygyYUQuhvpRoGaSIA06EurD&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep28-1.fna&_nc_gid=4teCmyDxcNRLRQrteSITWQ&_nc_ss=7a22e&oh=00_AQKsqQ9LTYMyDV2QkwpTF_XWUQO2aIeoxx98RQbWQdXKAQ&oe=6AAF850F"
+        imgUrl: "Images/galery/Pigi_white_tiger_dark_souls_c2c4fbe2-1bb7-4dec-a34e-504f74f97540 - Copy.jpg"
     },
     {
         id: 7, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-03",
         title: { es: "La Historia", en: "The Story" },
         desc: { es: "Cada línea cuenta una historia. Cada idea deja una marca.", en: "Every line tells a story. Every idea leaves a mark." },
         tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "https://instagram.faep36-2.fna.fbcdn.net/v/t51.82787-15/650288053_18561585823057387_4490094408547594968_n.webp?_nc_cat=107&ig_cache_key=Mzg1MTQ5NzA1MjU5NzQ4NDM5OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=bJRxgaHvf9IQ7kNvwGvnsA1&_nc_oc=AdpR7mrR9YFpjHGwGCdQgO1MANCBKfLMFwAnH5YhDJ6JT08BAvh8RJcvaK5EganGnMw&_nc_ad=z-m&_nc_cid=5900&_nc_zt=23&_nc_ht=instagram.faep36-2.fna&_nc_gid=7NYtRrh9kWy6RH40rAiDYQ&_nc_ss=7a22e&oh=00_AQJDcdljbNK-LgcdSOqbgE0l3aX3uzAJJHtGgSsxjAIhoA&oe=6AB2073E"
+        imgUrl: "Images/galery/651168257_18561585814057387_8236522324979950329_n.webp"
     },
     {
         id: 8, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-04",
         title: { es: "La Identidad", en: "The Identity" },
         desc: { es: "Entre tinta y experiencias, se dibuja la identidad.", en: "Identity takes shape amidst ink and experiences." },
         tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "https://instagram.faep36-1.fna.fbcdn.net/v/t51.75761-15/492042516_18493622977057387_8673969118512317235_n.webp?_nc_cat=110&ig_cache_key=MzYyMDI4MjUzMjU1MDc3MDIwMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Vld38PVDJb4Q7kNvwGldbaR&_nc_oc=Adrtf02W0YgGB0INl4xbax2qCUzfNZ3fnrv23-5gRUzPTdthOI39_VoIrROuRfaTqmk&_nc_ad=z-m&_nc_cid=5900&_nc_zt=23&_nc_ht=instagram.faep36-1.fna&_nc_gid=7NYtRrh9kWy6RH40rAiDYQ&_nc_ss=7a22e&oh=00_AQIit7deq03JVcUVJbJ-7fioyi2pVDM-pzFITZwUSouTtA&oe=6AB1E36C"
+        imgUrl: "Images/galery/492042516_18493622977057387_8673969118512317235_n.webp"
     },
     {
         id: 9, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-01",
         title: { es: "La Experiencia", en: "The Experience" },
         desc: { es: "La experiencia no se mide por los años, sino por los desafíos que te animaste a enfrentar.", en: "Experience is not measured by years, but by the challenges you dared to face." },
         tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "https://instagram.faep36-2.fna.fbcdn.net/v/t51.75761-15/475783606_18476939866057387_694745016303068710_n.webp?_nc_cat=102&ig_cache_key=MzU1Nzk0NjE2NjI2NjAzMzk2Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=0mRt15tbqLwQ7kNvwGXBBQG&_nc_oc=Ado-42GO4ZZR6u83vebfjWK1IWLCgTisAuY0lytVExwFsNJGESBsrLLwEBY-uDG3JKU&_nc_ad=z-m&_nc_cid=5900&_nc_zt=23&_nc_ht=instagram.faep36-2.fna&_nc_gid=7NYtRrh9kWy6RH40rAiDYQ&_nc_ss=7a22e&oh=00_AQI3Y2fCe4sPfskk9UNnB0qMvINC2rkV9TllppqcApfsiw&oe=6AB20A27"
+        imgUrl: "Images/galery/475783606_18476939866057387_694745016303068710_n.webp"
     }
 ];
 
