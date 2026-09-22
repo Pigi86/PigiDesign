@@ -1678,3 +1678,202 @@ textarea:invalid.touched {
         transform: translateY(26px);
     }
 }
+
+
+/* ===== Mejoras de portfolio / propuesta profesional ===== */
+.profile-strip {
+    padding: 0 0 92px;
+    border-top: 0;
+}
+
+.profile-strip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--ov-025);
+}
+
+    .profile-strip-grid > div {
+        padding: 22px 24px;
+        border-right: 1px solid var(--line);
+        cursor: pointer;
+    }
+
+        .profile-strip-grid > div:last-child {
+            border-right: 0;
+        }
+
+    .profile-strip-grid strong {
+        display: block;
+        font: 700 12px 'JetBrains Mono';
+        color: var(--accent);
+        letter-spacing: .04em;
+    }
+
+    .profile-strip-grid span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+.tech-stack {
+    margin-top: 58px;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(145deg,var(--grad-service-a),var(--grad-service-b));
+}
+
+.tech-stack-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+    .tech-stack-head span {
+        color: var(--accent);
+        font-size: 10px;
+    }
+
+    .tech-stack-head h3 {
+        font-size: 1.35rem;
+    }
+
+.tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+    .tech-list span {
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--liText);
+        background: var(--ov-025);
+        font-size: 13px;
+        transition: .2s ease;
+        cursor: pointer;
+    }
+
+        .tech-list span:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+.work-intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    margin: -15px 0 28px;
+    padding: 20px 22px;
+    border-left: 2px solid var(--accent);
+    background: var(--ov-025);
+    border-radius: 0 14px 14px 0;
+}
+
+    .work-intro p {
+        margin: 0;
+        max-width: 70ch;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+.work-cta {
+    flex: 0 0 auto;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .work-cta span {
+        color: var(--accent);
+        margin-left: 6px;
+    }
+
+.grid-cards .card:hover .card-thumb img {
+    transform: scale(1.04);
+}
+
+.card-thumb img {
+    transition: transform .45s cubic-bezier(.2,.7,.2,1);
+}
+
+.process {
+    position: relative;
+}
+
+.step {
+    position: relative;
+}
+
+    .step strong {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: var(--bg-2);
+    }
+
+    .step:hover strong {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+.contact-info h2 {
+   /* max-width: 10ch;*/
+}
+
+@media(max-width:900px) {
+    .profile-strip-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+        .profile-strip-grid > div:nth-child(2) {
+            border-right: 0;
+        }
+
+        .profile-strip-grid > div:nth-child(-n+2) {
+            border-bottom: 1px solid var(--line);
+        }
+}
+
+@media(max-width:650px) {
+    .profile-strip {
+        padding-bottom: 65px;
+    }
+
+    .profile-strip-grid {
+        grid-template-columns: 1fr;
+    }
+
+        .profile-strip-grid > div, .profile-strip-grid > div:nth-child(2) {
+            border-right: 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+            .profile-strip-grid > div:last-child {
+                border-bottom: 0;
+            }
+
+    .tech-stack {
+        padding: 22px;
+        margin-top: 42px;
+    }
+
+    .work-intro {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
