@@ -290,7 +290,8 @@ nav a.navlink {
 }
 
     nav a.navlink:hover {
-        color: var(--accent)
+        color: var(--accent);
+        transform: translateY(-2px);
     }
 
 .langswitch {
@@ -824,7 +825,10 @@ section {
     bottom: 10px;
     right: 12px;
     font-size: 10px;
-    color: #b7c4d4
+    color: var(--text);
+    border-radius: 5px;
+    padding: 5px;
+    background: var(--buttonText);
 }
 
 .ticked {
