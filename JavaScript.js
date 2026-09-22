@@ -361,7 +361,8 @@ function setFilter(filter, btn) {
 
     function scrollToFirst() {
         if (firstSection) {
-            firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            //firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -536,7 +537,7 @@ function handleSubmit(e) {
     }
 }
 
-function sendEmail(btn) {   
+function sendEmail(btn) {
     const parametros = {
         name: document.getElementById("contact-name").value,
         email: document.getElementById("contact-email").value,
