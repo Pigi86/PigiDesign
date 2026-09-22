@@ -1812,6 +1812,10 @@ textarea:invalid.touched {
         margin-left: 6px;
     }
 
+    .work-ctaLink {
+        color: var(--accent) !important;        
+    }
+
 .grid-cards .card:hover .card-thumb img {
     transform: scale(1.04);
 }
