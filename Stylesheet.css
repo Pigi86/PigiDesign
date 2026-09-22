@@ -502,8 +502,15 @@ nav a.navlink {
     border-radius: 999px;
     font: 11px 'JetBrains Mono';
     color: var(--muted);
-    background: var(--ov-025)
+    background: var(--ov-025);
+    transition: .2s ease;
 }
+
+    .badge:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        cursor: pointer;
+    }
 
 /* ===== Skip link (accesibilidad por teclado) ===== */
 .skip-link {
