@@ -1224,7 +1224,8 @@ footer {
         }
 
     .gd-modal-close {
-        top: -25px;        
+        top: -5px; 
+        right:-3px;
     }
 
     .gd-modal-content {
