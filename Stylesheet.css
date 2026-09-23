@@ -9,6 +9,7 @@
     --accent: #65e6d2;
     --accent-2: #8aa7ff;
     --white: #fff;
+    --whiteIntro: rgba(255,255,255,0.09);
     --radius: 22px;
     --shadow: 0 20px 70px rgba(0,0,0,.28);
     /* superficies translucidas: se redefinen por tema para no quedar
@@ -32,39 +33,43 @@
     --buttonText: black;
 }
 
+/* Hide the old intro-name on large screens (we use intro-headline there); keep for small viewports */
+.intro-name { display: none; }
+
     /* ===== Tema claro =====
    Se activa con [data-theme="light"] en <html>; el toggle de tema
    guarda la eleccion en localStorage y respeta prefers-color-scheme
    como valor inicial cuando el usuario no eligio nada todavia. */
-    :root[data-theme="light"] {
-        --bg: #f6f8fb;
-        --bg-2: #eef2f7;
-        --surface: #ffffff;
-        --surface-2: #eef2f7;
-        --text: #101826;
-        --muted: #55647a;
-        --line: rgba(16,24,38,.12);
-        --white: #101826;
-        --shadow: 0 20px 60px rgba(16,24,38,.10);
-        --header-bg: rgba(246,248,251,.82);
-        --header-bg-solid: rgba(246,248,251,.97);
-        --grid-line: rgba(16,24,38,.035);
-        --ov-025: rgba(16,24,38,.035);
-        --ov-03: rgba(16,24,38,.04);
-        --ov-035: rgba(16,24,38,.045);
-        --ov-04: rgba(16,24,38,.05);
-        --grad-hero-a: rgba(16,24,38,.05);
-        --grad-hero-b: rgba(16,24,38,.02);
-        --grad-service-a: rgba(16,24,38,.045);
-        --grad-service-b: rgba(16,24,38,.015);
-        --input-bg: rgba(16,24,38,.035);
-        --input-bg-focus: rgba(16,24,38,.05);
-        --card-shadow-hover: 0 10px 26px rgba(16,24,38,.14);
-        --accent: darkblue;
-        --liText: black;
-        --linkText: black;
-        --buttonText: white;
-    }
+:root[data-theme="light"] {
+    --bg: #f6f8fb;
+    --bg-2: #eef2f7;
+    --surface: #ffffff;
+    --surface-2: #eef2f7;
+    --text: #101826;
+    --muted: #55647a;
+    --line: rgba(16,24,38,.12);
+    --white: #101826;
+    --whiteIntro: rgba(16,24,38,0.09);
+    --shadow: 0 20px 60px rgba(16,24,38,.10);
+    --header-bg: rgba(246,248,251,.82);
+    --header-bg-solid: rgba(246,248,251,.97);
+    --grid-line: rgba(16,24,38,.035);
+    --ov-025: rgba(16,24,38,.035);
+    --ov-03: rgba(16,24,38,.04);
+    --ov-035: rgba(16,24,38,.045);
+    --ov-04: rgba(16,24,38,.05);
+    --grad-hero-a: rgba(16,24,38,.05);
+    --grad-hero-b: rgba(16,24,38,.02);
+    --grad-service-a: rgba(16,24,38,.045);
+    --grad-service-b: rgba(16,24,38,.015);
+    --input-bg: rgba(16,24,38,.035);
+    --input-bg-focus: rgba(16,24,38,.05);
+    --card-shadow-hover: 0 10px 26px rgba(16,24,38,.14);
+    --accent: darkblue;
+    --liText: black;
+    --linkText: black;
+    --buttonText: white;
+}
 
 * {
     box-sizing: border-box
@@ -79,7 +84,7 @@ html {
    ========================= */
 
 ::-webkit-scrollbar {
-   /* width: 10px;*/
+    /* width: 10px;*/
 }
 
 ::-webkit-scrollbar-track {
@@ -98,7 +103,7 @@ html {
 
 /* Firefox */
 html {
-   /* scrollbar-width: thin;*/
+    /* scrollbar-width: thin;*/
     scrollbar-color: var(--accent) var(--bg);
 }
 
@@ -237,6 +242,76 @@ html.intro-lock body {
     .intro {
         display: none;
     }
+}
+
+.intro { overflow: hidden; }
+
+.intro-watermark {
+    position: absolute;
+    left: 50%;
+    top: 18%;
+    transform: translateX(-50%);
+    font-family: 'Manrope',sans-serif;
+    font-weight: 900;
+    font-size: clamp(5rem, 12vw, 12rem);
+    color: var(--whiteIntro);
+    letter-spacing: .08em;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.intro-title-group {
+    position: relative;
+    z-index: 3;
+    margin-top: 8px;
+}
+.intro-headline {
+    margin: 0;
+    font-family: 'Manrope',sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem,6vw,5rem);
+    line-height: 0.95;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: introHeadlineIn .7s cubic-bezier(.2,.9,.2,1) .5s forwards;
+}
+.intro-tagline {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font: 500 14px 'JetBrains Mono';
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: introTaglineIn .6s cubic-bezier(.2,.9,.2,1) .78s forwards;
+}
+
+@keyframes introHeadlineIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes introTaglineIn { to { opacity: 1; transform: translateY(0); } }
+
+.intro-flags { position: absolute; inset: auto 32px 18% auto; width: calc(100% - 64px); z-index: 2; pointer-events: none; }
+.flag { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--muted); }
+.flag-left { left: 24px; top: 36%; }
+.flag-right { right: 24px; top: 36%; }
+.flag-label { font-size: 12px; letter-spacing: .16em; font-weight: 700; color: var(--accent-2); }
+.flag-num { font-family: 'Manrope',sans-serif; font-weight: 900; font-size: 42px; color: var(--text); line-height: 0.9; }
+
+@media(max-width:900px) {
+    .intro-watermark { font-size: clamp(4rem, 16vw, 8rem); top: 12%; }
+    .flag-num { font-size: 34px; }
+    .flag-left, .flag-right { top: 48%; }
+}
+
+@media(max-width:650px) {
+    .intro-watermark { display: none; }
+    .flag-left, .flag-right { display: none; }
+    .intro-headline { font-size: clamp(1.8rem, 12vw, 3rem); }
+    /* On small screens, show the simpler intro-name and hide the big headline to avoid duplication */
+    .intro-name { display: block; }
+    .intro-headline { display: none; }
 }
 
 h1, h2, h3 {
@@ -1174,7 +1249,7 @@ footer {
     transition: opacity .32s ease, visibility .32s ease;
 }
 
-    .gd-modal.hidden {        
+    .gd-modal.hidden {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -1227,7 +1302,7 @@ footer {
 .gd-modal-body {
     display: flex;
     gap: 18px;
-    align-items: flex-start;   
+    align-items: flex-start;
     transform: translateY(-4px);
 }
 
@@ -1252,8 +1327,8 @@ footer {
         }
 
     .gd-modal-close {
-        top: -5px; 
-        right:-3px;
+        top: -5px;
+        right: -3px;
     }
 
     .gd-modal-content {
@@ -1870,9 +1945,9 @@ textarea:invalid.touched {
         margin-left: 6px;
     }
 
-    .work-ctaLink {
-        color: var(--accent) !important;        
-    }
+.work-ctaLink {
+    color: var(--accent) !important;
+}
 
 .grid-cards .card:hover .card-thumb img {
     transform: scale(1.04);
@@ -1907,7 +1982,7 @@ textarea:invalid.touched {
     }
 
 .contact-info h2 {
-   /* max-width: 10ch;*/
+    /* max-width: 10ch;*/
 }
 
 @media(max-width:900px) {
