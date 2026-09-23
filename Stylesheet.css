@@ -1482,7 +1482,14 @@ footer {
         border-radius: 999px;
         font: 12px 'JetBrains Mono';
         color: var(--text);
+        transition: .2s ease;
     }
+
+        .service-modal-tools span:hover {
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            transform: translateY(-2px);
+        }
 
 .service-modal-cta {
     display: inline-block;
