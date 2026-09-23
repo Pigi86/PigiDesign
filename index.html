@@ -298,10 +298,10 @@
                     <div class="section-tag mono" data-i18n="processTag">De la idea al resultado</div>
                 </div>
                 <div class="process">
-                    <div class="step"><strong>01</strong><h3 data-i18n="step1Title">Entender</h3><p data-i18n="step1Text">Objetivos, usuarios, necesidades y alcance.</p></div>
-                    <div class="step"><strong>02</strong><h3 data-i18n="step2Title">Diseñar</h3><p data-i18n="step2Text">Estructura, experiencia visual y solución técnica.</p></div>
-                    <div class="step"><strong>03</strong><h3 data-i18n="step3Title">Construir</h3><p data-i18n="step3Text">Desarrollo iterativo, integración y validación.</p></div>
-                    <div class="step"><strong>04</strong><h3 data-i18n="step4Title">Mejorar</h3><p data-i18n="step4Text">Ajustes, rendimiento y evolución del producto.</p></div>
+                    <div class="step" data-process="understand" role="button" tabindex="0" aria-haspopup="dialog"><strong>01</strong><h3 data-i18n="step1Title">Entender</h3><p data-i18n="step1Text">Objetivos, usuarios, necesidades y alcance.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                    <div class="step" data-process="design" role="button" tabindex="0" aria-haspopup="dialog"><strong>02</strong><h3 data-i18n="step2Title">Diseñar</h3><p data-i18n="step2Text">Estructura, experiencia visual y solución técnica.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                    <div class="step" data-process="build" role="button" tabindex="0" aria-haspopup="dialog"><strong>03</strong><h3 data-i18n="step3Title">Construir</h3><p data-i18n="step3Text">Desarrollo iterativo, integración y validación.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                    <div class="step" data-process="improve" role="button" tabindex="0" aria-haspopup="dialog"><strong>04</strong><h3 data-i18n="step4Title">Mejorar</h3><p data-i18n="step4Text">Ajustes, rendimiento y evolución del producto.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
                 </div>
             </div>
         </section>
@@ -425,11 +425,11 @@
             <div id="service-modal-num" class="service-modal-num mono"></div>
             <h3 id="service-modal-title"></h3>
             <p id="service-modal-lead" class="service-modal-lead"></p>
-            <h4 data-i18n="serviceIncludes">Qué incluye</h4>
+            <h4 id="service-modal-h-list">Qué incluye</h4>
             <ul id="service-modal-list" class="service-modal-list"></ul>
-            <h4 data-i18n="serviceTools">Herramientas</h4>
+            <h4 id="service-modal-h-extra">Herramientas</h4>
             <div id="service-modal-tools" class="service-modal-tools"></div>
-            <a href="#contacto" class="btn-primary service-modal-cta" data-action="contact" data-i18n="serviceCta">Consultar por este servicio</a>
+            <a href="#contacto" class="btn-primary service-modal-cta" id="service-modal-cta" data-action="contact">Consultar por este servicio</a>
         </div>
     </div>
 
