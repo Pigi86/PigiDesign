@@ -1582,6 +1582,10 @@ footer {
     z-index: 80;
 }
 
+    .gd-modal-close:hover {
+        color: var(--accent);
+    }
+
 .gd-modal-body {
     display: flex;
     gap: 18px;
