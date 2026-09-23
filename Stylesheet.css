@@ -1498,6 +1498,20 @@ footer {
         }
 }
 
+/* Process steps: opens the detail popup */
+.step:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -4px;
+}
+
+.step:hover .service-more::after {
+    transform: rotate(90deg);
+}
+
+.step .service-more {
+    margin-top: 16px;
+}
+
 /* GD modal styles */
 .gd-modal {
     position: fixed;
