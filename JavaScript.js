@@ -270,8 +270,8 @@ const projects = [
     },
     {
         id: 6, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
-        title: { es: "Imagen IA", en: "IA Image" },
-        desc: { es: "Imagen generada usando IA.", en: "Image generated using IA." },
+        title: { es: "La Sombra del Tigre de Plata", en: "The Shadow of the Silver Tiger" },
+        desc: { es: "Imponente ilustración de un guerrero antropomórfico con rasgos de tigre blanco y armadura de combate labrada. Sus ojos resplandecen con una intensa energía azul que contrasta con el aura mística de tonos púrpuras que lo rodea, proyectando la figura de un jefe legendario de la fantasía oscura.", en: "A striking illustration of an anthropomorphic warrior with the features of a white tiger and intricately carved battle armor. His eyes glow with an intense blue energy that contrasts with the mystical, purple aura surrounding him, projecting the image of a legendary dark fantasy chieftain." },
         tags: ["Adobe Fireworks", "IA"],
         imgUrl: "Images/galery/Pigi_white_tiger_dark_souls_c2c4fbe2-1bb7-4dec-a34e-504f74f97540 - Copy.jpg"
     },
