@@ -250,35 +250,41 @@
                     <div class="section-tag mono" data-i18n="servicesTag">Servicios / soluciones</div>
                 </div>
                 <div class="services">
-                    <article class="service">
+                    <article class="service" data-service="web" role="button" tabindex="0" aria-haspopup="dialog">
                         <div class="service-num mono">01 / WEB</div>
                         <h3 data-i18n="serviceWebTitle">Desarrollo web</h3>
                         <p data-i18n="serviceWebText">Sitios institucionales, landing pages y aplicaciones web rápidas, responsive y pensadas para crecer.</p>
+                        <span class="service-more" data-i18n="serviceMore">Ver detalle</span>
                     </article>
-                    <article class="service">
+                    <article class="service" data-service="power" role="button" tabindex="0" aria-haspopup="dialog">
                         <div class="service-num mono">02 / POWER</div>
                         <h3 data-i18n="servicePowerTitle">Power Platform</h3>
                         <p data-i18n="servicePowerText">Aplicaciones y automatizaciones con Power Apps, Power Automate, SharePoint y soluciones conectadas.</p>
+                        <span class="service-more" data-i18n="serviceMore">Ver detalle</span>
                     </article>
-                    <article class="service">
+                    <article class="service" data-service="design" role="button" tabindex="0" aria-haspopup="dialog">
                         <div class="service-num mono">03 / DESIGN</div>
                         <h3 data-i18n="serviceDesignTitle">Diseño Gráfico</h3>
                         <p data-i18n="serviceDesignText">Interfaces, identidad visual y piezas gráficas con foco en claridad, consistencia y detalle.</p>
+                        <span class="service-more" data-i18n="serviceMore">Ver detalle</span>
                     </article>
-                    <article class="service">
+                    <article class="service" data-service="csharp" role="button" tabindex="0" aria-haspopup="dialog">
                         <div class="service-num mono">04 / CSHARP</div>
                         <h3 data-i18n="serviceCSharpTitle">C#</h3>
                         <p data-i18n="serviceCSharpText">Desarrollo de aplicaciones backend y servicios con C#.</p>
+                        <span class="service-more" data-i18n="serviceMore">Ver detalle</span>
                     </article>
-                    <article class="service">
+                    <article class="service" data-service="sql" role="button" tabindex="0" aria-haspopup="dialog">
                         <div class="service-num mono">05 / SQL</div>
                         <h3 data-i18n="serviceSqlTitle">SQL Server</h3>
                         <p data-i18n="serviceSqlText">Modelado de datos, consultas y optimización en SQL Server.</p>
+                        <span class="service-more" data-i18n="serviceMore">Ver detalle</span>
                     </article>
-                    <article class="service">
+                    <article class="service" data-service="ai" role="button" tabindex="0" aria-haspopup="dialog">
                         <div class="service-num mono">06 / AI</div>
                         <h3 data-i18n="serviceAiTitle">Inteligencia Artificial</h3>
                         <p data-i18n="serviceAiText">Integración de modelos y soluciones de IA para proyectos.</p>
+                        <span class="service-more" data-i18n="serviceMore">Ver detalle</span>
                     </article>
                 </div>
             </div>
@@ -408,6 +414,22 @@
         </p>
         <div class="cookie-actions">
             <button id="cookie-accept" class="btn-primary" type="button" data-i18n="cookieAccept">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Modal for service details -->
+    <div id="service-modal" class="service-modal hidden" aria-hidden="true">
+        <div class="service-modal-backdrop" data-action="close"></div>
+        <div class="service-modal-content" role="dialog" aria-modal="true" aria-labelledby="service-modal-title">
+            <button type="button" class="service-modal-close" data-i18n-aria="serviceClose" aria-label="Cerrar">&times;</button>
+            <div id="service-modal-num" class="service-modal-num mono"></div>
+            <h3 id="service-modal-title"></h3>
+            <p id="service-modal-lead" class="service-modal-lead"></p>
+            <h4 data-i18n="serviceIncludes">Qué incluye</h4>
+            <ul id="service-modal-list" class="service-modal-list"></ul>
+            <h4 data-i18n="serviceTools">Herramientas</h4>
+            <div id="service-modal-tools" class="service-modal-tools"></div>
+            <a href="#contacto" class="btn-primary service-modal-cta" data-action="contact" data-i18n="serviceCta">Consultar por este servicio</a>
         </div>
     </div>
 
