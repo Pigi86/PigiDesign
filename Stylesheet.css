@@ -1076,9 +1076,13 @@ section {
         font-size: 1rem
     }
 
-.icon {
-    padding-right: 25px;
-}
+    .contact-links a:hover {
+        color:var(--accent);
+    }
+
+        .icon {
+            padding-right: 25px;
+        }
 
 .arrow {
     color: var(--accent)
