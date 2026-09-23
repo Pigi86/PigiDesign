@@ -77,6 +77,8 @@ const translations = {
         serviceTools: "Herramientas",
         serviceCta: "Consultar por este servicio",
         serviceClose: "Cerrar",
+        processIncludes: "Qué hacemos en esta etapa",
+        processDeliver: "Qué obtenés",
         processTitle: "Cómo trabajo",
         processTag: "De la idea al resultado",
         step1Title: "Entender",
@@ -177,6 +179,8 @@ const translations = {
         serviceTools: "Tools",
         serviceCta: "Ask about this service",
         serviceClose: "Close",
+        processIncludes: "What we do at this stage",
+        processDeliver: "What you get",
         processTitle: "How I work",
         processTag: "From idea to result",
         step1Title: "Understand",
@@ -590,17 +594,129 @@ const serviceDetails = {
     }
 };
 
+const processDetails = {
+    understand: {
+        titleKey: "step1Title",
+        es: {
+            num: "Paso 01 / 04",
+            lead: "Antes de abrir un editor de código o una herramienta de diseño, me tomo el tiempo de entender qué problema hay que resolver y para quién, así el proyecto arranca con un rumbo claro.",
+            includes: [
+                "Una primera conversación para conocer el negocio, los objetivos y el contexto del proyecto.",
+                "Identificar quiénes van a usar la solución y qué necesitan de ella.",
+                "Relevar los procesos, sistemas y datos con los que hay que trabajar.",
+                "Definir el alcance: qué entra ahora, qué queda para más adelante y qué es prioritario.",
+                "Acordar tiempos y forma de trabajo."
+            ],
+            deliverables: ["Objetivos claros", "Alcance definido", "Prioridades acordadas", "Plan de trabajo"]
+        },
+        en: {
+            num: "Step 01 / 04",
+            lead: "Before opening a code editor or a design tool, I take the time to understand which problem needs solving and for whom, so the project starts with a clear direction.",
+            includes: [
+                "An initial conversation to get to know the business, the goals and the project context.",
+                "Identifying who will use the solution and what they need from it.",
+                "Mapping the processes, systems and data involved.",
+                "Defining the scope: what goes in now, what waits for later and what is a priority.",
+                "Agreeing on timelines and ways of working."
+            ],
+            deliverables: ["Clear goals", "Defined scope", "Agreed priorities", "Work plan"]
+        }
+    },
+    design: {
+        titleKey: "step2Title",
+        es: {
+            num: "Paso 02 / 04",
+            lead: "Con el alcance definido, planteo cómo va a ser la solución: cómo se organiza, cómo se ve y cómo se construye, para validar el rumbo antes de desarrollar.",
+            includes: [
+                "Estructura de la información y flujos de navegación o de proceso.",
+                "Diseño visual de las pantallas y prototipos en Figma para validar antes de programar.",
+                "Definición de la solución técnica: tecnologías, datos e integraciones.",
+                "Revisión conjunta para ajustar lo necesario antes de pasar a construir."
+            ],
+            deliverables: ["Estructura y flujos", "Prototipo", "Diseño visual", "Solución técnica"]
+        },
+        en: {
+            num: "Step 02 / 04",
+            lead: "With the scope defined, I lay out what the solution will be: how it is organized, how it looks and how it is built, so the direction is validated before development starts.",
+            includes: [
+                "Information structure and navigation or process flows.",
+                "Visual design of the screens and Figma prototypes to validate before coding.",
+                "Definition of the technical solution: technologies, data and integrations.",
+                "A joint review to adjust whatever is needed before moving on to build."
+            ],
+            deliverables: ["Structure and flows", "Prototype", "Visual design", "Technical solution"]
+        }
+    },
+    build: {
+        titleKey: "step3Title",
+        es: {
+            num: "Paso 03 / 04",
+            lead: "Desarrollo la solución en etapas cortas y muestro avances, para que puedas ver el proyecto tomar forma y opinar mientras todavía es fácil hacer cambios.",
+            includes: [
+                "Desarrollo iterativo, con entregas parciales que se pueden revisar.",
+                "Integración con los sistemas, bases de datos y servicios necesarios.",
+                "Pruebas para validar que todo funcione como se acordó, en distintos dispositivos y escenarios.",
+                "Incorporación de tus comentarios en cada etapa."
+            ],
+            deliverables: ["Avances revisables", "Integraciones", "Pruebas", "Versión lista para publicar"]
+        },
+        en: {
+            num: "Step 03 / 04",
+            lead: "I build the solution in short stages and show progress, so you can see the project take shape and give feedback while changes are still easy to make.",
+            includes: [
+                "Iterative development, with partial deliveries that can be reviewed.",
+                "Integration with the required systems, databases and services.",
+                "Testing to confirm everything works as agreed, across devices and scenarios.",
+                "Incorporating your feedback at every stage."
+            ],
+            deliverables: ["Reviewable progress", "Integrations", "Testing", "Release-ready version"]
+        }
+    },
+    improve: {
+        titleKey: "step4Title",
+        es: {
+            num: "Paso 04 / 04",
+            lead: "Publicar no es el final. Después del lanzamiento reviso cómo se usa la solución y la ajusto para que siga funcionando bien y evolucionando junto con el negocio.",
+            includes: [
+                "Puesta en marcha y seguimiento de los primeros días de uso.",
+                "Corrección de errores y ajustes a partir del uso real.",
+                "Mejoras de rendimiento y de experiencia de uso.",
+                "Nuevas funcionalidades a medida que cambian las necesidades."
+            ],
+            deliverables: ["Puesta en marcha", "Ajustes", "Mejor rendimiento", "Nuevas funciones"]
+        },
+        en: {
+            num: "Step 04 / 04",
+            lead: "Launching is not the end. After release I look at how the solution is used and fine-tune it so it keeps working well and evolving alongside the business.",
+            includes: [
+                "Rollout and follow-up during the first days of use.",
+                "Bug fixes and adjustments based on real usage.",
+                "Performance and user experience improvements.",
+                "New features as needs change."
+            ],
+            deliverables: ["Rollout", "Adjustments", "Better performance", "New features"]
+        }
+    }
+};
+
 const serviceModal = document.getElementById('service-modal');
+let activeServiceKind = 'service';
 let activeServiceKey = null;
 let serviceTrigger = null;
 
 function renderServiceModal() {
     if (!serviceModal || !activeServiceKey) return;
-    const d = serviceDetails[activeServiceKey];
+    const isProcess = activeServiceKind === 'process';
+    const d = (isProcess ? processDetails : serviceDetails)[activeServiceKey];
     const c = d[currentLang];
-    document.getElementById('service-modal-num').textContent = d.num;
-    document.getElementById('service-modal-title').textContent = translations[currentLang][d.titleKey];
+    const t = translations[currentLang];
+
+    document.getElementById('service-modal-num').textContent = c.num || d.num;
+    document.getElementById('service-modal-title').textContent = t[d.titleKey];
     document.getElementById('service-modal-lead').textContent = c.lead;
+    document.getElementById('service-modal-h-list').textContent = isProcess ? t.processIncludes : t.serviceIncludes;
+    document.getElementById('service-modal-h-extra').textContent = isProcess ? t.processDeliver : t.serviceTools;
+    document.getElementById('service-modal-cta').textContent = isProcess ? t.heroCtaContact : t.serviceCta;
 
     const list = document.getElementById('service-modal-list');
     list.innerHTML = '';
@@ -610,17 +726,19 @@ function renderServiceModal() {
         list.appendChild(li);
     });
 
-    const tools = document.getElementById('service-modal-tools');
-    tools.innerHTML = '';
-    d.tools.forEach(text => {
+    const chips = document.getElementById('service-modal-tools');
+    chips.innerHTML = '';
+    (isProcess ? c.deliverables : d.tools).forEach(text => {
         const span = document.createElement('span');
         span.textContent = text;
-        tools.appendChild(span);
+        chips.appendChild(span);
     });
 }
 
-function openServiceModal(key, trigger) {
-    if (!serviceModal || !serviceDetails[key]) return;
+function openServiceModal(kind, key, trigger) {
+    const source = kind === 'process' ? processDetails : serviceDetails;
+    if (!serviceModal || !source[key]) return;
+    activeServiceKind = kind;
     activeServiceKey = key;
     serviceTrigger = trigger || null;
     renderServiceModal();
@@ -642,14 +760,18 @@ function closeServiceModal(restoreFocus) {
 }
 
 if (serviceModal) {
-    document.querySelectorAll('.service[data-service]').forEach(card => {
-        const open = () => openServiceModal(card.getAttribute('data-service'), card);
-        card.addEventListener('click', open);
-        card.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                open();
-            }
+    // Tarjetas de servicios y pasos del proceso abren el mismo popup
+    [['.service[data-service]', 'data-service', 'service'],
+    ['.step[data-process]', 'data-process', 'process']].forEach(([selector, attr, kind]) => {
+        document.querySelectorAll(selector).forEach(card => {
+            const open = () => openServiceModal(kind, card.getAttribute(attr), card);
+            card.addEventListener('click', open);
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    open();
+                }
+            });
         });
     });
 
