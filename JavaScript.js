@@ -43,6 +43,8 @@ if (typeof emailjs !== 'undefined') {
 const translations = {
     es: {
         introShort: "Desarrollo & Power Platform",
+        introShort2: "Desarrollo web · Power Platform · Diseño",
+        introShort3: "DISEÑO",
         nameShort: "Leandro Pignatta",
         navAbout: "Sobre mí",
         navWork: "Trabajo",
@@ -70,6 +72,11 @@ const translations = {
         serviceSqlText: "Modelado de datos, consultas y optimización en SQL Server.",
         serviceAiTitle: "Inteligencia Artificial",
         serviceAiText: "Integración de modelos y soluciones de IA para proyectos.",
+        serviceMore: "Ver detalle",
+        serviceIncludes: "Qué incluye",
+        serviceTools: "Herramientas",
+        serviceCta: "Consultar por este servicio",
+        serviceClose: "Cerrar",
         processTitle: "Cómo trabajo",
         processTag: "De la idea al resultado",
         step1Title: "Entender",
@@ -136,6 +143,8 @@ const translations = {
     },
     en: {
         introShort: "Development & Power Platform",
+        introShort2: "Web Development · Power Platform · Design",
+        introShort3: "DESIGN",
         nameShort: "Leandro Pignatta",
         navAbout: "About",
         navWork: "Work",
@@ -163,6 +172,11 @@ const translations = {
         serviceSqlText: "Data modeling, queries and optimization in SQL Server.",
         serviceAiTitle: "Artificial Intelligence",
         serviceAiText: "Integration of models and AI solutions into projects.",
+        serviceMore: "View details",
+        serviceIncludes: "What's included",
+        serviceTools: "Tools",
+        serviceCta: "Ask about this service",
+        serviceClose: "Close",
         processTitle: "How I work",
         processTag: "From idea to result",
         step1Title: "Understand",
@@ -422,6 +436,249 @@ function setFilter(filter, btn) {
     });
 })();
 
+// Service detail modal
+const serviceDetails = {
+    web: {
+        num: "01 / WEB",
+        titleKey: "serviceWebTitle",
+        tools: ["HTML", "CSS", "JavaScript", "React", "Node.js", "WordPress"],
+        es: {
+            lead: "Diseño y desarrollo sitios y aplicaciones web pensados para verse bien y funcionar rápido en cualquier dispositivo, con una base de código ordenada que se pueda mantener y ampliar con el tiempo.",
+            includes: [
+                "Sitios institucionales y landing pages a medida.",
+                "Aplicaciones web con React y Node.js.",
+                "Sitios administrables en WordPress, cuando necesitás editar tu propio contenido.",
+                "Diseño responsive, buen rendimiento y estructura pensada para buscadores.",
+                "Formularios de contacto, integraciones y publicación del sitio."
+            ]
+        },
+        en: {
+            lead: "I design and build websites and web applications that look good and run fast on any device, on a clean codebase that can be maintained and extended over time.",
+            includes: [
+                "Custom institutional sites and landing pages.",
+                "Web applications with React and Node.js.",
+                "Editable WordPress sites, when you need to manage your own content.",
+                "Responsive design, solid performance and search-friendly structure.",
+                "Contact forms, integrations and site deployment."
+            ]
+        }
+    },
+    power: {
+        num: "02 / POWER",
+        titleKey: "servicePowerTitle",
+        tools: ["Power Apps", "Power Automate", "SharePoint", "SQL Server"],
+        es: {
+            lead: "Automatizo procesos y construyo aplicaciones internas sobre Power Platform para que los equipos dejen de depender de planillas, mails y tareas manuales.",
+            includes: [
+                "Aplicaciones con Power Apps para cargar, aprobar y gestionar información.",
+                "Flujos con Power Automate: notificaciones, aprobaciones e integraciones entre sistemas.",
+                "Sitios, listas y bibliotecas de SharePoint como repositorio de datos y documentos.",
+                "Conexión con SQL Server y otras fuentes de datos.",
+                "Acompañamiento en la puesta en marcha y ajustes posteriores."
+            ]
+        },
+        en: {
+            lead: "I automate processes and build internal applications on Power Platform so teams can stop relying on spreadsheets, emails and manual tasks.",
+            includes: [
+                "Power Apps applications to capture, approve and manage information.",
+                "Power Automate flows: notifications, approvals and integrations between systems.",
+                "SharePoint sites, lists and libraries as a data and document repository.",
+                "Connection to SQL Server and other data sources.",
+                "Support during rollout and follow-up adjustments."
+            ]
+        }
+    },
+    design: {
+        num: "03 / DESIGN",
+        titleKey: "serviceDesignTitle",
+        tools: ["Figma", "Illustrator", "Photoshop", "InDesign", "Fireworks"],
+        es: {
+            lead: "Resuelvo el lado visual de un proyecto: desde la interfaz de una aplicación hasta la identidad y las piezas gráficas que la acompañan, cuidando la claridad y la consistencia.",
+            includes: [
+                "Diseño de interfaces y prototipos en Figma.",
+                "Identidad visual: logotipos, paleta de color y tipografías.",
+                "Piezas gráficas para redes sociales y material impreso.",
+                "Maquetación de documentos y publicaciones con InDesign.",
+                "Retoque y edición de imágenes con Photoshop e Illustrator."
+            ]
+        },
+        en: {
+            lead: "I take care of the visual side of a project: from an application's interface to the identity and graphic pieces that go with it, focused on clarity and consistency.",
+            includes: [
+                "Interface design and prototypes in Figma.",
+                "Visual identity: logos, color palette and typography.",
+                "Graphic pieces for social media and print material.",
+                "Document and publication layout with InDesign.",
+                "Image retouching and editing with Photoshop and Illustrator."
+            ]
+        }
+    },
+    csharp: {
+        num: "04 / CSHARP",
+        titleKey: "serviceCSharpTitle",
+        tools: ["C#", ".NET", "SQL Server"],
+        es: {
+            lead: "Desarrollo la lógica de negocio y los servicios que hay detrás de una aplicación, con C# y .NET, priorizando un código claro y fácil de mantener.",
+            includes: [
+                "Aplicaciones y servicios backend con C# y .NET.",
+                "APIs para conectar aplicaciones web y sistemas existentes.",
+                "Acceso a datos y trabajo conjunto con SQL Server.",
+                "Mantenimiento y evolución de sistemas que ya están en producción.",
+                "Automatización de procesos internos."
+            ]
+        },
+        en: {
+            lead: "I build the business logic and services behind an application with C# and .NET, prioritizing clear, maintainable code.",
+            includes: [
+                "Backend applications and services with C# and .NET.",
+                "APIs to connect web applications and existing systems.",
+                "Data access and close work with SQL Server.",
+                "Maintenance and evolution of systems already in production.",
+                "Internal process automation."
+            ]
+        }
+    },
+    sql: {
+        num: "05 / SQL",
+        titleKey: "serviceSqlTitle",
+        tools: ["SQL Server", "C#", "Power Platform"],
+        es: {
+            lead: "Diseño y mejoro la capa de datos: estructuras claras, consultas eficientes y bases que sigan funcionando bien a medida que la información crece.",
+            includes: [
+                "Modelado de bases de datos: tablas, relaciones y restricciones.",
+                "Consultas, vistas y procedimientos almacenados.",
+                "Optimización de consultas lentas y diseño de índices.",
+                "Extracción de datos y reportes para otras aplicaciones.",
+                "Integración con aplicaciones en C# y con Power Platform."
+            ]
+        },
+        en: {
+            lead: "I design and improve the data layer: clear structures, efficient queries and databases that keep performing well as the data grows.",
+            includes: [
+                "Database modeling: tables, relationships and constraints.",
+                "Queries, views and stored procedures.",
+                "Slow query optimization and index design.",
+                "Data extraction and reporting for other applications.",
+                "Integration with C# applications and Power Platform."
+            ]
+        }
+    },
+    ai: {
+        num: "06 / AI",
+        titleKey: "serviceAiTitle",
+        tools: ["C#", "JavaScript", "Power Automate"],
+        es: {
+            lead: "Incorporo inteligencia artificial en proyectos concretos, donde aporta valor real: asistentes, análisis de texto y automatización de tareas repetitivas.",
+            includes: [
+                "Integración de modelos de lenguaje en sitios y aplicaciones.",
+                "Asistentes conectados a la información de tu negocio.",
+                "Resumen, clasificación y extracción de datos desde texto y documentos.",
+                "Automatización de flujos combinando IA con Power Automate.",
+                "Evaluación de dónde conviene usar IA y dónde no."
+            ]
+        },
+        en: {
+            lead: "I bring artificial intelligence into concrete projects where it adds real value: assistants, text analysis and automation of repetitive tasks.",
+            includes: [
+                "Integration of language models into websites and applications.",
+                "Assistants connected to your business information.",
+                "Summarizing, classifying and extracting data from text and documents.",
+                "Workflow automation combining AI with Power Automate.",
+                "Assessing where AI makes sense and where it doesn't."
+            ]
+        }
+    }
+};
+
+const serviceModal = document.getElementById('service-modal');
+let activeServiceKey = null;
+let serviceTrigger = null;
+
+function renderServiceModal() {
+    if (!serviceModal || !activeServiceKey) return;
+    const d = serviceDetails[activeServiceKey];
+    const c = d[currentLang];
+    document.getElementById('service-modal-num').textContent = d.num;
+    document.getElementById('service-modal-title').textContent = translations[currentLang][d.titleKey];
+    document.getElementById('service-modal-lead').textContent = c.lead;
+
+    const list = document.getElementById('service-modal-list');
+    list.innerHTML = '';
+    c.includes.forEach(text => {
+        const li = document.createElement('li');
+        li.textContent = text;
+        list.appendChild(li);
+    });
+
+    const tools = document.getElementById('service-modal-tools');
+    tools.innerHTML = '';
+    d.tools.forEach(text => {
+        const span = document.createElement('span');
+        span.textContent = text;
+        tools.appendChild(span);
+    });
+}
+
+function openServiceModal(key, trigger) {
+    if (!serviceModal || !serviceDetails[key]) return;
+    activeServiceKey = key;
+    serviceTrigger = trigger || null;
+    renderServiceModal();
+    serviceModal.querySelector('.service-modal-content').scrollTop = 0;
+    serviceModal.classList.remove('hidden');
+    serviceModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    serviceModal.querySelector('.service-modal-close').focus();
+}
+
+function closeServiceModal(restoreFocus) {
+    if (!serviceModal || serviceModal.classList.contains('hidden')) return;
+    serviceModal.classList.add('hidden');
+    serviceModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    activeServiceKey = null;
+    if (restoreFocus !== false && serviceTrigger) serviceTrigger.focus();
+    serviceTrigger = null;
+}
+
+if (serviceModal) {
+    document.querySelectorAll('.service[data-service]').forEach(card => {
+        const open = () => openServiceModal(card.getAttribute('data-service'), card);
+        card.addEventListener('click', open);
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                open();
+            }
+        });
+    });
+
+    serviceModal.addEventListener('click', (ev) => {
+        if (ev.target.getAttribute('data-action') === 'close') closeServiceModal();
+        if (ev.target.closest('[data-action="contact"]')) closeServiceModal(false);
+    });
+    serviceModal.querySelector('.service-modal-close').addEventListener('click', () => closeServiceModal());
+
+    window.addEventListener('keydown', (e) => {
+        if (serviceModal.classList.contains('hidden')) return;
+        if (e.key === 'Escape') {
+            closeServiceModal();
+        } else if (e.key === 'Tab') {
+            // mantiene el foco dentro del popup
+            const focusables = serviceModal.querySelectorAll('button, a[href]');
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        }
+    });
+}
+
 function setLang(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
@@ -447,6 +704,7 @@ function setLang(lang) {
     });
     renderCards();
     renderHeroStats();
+    renderServiceModal();
     if (typeof window.applyThemeLabels === 'function') window.applyThemeLabels();
 
     try { localStorage.setItem('lp-lang', lang); } catch (err) { /* storage no disponible */ }
