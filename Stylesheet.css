@@ -1616,10 +1616,12 @@ footer {
     .gd-modal-close {
         top: -5px;
         right: -3px;
+        display: none;
     }
 
     .gd-modal-content {
-        max-height: 90%;
+        max-height: 85%;
+        overflow-y: auto;
     }
 }
 
