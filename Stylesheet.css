@@ -1193,6 +1193,10 @@ footer {
     justify-content: space-between
 }
 
+.footer {
+    margin-top: 15px;
+}
+
 @media(max-width:900px) {
     .hero-grid, .about-grid, .contact-grid {
         grid-template-columns: 1fr
