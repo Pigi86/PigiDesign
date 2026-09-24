@@ -2317,3 +2317,23 @@ textarea:invalid.touched {
         gap: 12px;
     }
 }
+
+#sobre-mi {
+    background: var(--surface);
+}
+
+#servicios {
+    background: var(--surface2);
+}
+
+#proceso {
+    background: var(--surface);
+}
+
+#trabajo {
+    background: var(--surface2);
+}
+
+#contacto {
+    background: var(--surface);
+}
