@@ -279,13 +279,12 @@ const projects = [
         imgUrl: "Images/webpage3.png"
     },
     {
-        id: 4, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-07",
+        id: 4, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-09",
         title: { es: "Amperio Marketplace Sitio Web", en: "Amperio Marketplace Web Page" },
-        desc: {
-            es: "Amperio es un marketplace de tecnología moderno y profesional, diseñado para ofrecer una experiencia de compra rápida, clara y atractiva. El sitio presenta un catálogo de productos tecnológicos, con una interfaz visual cuidada, navegación intuitiva y elementos orientados a facilitar la compra.", en: "Amperio is a modern, professional technology marketplace designed to offer a fast, clear, and engaging shopping experience. The site features a catalog of technology products, with a polished visual interface, intuitive navigation, and elements designed to facilitate the purchasing process." },
+        desc: { es: "Amperio es un marketplace de tecnología moderno y profesional, diseñado para ofrecer una experiencia de compra rápida, clara y atractiva. El sitio presenta un catálogo de productos tecnológicos, con una interfaz visual cuidada, navegación intuitiva y elementos orientados a facilitar la compra.", en: "Amperio is a modern, professional technology marketplace designed to offer a fast, clear, and engaging shopping experience. The site features a catalog of technology products, with a polished visual interface, intuitive navigation, and elements designed to facilitate the purchasing process." },
         tags: ["HTML", "JavaScript", "CSS"],
         url: "https://pigi86.github.io/Marketplace/",
-        imgUrl: "Images/webpage3.png"
+        imgUrl: "Images/webpage4.png"
     },
     {
         id: 5, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
