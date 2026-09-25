@@ -348,6 +348,13 @@ const projects = [
         desc: { es: "Tejiendo estrellas y sosteniendo planetas. ✨ El poder del cosmos está en nuestras manos, si nos atrevemos a mirar más allá de la oscuridad. ¿Cuál es tu rincón favorito del universo?", en: "Weaving stars and holding planets. ✨ The power of the cosmos lies in our hands, if we dare to look beyond the darkness. What is your favorite corner of the universe?" },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/633354222_18389236897159490_5365674072843004945_n.jpg"
+    },
+    {
+        id: 14, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2023-09",
+        title: { es: "El Hombre de la Máscara", en: "The Man in the Mask" },
+        desc: { es: "“Detrás de cada máscara hay un rostro, y detrás de este, una historia.” ― Marty Rubin", en: "“Behind every mask, there is a face, and behind that a story.” ― Marty Rubin" },
+        tags: ["Adobe Fireworks", "Photoshop"],
+        imgUrl: "Images/galery/625059809_18090390788063260_6516125498507490905_n.jpg"
     }
 ];
 
