@@ -141,7 +141,10 @@ const translations = {
         fSending: "Enviando...",
         fError: "No se pudo enviar el mensaje. Probá de nuevo o escribime por mail.",
         cookieText: "Este sitio usa fuentes y recursos de terceros (Google Fonts, Font Awesome) y guarda tu preferencia de tema en el almacenamiento local de tu navegador. No se usan cookies de seguimiento ni analítica activa.",
-        cookieAccept: "Entendido"
+        cookieAccept: "Entendido",
+        pagPrev: "Anterior",
+        pagNext: "Siguiente",
+        pagPage: "Página"
     },
     en: {
         introShort: "Development & Power Platform",
@@ -243,7 +246,10 @@ const translations = {
         fSending: "Sending...",
         fError: "Couldn't send the message. Try again or email me directly.",
         cookieText: "This site uses third-party fonts and resources (Google Fonts, Font Awesome) and stores your theme preference in your browser's local storage. No tracking cookies or active analytics are used.",
-        cookieAccept: "Got it"
+        cookieAccept: "Got it",
+        pagPrev: "Previous",
+        pagNext: "Next",
+        pagPage: "Page"
     }
 };
 
@@ -313,17 +319,48 @@ const projects = [
         desc: { es: "La experiencia no se mide por los años, sino por los desafíos que te animaste a enfrentar.", en: "Experience is not measured by years, but by the challenges you dared to face." },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/475783606_18476939866057387_694745016303068710_n.webp"
+    },
+    {
+        id: 10, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-10",
+        title: { es: "El Guardián del Bit y el Oro", en: "The Guardian of Bit and Gold" },
+        desc: { es: "Surgiendo del vacío, este antiguo guardián ha regresado. Fríos ojos azules que todo lo ven. Llamas púrpuras que purgan la sombra.", en: "Emerging from the void, this ancient guardian has returned. Cold blue eyes that see all. Purple flames that purge the shadow." },
+        tags: ["Adobe Fireworks", "Photoshop"],
+        imgUrl: "Images/galery/572384413_18529890895057387_2985686607725497839_n.webp"
+    },
+    {
+        id: 11, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-02",
+        title: { es: "No es solo un dibujo... es papel", en: "It's not just a drawing... it's paper." },
+        desc: { es: "Donde la geometría y la textura se encuentran. Esta pieza de arte low-poly cobró vida con cada pliegue de papel meticulosamente diseñado. Desde el moño hasta el reflejo de la puesta de sol en las gafas, es todo un mundo de detalles. ¿Quién más se une al club de los pliegues?", en: "Where geometry and texture meet. This low-poly art piece came to life with every meticulously designed paper fold. From the bow to the sunset reflecting in the glasses, it’s a whole world of detail. Who else is joining the folding club?" },
+        tags: ["Adobe Fireworks", "Photoshop"],
+        imgUrl: "Images/galery/640184412_18556927060057387_3678659511849913627_n.webp"
+    },
+    {
+        id: 12, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2019-10",
+        title: { es: "Un Cosmos en mis Manos", en: "A Cosmos in My Hands" },
+        desc: { es: "Tejiendo estrellas y sosteniendo planetas. ✨ El poder del cosmos está en nuestras manos, si nos atrevemos a mirar más allá de la oscuridad. ¿Cuál es tu rincón favorito del universo?", en: "Weaving stars and holding planets. ✨ The power of the cosmos lies in our hands, if we dare to look beyond the darkness. What is your favorite corner of the universe?" },
+        tags: ["Adobe Fireworks", "Photoshop"],
+        imgUrl: "Images/galery/633354222_18389236897159490_5365674072843004945_n.jpg"
     }
 ];
 
 let currentLang = 'es';
 let currentFilter = 'all';
+let currentPage = 1;
+const CARDS_PER_PAGE = 6;
 
 function renderCards() {
     const container = document.getElementById('cards');
     container.innerHTML = '';
-    projects
-        .filter(p => currentFilter === 'all' || p.cat === currentFilter)
+
+    const filtered = projects.filter(p => currentFilter === 'all' || p.cat === currentFilter);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / CARDS_PER_PAGE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const start = (currentPage - 1) * CARDS_PER_PAGE;
+    const pageItems = filtered.slice(start, start + CARDS_PER_PAGE);
+
+    pageItems
         .forEach(p => {
             if (p.url != null) {
                 const card = document.createElement('div');
@@ -362,10 +399,54 @@ function renderCards() {
                 container.appendChild(card);
             }
         });
+
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    const nav = document.getElementById('cards-pagination');
+    if (!nav) return;
+    nav.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    const t = translations[currentLang];
+
+    function makeButton(label, targetPage, opts) {
+        opts = opts || {};
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = label;
+        if (opts.current) {
+            btn.className = 'active';
+            btn.setAttribute('aria-current', 'page');
+        }
+        btn.disabled = !!opts.disabled;
+        btn.addEventListener('click', () => goToPage(targetPage));
+        return btn;
+    }
+
+    nav.appendChild(makeButton('← ' + t.pagPrev, currentPage - 1, { disabled: currentPage === 1 }));
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = makeButton(String(i), i, { current: i === currentPage });
+        btn.setAttribute('aria-label', t.pagPage + ' ' + i);
+        nav.appendChild(btn);
+    }
+
+    nav.appendChild(makeButton(t.pagNext + ' →', currentPage + 1, { disabled: currentPage === totalPages }));
+}
+
+function goToPage(page) {
+    currentPage = page;
+    renderCards();
+    const section = document.getElementById('trabajo');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function setFilter(filter, btn) {
     currentFilter = filter;
+    currentPage = 1;
     document.querySelectorAll('.work-toggle button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderCards();
