@@ -969,6 +969,57 @@ section {
         text-decoration: none;
     }
 
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 34px;
+}
+
+    .pagination button {
+        min-width: 38px;
+        height: 38px;
+        padding: 0 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        cursor: pointer;
+        color: var(--muted);
+        font: 12px 'JetBrains Mono';
+        transition: .2s;
+    }
+
+        .pagination button:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .pagination button.active {
+            border-color: var(--accent);
+            color: var(--bg);
+            background: var(--accent);
+            cursor: default;
+        }
+
+        .pagination button:disabled {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+@media(max-width:480px) {
+    .pagination button {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 9px;
+        font-size: 11px;
+    }
+}
+
 .card {
     padding: 16px;
     border: 1px solid var(--line);
