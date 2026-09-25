@@ -279,63 +279,72 @@ const projects = [
         imgUrl: "Images/webpage3.png"
     },
     {
-        id: 4, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
+        id: 4, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-07",
+        title: { es: "Amperio Marketplace Sitio Web", en: "Amperio Marketplace Web Page" },
+        desc: {
+            es: "Amperio es un marketplace de tecnología moderno y profesional, diseñado para ofrecer una experiencia de compra rápida, clara y atractiva. El sitio presenta un catálogo de productos tecnológicos, con una interfaz visual cuidada, navegación intuitiva y elementos orientados a facilitar la compra.", en: "Amperio is a modern, professional technology marketplace designed to offer a fast, clear, and engaging shopping experience. The site features a catalog of technology products, with a polished visual interface, intuitive navigation, and elements designed to facilitate the purchasing process." },
+        tags: ["HTML", "JavaScript", "CSS"],
+        url: "https://pigi86.github.io/Marketplace/",
+        imgUrl: "Images/webpage3.png"
+    },
+    {
+        id: 5, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
         title: { es: "El Tiempo Geológico", en: "Geologic Time" },
         desc: { es: "Donde el tiempo geológico se encuentra con el pulso del mañana. Un fragmento de eternidad petrificado en pirita y cristal, ahora convertido en la brújula que traza un rumbo a través de los océanos del tiempo y el espacio profundo. De la materia prima a la proyección de la luz, el tiempo no es solo medida; es la esencia de lo que fuimos y seremos. El viaje comienza en la muñeca.", en: "Where geological time meets the pulse of tomorrow. A fragment of eternity—petrified in pyrite and crystal—now transformed into a compass charting a course across the oceans of time and deep space. From raw material to the projection of light, time is not merely a measurement; it is the essence of who we were and who we will become. The journey begins on the wrist." },
         tags: ["Adobe Fireworks", "Illustrator", "IA"],
         imgUrl: "Images/galery/803323368_18615402526057387_5107416572513340125_n.jpg"
     },
     {
-        id: 5, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
+        id: 6, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
         title: { es: "Construyendo el Futuro", en: "Building the Future" },
         desc: { es: "Entre datos, estrellas y posibilidades infinitas. Construyendo el futuro una línea de código, una idea y un desafío a la vez.", en: "Amidst data, stars, and infinite possibilities. Building the future—one line of code, one idea, and one challenge at a time." },
         tags: ["Photoshop", "Adobe Fireworks", "IA"],
         imgUrl: "Images/galery/723238858_18588151651057387_7384351274187935941_n.jpg"
     },
     {
-        id: 6, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
+        id: 7, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
         title: { es: "La Sombra del Tigre de Plata", en: "The Shadow of the Silver Tiger" },
         desc: { es: "Imponente ilustración de un guerrero antropomórfico con rasgos de tigre blanco y armadura de combate labrada. Sus ojos resplandecen con una intensa energía azul que contrasta con el aura mística de tonos púrpuras que lo rodea, proyectando la figura de un jefe legendario de la fantasía oscura.", en: "A striking illustration of an anthropomorphic warrior with the features of a white tiger and intricately carved battle armor. His eyes glow with an intense blue energy that contrasts with the mystical, purple aura surrounding him, projecting the image of a legendary dark fantasy chieftain." },
         tags: ["Adobe Fireworks", "IA"],
         imgUrl: "Images/galery/Pigi_white_tiger_dark_souls_c2c4fbe2-1bb7-4dec-a34e-504f74f97540 - Copy.jpg"
     },
     {
-        id: 7, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-03",
+        id: 8, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-03",
         title: { es: "La Historia", en: "The Story" },
         desc: { es: "Cada línea cuenta una historia. Cada idea deja una marca.", en: "Every line tells a story. Every idea leaves a mark." },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/651168257_18561585814057387_8236522324979950329_n.webp"
     },
     {
-        id: 8, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-04",
+        id: 9, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-04",
         title: { es: "La Identidad", en: "The Identity" },
         desc: { es: "Entre tinta y experiencias, se dibuja la identidad.", en: "Identity takes shape amidst ink and experiences." },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/492042516_18493622977057387_8673969118512317235_n.webp"
     },
     {
-        id: 9, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-01",
+        id: 10, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-01",
         title: { es: "La Experiencia", en: "The Experience" },
         desc: { es: "La experiencia no se mide por los años, sino por los desafíos que te animaste a enfrentar.", en: "Experience is not measured by years, but by the challenges you dared to face." },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/475783606_18476939866057387_694745016303068710_n.webp"
     },
     {
-        id: 10, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-10",
+        id: 11, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-10",
         title: { es: "El Guardián del Bit y el Oro", en: "The Guardian of Bit and Gold" },
         desc: { es: "Surgiendo del vacío, este antiguo guardián ha regresado. Fríos ojos azules que todo lo ven. Llamas púrpuras que purgan la sombra.", en: "Emerging from the void, this ancient guardian has returned. Cold blue eyes that see all. Purple flames that purge the shadow." },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/572384413_18529890895057387_2985686607725497839_n.webp"
     },
     {
-        id: 11, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-02",
+        id: 12, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-02",
         title: { es: "No es solo un dibujo... es papel", en: "It's not just a drawing... it's paper." },
         desc: { es: "Donde la geometría y la textura se encuentran. Esta pieza de arte low-poly cobró vida con cada pliegue de papel meticulosamente diseñado. Desde el moño hasta el reflejo de la puesta de sol en las gafas, es todo un mundo de detalles. ¿Quién más se une al club de los pliegues?", en: "Where geometry and texture meet. This low-poly art piece came to life with every meticulously designed paper fold. From the bow to the sunset reflecting in the glasses, it’s a whole world of detail. Who else is joining the folding club?" },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/640184412_18556927060057387_3678659511849913627_n.webp"
     },
     {
-        id: 12, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2019-10",
+        id: 13, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2019-10",
         title: { es: "Un Cosmos en mis Manos", en: "A Cosmos in My Hands" },
         desc: { es: "Tejiendo estrellas y sosteniendo planetas. ✨ El poder del cosmos está en nuestras manos, si nos atrevemos a mirar más allá de la oscuridad. ¿Cuál es tu rincón favorito del universo?", en: "Weaving stars and holding planets. ✨ The power of the cosmos lies in our hands, if we dare to look beyond the darkness. What is your favorite corner of the universe?" },
         tags: ["Adobe Fireworks", "Photoshop"],
