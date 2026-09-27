@@ -1217,3 +1217,148 @@ inputsRequired.forEach(input => {
 
     if (acceptBtn) acceptBtn.addEventListener('click', dismiss);
 })();
+
+/* =========================================================
+   Hero code typewriter — escribe, pausa, borra y reinicia
+   ========================================================= */
+(function () {
+    var writer = document.querySelector('[data-codewriter]');
+    if (!writer) return;
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var lines = [
+        'const developer = "Leandro";',
+        'const skills = ["web", "power", "design"];',
+        'function build(idea) {',
+        'return idea.transform();',
+        '}'
+    ];
+    var elements = Array.prototype.slice.call(writer.querySelectorAll('.code-line'));
+    var speed = 42;
+    var deleteSpeed = 24;
+    var linePause = 140;
+    var holdPause = 1800;
+    var resetPause = 500;
+    var timer = null;
+
+    function clearLines() {
+        elements.forEach(function (el) { el.innerHTML = ''; });
+    }
+
+    function typeLine(index, charIndex) {
+        if (index >= lines.length) {
+            timer = window.setTimeout(deleteAll, holdPause);
+            return;
+        }
+
+        var el = elements[index];
+        var text = lines[index];
+        el.textContent = text.slice(0, charIndex);
+
+        if (charIndex < text.length) {
+            timer = window.setTimeout(function () {
+                typeLine(index, charIndex + 1);
+            }, speed);
+        } else {
+            timer = window.setTimeout(function () {
+                typeLine(index + 1, 0);
+            }, linePause);
+        }
+    }
+
+    function deleteAll() {
+        var index = lines.length - 1;
+        function eraseLine() {
+            var el = elements[index];
+            var current = el.textContent;
+            if (current.length > 0) {
+                el.textContent = current.slice(0, -1);
+                timer = window.setTimeout(eraseLine, deleteSpeed);
+            } else if (index > 0) {
+                index -= 1;
+                timer = window.setTimeout(eraseLine, 70);
+            } else {
+                timer = window.setTimeout(start, resetPause);
+            }
+        }
+        eraseLine();
+    }
+
+    function start() {
+        if (timer) window.clearTimeout(timer);
+        clearLines();
+        if (reduced) {
+            lines.forEach(function (line, i) { elements[i].textContent = line; });
+            return;
+        }
+        typeLine(0, 0);
+    }
+
+    start();
+})();
+
+/* =========================================================
+   Custom cursor
+   ========================================================= */
+(function () {
+    var finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!finePointer || reduced) return;
+
+    var dot = document.createElement('div');
+    var ring = document.createElement('div');
+    dot.className = 'cursor-dot';
+    ring.className = 'cursor-ring';
+    dot.setAttribute('aria-hidden', 'true');
+    ring.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(dot);
+    document.body.appendChild(ring);
+    document.documentElement.classList.add('has-custom-cursor');
+
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    var active = true;
+
+    function move(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.transform = 'translate3d(' + mouseX + 'px,' + mouseY + 'px,0)';
+        if (!document.body.classList.contains('cursor-ready')) {
+            document.body.classList.add('cursor-ready');
+        }
+    }
+
+    function animate() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        ring.style.transform = 'translate3d(' + ringX + 'px,' + ringY + 'px,0)';
+        if (active) requestAnimationFrame(animate);
+    }
+
+    document.addEventListener('mousemove', move, { passive: true });
+    document.addEventListener('mouseenter', function () {
+        active = true;
+        document.body.classList.remove('cursor-hidden');
+        requestAnimationFrame(animate);
+    });
+    document.addEventListener('mouseleave', function () {
+        active = false;
+        document.body.classList.add('cursor-hidden');
+    });
+
+    document.addEventListener('mouseover', function (e) {
+        var target = e.target.closest && e.target.closest(
+            'a, button, [role="button"], input, textarea, select, label, .card, .service, .step, .hero-title-img, .badge'
+        );
+        document.body.classList.toggle('cursor-hover', !!target);
+    }, { passive: true });
+
+    document.addEventListener('mousedown', function () {
+        document.body.classList.add('cursor-click');
+    });
+    document.addEventListener('mouseup', function () {
+        document.body.classList.remove('cursor-click');
+    });
+
+    requestAnimationFrame(animate);
+})();
