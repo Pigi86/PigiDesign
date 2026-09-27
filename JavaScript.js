@@ -114,7 +114,7 @@ const translations = {
         metaLocationValue: "Buenos Aires, Argentina",
         metaFocus: "Enfoque",
         metaFocusValue: "Desarrollo web · Power Platform · Diseño gráfico",
-        aboutTitle: "Sobre mí",
+        aboutTitle: "Acerca de mí",
         aboutTag: "Perfil / competencias",
         aboutP1: "Analista programador senior con foco en Power Platform y desarrollo web. Trabajo tanto en la construcción de aplicaciones y flujos como en la resolución del lado visual de un proyecto, desde interfaces hasta piezas de diseño gráfico.",
         aboutP2: "Este espacio reúne una selección de trabajos propios: proyectos web y piezas de diseño gráfico realizadas en distintos contextos, personales y profesionales.",
@@ -1133,6 +1133,7 @@ inputsRequired.forEach(input => {
 
 (function () {
     var ITEM_SELECTOR = [
+        '.hero-eyebrow',
         '.hero-grid > *',
         '.section-head',
         '.about-grid > div',
