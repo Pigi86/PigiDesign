@@ -107,7 +107,7 @@ const translations = {
         fDesc: "He recibido tu mensaje! Me comunicaré contigo a la brevedad.",
 
         heroEyebrow: "Perfil profesional",
-        heroPitch: "Diseño y desarrollo interfaces y sistemas digitales: desde sitios y aplicaciones web hasta soluciones de Power Platform, sin perder de vista el detalle visual.",
+        heroPitch: "Desarrollo soluciones digitales que combinan código, automatización y diseño: desde sitios y aplicaciones web hasta soluciones empresariales con Power Platform.",
         metaRole: "Rol",
         metaRoles: "Analista Programador Senior — Desarrollador Senior en Power Platform",
         metaLocation: "Ubicación",
@@ -212,7 +212,7 @@ const translations = {
         fDesc: "I have received your message! I will get in touch with you shortly.",
 
         heroEyebrow: "Professional profile",
-        heroPitch: "I design and build digital interfaces and systems: from websites and web apps to Power Platform solutions, without losing sight of visual detail.",
+        heroPitch: "I develop digital solutions that combine code, automation, and design—ranging from websites and web applications to enterprise solutions using Power Platform.",
         metaRole: "Role",
         metaRoles: "Senior Programmer Analyst — Power Platform Senior Developer",
         metaLocation: "Location",
