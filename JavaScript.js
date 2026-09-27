@@ -311,21 +311,29 @@ const projects = [
         imgUrl: "Images/webpage5.png"
     },
     {
-        id: 6, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
+        id: 6, cat: "web", thumb: "thumb-web-3", ref: "WEB-2025-08",
+        title: { es: "Service Flow Sitio Web", en: "Service Flow Web Page" },
+        desc: { es: "Plataforma web empresarial diseñada para centralizar la gestión de tickets, clientes, equipos y operaciones. Incluye dashboard de métricas, seguimiento de incidencias, filtros, búsqueda, reportes y administración de usuarios, con una interfaz moderna, responsive y orientada a mejorar la eficiencia operativa.", en: "An enterprise web platform designed to centralize the management of tickets, clients, teams, and operations. It features a metrics dashboard, incident tracking, filtering, search capabilities, reporting, and user administration, all within a modern, responsive interface aimed at improving operational efficiency." },
+        tags: ["HTML", "JavaScript", "CSS", "Power Apps"],
+        url: "https://pigi86.github.io/ServiceFlow/",
+        imgUrl: "Images/webpage6.png"
+    },
+    {
+        id: 7, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
         title: { es: "El Tiempo Geológico", en: "Geologic Time" },
         desc: { es: "Donde el tiempo geológico se encuentra con el pulso del mañana. Un fragmento de eternidad petrificado en pirita y cristal, ahora convertido en la brújula que traza un rumbo a través de los océanos del tiempo y el espacio profundo. De la materia prima a la proyección de la luz, el tiempo no es solo medida; es la esencia de lo que fuimos y seremos. El viaje comienza en la muñeca.", en: "Where geological time meets the pulse of tomorrow. A fragment of eternity—petrified in pyrite and crystal—now transformed into a compass charting a course across the oceans of time and deep space. From raw material to the projection of light, time is not merely a measurement; it is the essence of who we were and who we will become. The journey begins on the wrist." },
         tags: ["Adobe Fireworks", "Illustrator", "IA"],
         imgUrl: "Images/galery/803323368_18615402526057387_5107416572513340125_n.jpg"
     },
     {
-        id: 7, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
+        id: 8, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
         title: { es: "Construyendo el Futuro", en: "Building the Future" },
         desc: { es: "Entre datos, estrellas y posibilidades infinitas. Construyendo el futuro una línea de código, una idea y un desafío a la vez.", en: "Amidst data, stars, and infinite possibilities. Building the future—one line of code, one idea, and one challenge at a time." },
         tags: ["Photoshop", "Adobe Fireworks", "IA"],
         imgUrl: "Images/galery/723238858_18588151651057387_7384351274187935941_n.jpg"
     },
     {
-        id: 8, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
+        id: 9, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
         title: { es: "La Sombra del Tigre de Plata", en: "The Shadow of the Silver Tiger" },
         desc: { es: "Imponente ilustración de un guerrero antropomórfico con rasgos de tigre blanco y armadura de combate labrada. Sus ojos resplandecen con una intensa energía azul que contrasta con el aura mística de tonos púrpuras que lo rodea, proyectando la figura de un jefe legendario de la fantasía oscura.", en: "A striking illustration of an anthropomorphic warrior with the features of a white tiger and intricately carved battle armor. His eyes glow with an intense blue energy that contrasts with the mystical, purple aura surrounding him, projecting the image of a legendary dark fantasy chieftain." },
         tags: ["Adobe Fireworks", "IA"],
@@ -374,7 +382,7 @@ const projects = [
         imgUrl: "Images/galery/633354222_18389236897159490_5365674072843004945_n.jpg"
     },
     {
-        id: 14, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2023-09",
+        id: 16, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2023-09",
         title: { es: "El Hombre de la Máscara", en: "The Man in the Mask" },
         desc: { es: "“Detrás de cada máscara hay un rostro, y detrás de este, una historia.” ― Marty Rubin", en: "“Behind every mask, there is a face, and behind that a story.” ― Marty Rubin" },
         tags: ["Adobe Fireworks", "Photoshop"],
