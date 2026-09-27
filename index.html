@@ -349,7 +349,25 @@
                     <a data-i18n="workCta2" href="#contacto" class="work-cta work-ctaLink">¿Tenés un proyecto? <span>→</span></a>
                 </div>
 
+                <div class="work-search" role="search">
+                    <label class="sr-only" for="work-search-input" data-i18n="workSearchLabel">Buscar proyectos</label>
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <input id="work-search-input" type="search" autocomplete="off" spellcheck="false"
+                           data-i18n-placeholder="workSearchPlaceholder"
+                           placeholder="Buscar por proyecto, tecnología..."
+                           aria-controls="cards" />
+                    <button id="work-search-clear" class="work-search-clear" type="button"
+                            data-i18n-aria="workSearchClear" aria-label="Limpiar búsqueda" hidden>
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div id="work-search-count" class="work-search-count" role="status" aria-live="polite" hidden></div>
+
                 <div class="grid-cards" id="cards"></div>
+                <div id="work-empty" class="work-empty" role="status" aria-live="polite" hidden>
+                    <span class="mono">00</span>
+                    <p data-i18n="workSearchEmpty">No se encontraron proyectos con esa búsqueda.</p>
+                </div>
                 <nav class="pagination" id="cards-pagination" aria-label="Paginación de proyectos"></nav>
             </div>
         </section>
