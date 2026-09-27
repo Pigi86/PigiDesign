@@ -152,7 +152,8 @@ const translations = {
         workSearchClear: "Limpiar búsqueda",
         workSearchEmpty: "No se encontraron proyectos con esa búsqueda.",
         workSearchResultSingular: "proyecto encontrado",
-        workSearchResultPlural: "proyectos encontrados"
+        workSearchResultPlural: "proyectos encontrados",
+        externalButton: "Ir a sitio web"
     },
     en: {
         introShort: "Development & Power Platform",
@@ -265,7 +266,8 @@ const translations = {
         workSearchClear: "Clear search",
         workSearchEmpty: "No projects matched your search.",
         workSearchResultSingular: "project found",
-        workSearchResultPlural: "projects found"
+        workSearchResultPlural: "projects found",
+        externalButton: "Go to web page"
     }
 };
 
@@ -446,26 +448,11 @@ function renderCards() {
 
     pageItems
         .forEach(p => {
-            if (p.url != null) {
-                const card = document.createElement('div');
-                card.className = 'card ticked';
-                card.innerHTML = `<a href="${p.url}" target="_blank" rel="noopener">
-    <div class="card-thumb">
-        <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" width="400" height="225" />
-        <span class="card-ref mono">${p.ref}</span>
-    </div>
-    <h3>${p.title[currentLang]}</h3>
-    <p>${p.desc[currentLang]}</p><br>
-    <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div></a>
-    `;
-                container.appendChild(card);
-            }
-            else {
-                const card = document.createElement('div');
-                card.className = 'card ticked';
-                card.setAttribute('data-cat', p.cat);
-                card.setAttribute('data-img', p.imgUrl || '');
-                card.innerHTML = `    
+            const card = document.createElement('div');
+            card.className = 'card ticked';
+            card.setAttribute('data-cat', p.cat);
+            card.setAttribute('data-img', p.imgUrl || '');
+            card.innerHTML = `    
     <div class="card-thumb">
         <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" width="400" height="225" />
         <span class="card-ref mono">${p.ref}</span>
@@ -474,14 +461,14 @@ function renderCards() {
     <p>${p.desc[currentLang]}</p>
     <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
     `;
-                // If this is a graphic design item, open modal on click
-                if (p.cat === 'gd') {
-                    card.addEventListener('click', () => {
-                        openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang], p.tags);
-                    });
-                }
-                container.appendChild(card);
-            }
+            // If this is a graphic design item, open modal on click
+            //if (p.cat === 'gd') {
+            card.addEventListener('click', () => {
+                openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang], p.tags, p.url);
+            });
+            //}
+            container.appendChild(card);
+
         });
 
     renderPagination(totalPages);
@@ -1047,8 +1034,9 @@ const gdModalImg = document.getElementById('gd-modal-img');
 const gdModalTitle = document.getElementById('gd-modal-title');
 const gdModalDesc = document.getElementById('gd-modal-desc');
 const gdModalTags = document.getElementById('gd-modal-tags');
+const gdModalButton = document.getElementById('gd-modal-button');
 
-function openGdModal(imgSrc, title, desc, tags) {
+function openGdModal(imgSrc, title, desc, tags, url) {
     if (!gdModal) return;
     gdModalImg.src = imgSrc || '';
     gdModalImg.alt = title || '';
@@ -1057,10 +1045,23 @@ function openGdModal(imgSrc, title, desc, tags) {
     gdModal.classList.remove('hidden');
     gdModal.setAttribute('aria-hidden', 'false');
     gdModalTags.replaceChildren();
+    gdModalButton.replaceChildren();
+    var newP = gdModalTags.appendChild(document.createElement("p"));
     for (var ii = 0; ii < tags.length; ii++) {
         const newSpan = document.createElement('span');
         newSpan.textContent = tags[ii];
-        gdModalTags.appendChild(newSpan);
+        newP.appendChild(newSpan);
+    }
+    gdModalTags.appendChild(document.createElement("br"))
+    if (url != null) {
+        var newP2 = gdModalTags.appendChild(document.createElement("p"));
+        const newAnchor = document.createElement('a');
+        newAnchor.textContent = translations[currentLang].externalButton;
+        newAnchor.className = "btn-primary";
+        newAnchor.href = url;
+        newAnchor.setAttribute("data-i18n", "externalButton");
+        newAnchor.target = "_blank";
+        gdModalButton.appendChild(newAnchor);
     }
     // prevent body scroll
     document.body.style.overflow = 'hidden';
