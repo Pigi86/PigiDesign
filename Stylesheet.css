@@ -2547,6 +2547,10 @@ textarea:invalid.touched {
         opacity: .55;
     }
 
+        .hero-code-dots i:nth-child(3) {
+            background: var(--accent);
+        }
+
 .hero-code-file {
     flex: 1;
     font-size: 10px;
