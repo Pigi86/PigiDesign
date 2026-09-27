@@ -1085,6 +1085,8 @@ section {
     color: var(--text);
     border-radius: 5px;
     padding: 5px;
+    border-width: 1px;
+    border-color: var(--text);
     background: var(--buttonText);
 }
 
