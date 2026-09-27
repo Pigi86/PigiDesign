@@ -477,7 +477,7 @@ function renderCards() {
                 // If this is a graphic design item, open modal on click
                 if (p.cat === 'gd') {
                     card.addEventListener('click', () => {
-                        openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang]);
+                        openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang], p.tags);
                     });
                 }
                 container.appendChild(card);
@@ -1046,8 +1046,9 @@ const gdModal = document.getElementById('gd-modal');
 const gdModalImg = document.getElementById('gd-modal-img');
 const gdModalTitle = document.getElementById('gd-modal-title');
 const gdModalDesc = document.getElementById('gd-modal-desc');
+const gdModalTags = document.getElementById('gd-modal-tags');
 
-function openGdModal(imgSrc, title, desc) {
+function openGdModal(imgSrc, title, desc, tags) {
     if (!gdModal) return;
     gdModalImg.src = imgSrc || '';
     gdModalImg.alt = title || '';
@@ -1055,6 +1056,12 @@ function openGdModal(imgSrc, title, desc) {
     gdModalDesc.textContent = desc || '';
     gdModal.classList.remove('hidden');
     gdModal.setAttribute('aria-hidden', 'false');
+    gdModalTags.replaceChildren();
+    for (var ii = 0; ii < tags.length; ii++) {
+        const newSpan = document.createElement('span');
+        newSpan.textContent = tags[ii];
+        gdModalTags.appendChild(newSpan);
+    }
     // prevent body scroll
     document.body.style.overflow = 'hidden';
 }
