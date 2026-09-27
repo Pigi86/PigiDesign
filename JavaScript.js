@@ -134,7 +134,9 @@ const translations = {
         themeToggleAria: "Cambiar a tema claro",
         themeToggleAriaLight: "Cambiar a tema oscuro",
         heroCtaContact: "Hablemos de un proyecto",
-        heroCtaCvLabel: "Descargar CV",
+        heroCtaCvLabel: "Descargar CV PDF",
+        heroCtaCvLabel2: "Curriculum",
+        heroCtaCvLabel3: "Abrir en una pestaña nueva",
         statProjects: "Proyectos publicados",
         statAreas: "Áreas de especialización",
         statLangs: "Idiomas del sitio",
@@ -239,7 +241,9 @@ const translations = {
         themeToggleAria: "Switch to light theme",
         themeToggleAriaLight: "Switch to dark theme",
         heroCtaContact: "Let's talk about a project",
-        heroCtaCvLabel: "Download CV",
+        heroCtaCvLabel: "Download CV PDF",
+        heroCtaCvLabel2: "Resume",
+        heroCtaCvLabel3: "Open in a new tab",
         statProjects: "Published projects",
         statAreas: "Areas of expertise",
         statLangs: "Site languages",
@@ -1223,79 +1227,137 @@ inputsRequired.forEach(input => {
    Hero code typewriter — escribe, pausa, borra y reinicia
    ========================================================= */
 (function () {
-    var writer = document.querySelector('[data-codewriter]');
+    const writer = document.querySelector('[data-codewriter]');
     if (!writer) return;
 
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var lines = [
-        'const developer = "Leandro";',
-        'const skills = ["web", "power", "design"];',
-        'function build(idea) {',
-        'return idea.transform();',
-        '}'
+    const lines = [
+        'const developer = {',
+        '  name: "Leandro",',
+        '  focus: ["web", "power-platform"],',
+        '  status: "building",',
+        '};'
     ];
-    var elements = Array.prototype.slice.call(writer.querySelectorAll('.code-line'));
-    var speed = 42;
-    var deleteSpeed = 24;
-    var linePause = 140;
-    var holdPause = 1800;
-    var resetPause = 500;
-    var timer = null;
+
+    const lineEls = Array.from(writer.querySelectorAll('.code-line'));
+    if (!lineEls.length) return;
+
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const visibleLines = Math.min(lines.length, lineEls.length);
+
+    // El cursor es un único elemento y se mueve al final de la línea activa.
+    const caret = document.createElement('span');
+    caret.className = 'code-caret';
+    caret.setAttribute('aria-hidden', 'true');
+
+    // Renderiza el texto manteniendo los valores entre comillas destacados.
+    function renderCode(el, value) {
+        el.textContent = '';
+        const parts = value.split(/(\"(?:[^\"\\]|\\.)*\")/g);
+
+        parts.forEach(function (part) {
+            if (!part) return;
+            if (part.charAt(0) === '\"' && part.charAt(part.length - 1) === '\"') {
+                const span = document.createElement('span');
+                span.className = 'code-string';
+                span.textContent = part;
+                el.appendChild(span);
+            } else {
+                el.appendChild(document.createTextNode(part));
+            }
+        });
+    }
 
     function clearLines() {
-        elements.forEach(function (el) { el.innerHTML = ''; });
+        lineEls.forEach(function (el) {
+            el.textContent = '';
+            el.classList.remove('is-typing', 'is-done');
+        });
+        if (caret.parentNode) caret.parentNode.removeChild(caret);
     }
 
-    function typeLine(index, charIndex) {
-        if (index >= lines.length) {
-            timer = window.setTimeout(deleteAll, holdPause);
-            return;
-        }
-
-        var el = elements[index];
-        var text = lines[index];
-        el.textContent = text.slice(0, charIndex);
-
-        if (charIndex < text.length) {
-            timer = window.setTimeout(function () {
-                typeLine(index, charIndex + 1);
-            }, speed);
-        } else {
-            timer = window.setTimeout(function () {
-                typeLine(index + 1, 0);
-            }, linePause);
-        }
-    }
-
-    function deleteAll() {
-        var index = lines.length - 1;
-        function eraseLine() {
-            var el = elements[index];
-            var current = el.textContent;
-            if (current.length > 0) {
-                el.textContent = current.slice(0, -1);
-                timer = window.setTimeout(eraseLine, deleteSpeed);
-            } else if (index > 0) {
-                index -= 1;
-                timer = window.setTimeout(eraseLine, 70);
-            } else {
-                timer = window.setTimeout(start, resetPause);
-            }
-        }
-        eraseLine();
-    }
-
-    function start() {
-        if (timer) window.clearTimeout(timer);
+    function showFinal() {
         clearLines();
-        if (reduced) {
-            lines.forEach(function (line, i) { elements[i].textContent = line; });
-            return;
-        }
-        typeLine(0, 0);
+        lineEls.forEach(function (el, i) {
+            if (i < visibleLines) renderCode(el, lines[i]);
+        });
     }
 
-    start();
+    if (reduced) {
+        showFinal();
+        return;
+    }
+
+    let cancelled = false;
+    let runId = 0;
+
+    function sleep(ms) {
+        return new Promise(function (resolve) { window.setTimeout(resolve, ms); });
+    }
+
+    async function typeRun() {
+        const currentRun = ++runId;
+        clearLines();
+
+        for (let i = 0; i < visibleLines; i++) {
+            if (cancelled || currentRun !== runId) return;
+            const el = lineEls[i];
+            el.classList.add('is-typing');
+            el.appendChild(caret);
+
+            const text = lines[i];
+            let typed = '';
+            for (let j = 0; j < text.length; j++) {
+                if (cancelled || currentRun !== runId) return;
+                typed += text[j];
+                renderCode(el, typed);
+                el.appendChild(caret);
+                await sleep(22 + Math.random() * 28);
+            }
+
+            el.classList.remove('is-typing');
+            el.classList.add('is-done');
+            await sleep(120);
+        }
+
+        if (cancelled || currentRun !== runId) return;
+        await sleep(1800);
+
+        // Borrado desde la última línea, manteniendo el cursor pegado al texto.
+        for (let i = visibleLines - 1; i >= 0; i--) {
+            if (cancelled || currentRun !== runId) return;
+            const el = lineEls[i];
+            el.classList.remove('is-done');
+            el.classList.add('is-typing');
+            el.appendChild(caret);
+
+            let currentText = lines[i];
+            while (currentText.length) {
+                currentText = currentText.slice(0, -1);
+                renderCode(el, currentText);
+                el.appendChild(caret);
+                await sleep(14 + Math.random() * 18);
+            }
+
+            el.classList.remove('is-typing');
+            await sleep(90);
+        }
+
+        if (caret.parentNode) caret.parentNode.removeChild(caret);
+        await sleep(500);
+        if (!cancelled) typeRun();
+    }
+
+    typeRun();
+
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            cancelled = true;
+            runId++;
+        } else if (cancelled) {
+            cancelled = false;
+            typeRun();
+        }
+    });
 })();
 
 /* =========================================================
