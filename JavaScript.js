@@ -146,7 +146,13 @@ const translations = {
         cookieAccept: "Entendido",
         pagPrev: "Anterior",
         pagNext: "Siguiente",
-        pagPage: "Página"
+        pagPage: "Página",
+        workSearchLabel: "Buscar proyectos",
+        workSearchPlaceholder: "Buscar por proyecto, tecnología...",
+        workSearchClear: "Limpiar búsqueda",
+        workSearchEmpty: "No se encontraron proyectos con esa búsqueda.",
+        workSearchResultSingular: "proyecto encontrado",
+        workSearchResultPlural: "proyectos encontrados"
     },
     en: {
         introShort: "Development & Power Platform",
@@ -253,7 +259,13 @@ const translations = {
         cookieAccept: "Got it",
         pagPrev: "Previous",
         pagNext: "Next",
-        pagPage: "Page"
+        pagPage: "Page",
+        workSearchLabel: "Search projects",
+        workSearchPlaceholder: "Search by project, technology...",
+        workSearchClear: "Clear search",
+        workSearchEmpty: "No projects matched your search.",
+        workSearchResultSingular: "project found",
+        workSearchResultPlural: "projects found"
     }
 };
 
@@ -372,6 +384,7 @@ const projects = [
 
 let currentLang = 'es';
 let currentFilter = 'all';
+let currentSearch = '';
 let currentPage = 1;
 const CARDS_PER_PAGE = 6;
 
@@ -379,7 +392,43 @@ function renderCards() {
     const container = document.getElementById('cards');
     container.innerHTML = '';
 
-    const filtered = projects.filter(p => currentFilter === 'all' || p.cat === currentFilter);
+    const query = currentSearch.trim().toLocaleLowerCase();
+    const filtered = projects.filter(p => {
+        const matchesCategory = currentFilter === 'all' || p.cat === currentFilter;
+        if (!matchesCategory) return false;
+        if (!query) return true;
+
+        const searchable = [
+            p.title && p.title[currentLang],
+            p.title && p.title.es,
+            p.title && p.title.en,
+            p.desc && p.desc[currentLang],
+            p.desc && p.desc.es,
+            p.desc && p.desc.en,
+            p.ref,
+            ...(p.tags || [])
+        ].filter(Boolean).join(' ').toLocaleLowerCase();
+
+        return searchable.includes(query);
+    });
+
+    const hasSearch = query.length > 0;
+
+    const emptyState = document.getElementById('work-empty');
+    if (emptyState) emptyState.hidden = !hasSearch || filtered.length !== 0;
+
+    const resultCount = document.getElementById('work-search-count');
+    if (resultCount) {
+        resultCount.hidden = !hasSearch;
+        if (hasSearch) {
+            const t = translations[currentLang];
+            const label = filtered.length === 1 ? t.workSearchResultSingular : t.workSearchResultPlural;
+            resultCount.textContent = filtered.length + ' ' + label;
+        } else {
+            resultCount.textContent = '';
+        }
+    }
+
     const totalPages = Math.max(1, Math.ceil(filtered.length / CARDS_PER_PAGE));
     if (currentPage > totalPages) currentPage = totalPages;
     if (currentPage < 1) currentPage = 1;
@@ -478,6 +527,39 @@ function setFilter(filter, btn) {
     btn.classList.add('active');
     renderCards();
 }
+
+// Search de proyectos: filtra por título, descripción, referencia y tecnologías.
+(function () {
+    const input = document.getElementById('work-search-input');
+    const clear = document.getElementById('work-search-clear');
+    if (!input) return;
+
+    function updateSearch(value) {
+        currentSearch = value || '';
+        currentPage = 1;
+        if (clear) clear.hidden = !currentSearch.trim();
+        renderCards();
+    }
+
+    input.addEventListener('input', function () {
+        updateSearch(this.value);
+    });
+
+    if (clear) {
+        clear.addEventListener('click', function () {
+            input.value = '';
+            updateSearch('');
+            input.focus();
+        });
+    }
+
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && input.value) {
+            input.value = '';
+            updateSearch('');
+        }
+    });
+})();
 
 // Back to top button behavior
 (function () {
