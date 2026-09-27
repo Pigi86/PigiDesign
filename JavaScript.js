@@ -287,7 +287,7 @@ const projects = [
         imgUrl: "Images/webpage4.png"
     },
     {
-        id: 5, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-09",
+        id: 5, cat: "web", thumb: "thumb-web-3", ref: "WEB-2025-04",
         title: { es: "Ledger Coin Sitio Web", en: "Ledger Coin Web Page" },
         desc: { es: "Ledger Coin es una plataforma web de simulación y análisis del mercado de criptomonedas, diseñada con una interfaz moderna, profesional y responsive. La web permite consultar precios simulados de criptomonedas, visualizar su evolución mediante gráficos interactivos, analizar estadísticas como capitalización, volumen y variaciones de precio, y gestionar una cartera virtual mediante operaciones de compra y venta.", en: "Ledger is a web-based platform for cryptocurrency market simulation and analysis, featuring a modern, professional, and responsive interface. The platform allows users to check simulated cryptocurrency prices, visualize price trends via interactive charts, analyze statistics such as market capitalization, volume, and price fluctuations, and manage a virtual portfolio through buy and sell transactions." },
         tags: ["HTML", "JavaScript", "CSS"],
