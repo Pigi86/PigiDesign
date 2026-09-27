@@ -856,7 +856,7 @@ section {
 
 .about-grid, .contact-grid {
     display: grid;
-    grid-template-columns: .85fr 1.15fr;
+    grid-template-columns: .95fr 1.15fr;
     gap: 70px
 }
 
@@ -2604,14 +2604,23 @@ textarea:invalid.touched {
     padding-left: 14px;
 }
 
+.code-string {
+    color: var(--accent);
+}
+
 .code-caret {
     display: inline-block;
     width: 1px;
     height: 12px;
-    margin-left: 4px;
+    margin-left: 1px;
     vertical-align: -2px;
     background: var(--accent);
+    box-shadow: 0 0 7px color-mix(in srgb, var(--accent) 70%, transparent);
     animation: codeCaret .8s steps(1,end) infinite;
+}
+
+.code-line.is-typing .code-caret {
+    animation-duration: .55s;
 }
 
 @keyframes codeCaret {
