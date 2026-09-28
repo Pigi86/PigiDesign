@@ -460,6 +460,7 @@ function renderCards() {
     <h3>${p.title[currentLang]}</h3>
     <p>${p.desc[currentLang]}</p>
     <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
+    <span class="service-more" data-i18n="serviceMore">${translations[currentLang].serviceMore}</span>
     `;
             // If this is a graphic design item, open modal on click
             //if (p.cat === 'gd') {
