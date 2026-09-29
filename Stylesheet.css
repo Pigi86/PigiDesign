@@ -3234,7 +3234,7 @@ kbd {
     border: 0;
     outline: 0;
     background: transparent;
-    color: #e7eef8;
+    color: var(--text);
     font: 12px 'JetBrains Mono'
 }
 
