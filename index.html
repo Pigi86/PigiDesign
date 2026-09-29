@@ -115,6 +115,9 @@
                     <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema" type="button">
                         <i class="fa fa-moon-o" aria-hidden="true"></i>
                     </button>
+                    <button id="command-open" class="theme-toggle command-open" type="button" data-i18n-aria="commandOpen" aria-label="Abrir comandos">
+                        <i class="fa fa-terminal" aria-hidden="true"></i>
+                    </button>
                 </div>
             </nav>
         </div>
@@ -148,8 +151,13 @@
                             <a class="btn-ghost" href="#sobre-mi">
                                 <span data-i18n="heroCtaCvLabel2">Curriculum</span>
                             </a>
+                            <button class="btn-terminal" id="terminal-open" type="button"><span class="mono">&gt;_</span> <span data-i18n="openTerminal">Open Terminal</span></button>
                         </div>
                         <div class="hero-stats" id="hero-stats" aria-hidden="false" style="display:none;"></div>
+                        <div class="hero-status-row">
+                            <span class="availability-pill"><span class="availability-dot"></span><span data-i18n="availableStatus">Disponible para nuevos proyectos</span></span>
+                            <button class="share-button" id="share-portfolio" type="button"><i class="fa fa-share-alt" aria-hidden="true"></i><span data-i18n="sharePortfolio">Compartir portfolio</span></button>
+                        </div>
                         <div class="hero-meta ticked">
                             <dl>
                                 <dt data-i18n="metaRole">Rol</dt>
@@ -220,7 +228,7 @@
                         </div>
                     </div>
                     <div>
-                        <div class="skillgroup">
+                        <div class="skillgroup skillgroup-interactive" tabindex="0" data-skill="web">
                             <h3 data-i18n="skillWeb">Desarrollo web</h3>
                             <ul>
                                 <li>HTML / CSS / JavaScript</li>
@@ -229,7 +237,7 @@
                                 <li>WordPress</li>
                             </ul>
                         </div>
-                        <div class="skillgroup">
+                        <div class="skillgroup skillgroup-interactive" tabindex="0" data-skill="power">
                             <h3 data-i18n="skillPlatform">Power Platform</h3>
                             <ul>
                                 <li>Power Apps</li>
@@ -238,7 +246,7 @@
                                 <li>SQL Server</li>
                             </ul>
                         </div>
-                        <div class="skillgroup">
+                        <div class="skillgroup skillgroup-interactive" tabindex="0" data-skill="design">
                             <h3 data-i18n="skillDesign">Diseño gráfico</h3>
                             <ul>
                                 <li>Illustrator</li>
@@ -383,7 +391,7 @@
                             Contame qué necesitás y vemos juntos la mejor forma de llevarlo a cabo. Desarrollo web, soluciones empresariales, automatización y Power Platform.
                         </p>
                         <ul class="contact-links">
-                            <li><a href="mailto:leandro.pignatta@live.com"><span><i class="fa fa-envelope icon" aria-hidden="true"></i>leandro.pignatta@live.com</span><span class="arrow mono">→</span></a></li>
+                            <li class="contact-email-row"><a href="mailto:leandro.pignatta@live.com"><span><i class="fa fa-envelope icon" aria-hidden="true"></i>leandro.pignatta@live.com</span><span class="arrow mono">→</span></a><button class="copy-email" id="copy-email" type="button" data-i18n-aria="copyEmail" aria-label="Copiar email"><i class="fa fa-copy" aria-hidden="true"></i></button></li>
                             <li><a href="https://www.linkedin.com/in/leandro-carlos-pignatta-8379b017/" target="_blank" rel="noopener"><span><i class="fa fa-linkedin icon" aria-hidden="true"></i>LinkedIn</span><span class="arrow mono">→</span></a></li>
                             <li><a href="https://www.facebook.com/lea.pignatta/" target="_blank" rel="noopener"><span><i class="fa fa-facebook icon" aria-hidden="true"></i>Facebook</span><span class="arrow mono">→</span></a></li>
                             <li><a href="https://www.instagram.com/lea.pigi86/" target="_blank" rel="noopener"><span><i class="fa fa-instagram icon" aria-hidden="true"></i>Instagram</span><span class="arrow mono">→</span></a></li>
@@ -460,6 +468,27 @@
         </p>
         <div class="cookie-actions">
             <button id="cookie-accept" class="btn-primary" type="button" data-i18n="cookieAccept">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Command palette -->
+    <div id="command-palette" class="command-palette hidden" aria-hidden="true">
+        <div class="command-backdrop" data-command-close></div>
+        <div class="command-dialog" role="dialog" aria-modal="true" aria-labelledby="command-title">
+            <div class="command-head"><span class="mono" id="command-title">COMMAND PALETTE</span><kbd>ESC</kbd></div>
+            <div class="command-input-wrap"><i class="fa fa-search" aria-hidden="true"></i><input id="command-input" type="search" autocomplete="off" placeholder="Buscar una acción..." data-i18n-placeholder="commandPlaceholder"></div>
+            <div id="command-list" class="command-list" role="listbox"></div>
+            <div class="command-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>ENTER</kbd> ejecutar</span><span><kbd>CTRL</kbd><kbd>K</kbd> abrir</span></div>
+        </div>
+    </div>
+
+    <!-- Interactive terminal -->
+    <div id="terminal-modal" class="terminal-modal hidden" aria-hidden="true">
+        <div class="terminal-backdrop" data-terminal-close></div>
+        <div class="terminal-window" role="dialog" aria-modal="true" aria-labelledby="terminal-title">
+            <div class="terminal-bar"><span class="terminal-dots"><i></i><i></i><i></i></span><span class="mono" id="terminal-title">leandro@portfolio:~</span><button type="button" data-terminal-close aria-label="Cerrar">×</button></div>
+            <div id="terminal-output" class="terminal-output" aria-live="polite"></div>
+            <form id="terminal-form" class="terminal-form"><span class="terminal-prompt mono">visitor@portfolio:~$</span><input id="terminal-input" class="mono" autocomplete="off" spellcheck="false" aria-label="Terminal command"></form>
         </div>
     </div>
 
