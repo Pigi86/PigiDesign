@@ -1376,8 +1376,14 @@ section {
     border: 1px solid var(--line);
     border-radius: 18px;
     color: var(--muted);
-    font-size: 12px
-}
+    font-size: 12px;
+    transition: .2s ease;}
+
+    .contact-note:hover {
+        border: 1px solid var(--accent);        
+        transform: translateY(-2px);
+    }
+
 
 footer {
     padding: 28px 0;
@@ -3133,8 +3139,8 @@ kbd {
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: 17px;
-    background: #09111f;
-    color: #dbe7f5;
+    background: var(--header-bg-solid);
+    color: var(--text);
     box-shadow: 0 35px 100px rgba(0,0,0,.45);
     animation: paletteIn .22s ease
 }
@@ -3146,8 +3152,8 @@ kbd {
     gap: 12px;
     padding: 0 14px;
     border-bottom: 1px solid rgba(255,255,255,.08);
-    background: #0e1828;
-    color: #93a4bb;
+    background: var(--ov-04);
+    color: var(--muted);
     font-size: 10px
 }
 
