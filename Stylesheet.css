@@ -465,10 +465,11 @@ nav {
 }
 
 nav a.navlink {
-    font-size: 14px;
+    font-size: 12px;
     text-decoration: none;
     color: var(--muted);
-    transition: .2s
+    transition: .2s;
+    font-family: 'JetBrains Mono',monospace;
 }
 
     nav a.navlink:hover {
@@ -1520,8 +1521,7 @@ footer {
             transition: clip-path .3s ease, opacity .25s ease;
         }
 
-        nav a.navlink {
-            display: block;
+        nav a.navlink {            
             font-size: 17px;
             font-weight: 500;
             color: var(--text);
@@ -2551,14 +2551,16 @@ textarea:invalid.touched {
 
 @media (hover: hover) and (pointer: fine) {
     html, body {
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 3 L5 25 L11 19 L15 28 L19 26 L15 17 L24 17 Z' fill='%2307111f' stroke='%2365e6d2' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 8 L9 19' stroke='%23ffffff' stroke-width='1' opacity='.75'/%3E%3C/svg%3E") 5 3, auto;
+        /*cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 3 L5 25 L11 19 L15 28 L19 26 L15 17 L24 17 Z' fill='%2307111f' stroke='%2365e6d2' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 8 L9 19' stroke='%23ffffff' stroke-width='1' opacity='.75'/%3E%3C/svg%3E") 5 3, auto;*/
+        cursor:none;
     }
 
     a, button, [role="button"], input[type="submit"],
     input[type="button"], summary, label[for],
     .card, .service, .step, .hero-title-img, .badge,
     .skillgroup li, .theme-toggle, .nav-toggle {
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 3 L5 25 L11 19 L15 28 L19 26 L15 17 L24 17 Z' fill='%2365e6d2' stroke='%2307111f' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 8 L9 19' stroke='%2307111f' stroke-width='1' opacity='.65'/%3E%3C/svg%3E") 5 3, pointer;
+        /*cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 3 L5 25 L11 19 L15 28 L19 26 L15 17 L24 17 Z' fill='%2365e6d2' stroke='%2307111f' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 8 L9 19' stroke='%2307111f' stroke-width='1' opacity='.65'/%3E%3C/svg%3E") 5 3, pointer;*/
+        cursor: none;
     }
 
     input, textarea, [contenteditable="true"] {
