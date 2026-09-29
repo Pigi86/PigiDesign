@@ -372,7 +372,7 @@ const projects = [
     {
         id: 14, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-02",
         title: { es: "No es solo un dibujo... es papel", en: "It's not just a drawing... it's paper." },
-        desc: { es: "Donde la geometría y la textura se encuentran. Esta pieza de arte low-poly cobró vida con cada pliegue de papel meticulosamente diseñado. Desde el moño hasta el reflejo de la puesta de sol en las gafas, es todo un mundo de detalles. ¿Quién más se une al club de los pliegues?", en: "Where geometry and texture meet. This low-poly art piece came to life with every meticulously designed paper fold. From the bow to the sunset reflecting in the glasses, it’s a whole world of detail. Who else is joining the folding club?" },
+        desc: { es: "Donde la geometría y la textura se encuentran. Esta pieza de arte low-poly cobró vida con cada pliegue de papel meticulosamente diseñado. Desde la bufanda hasta el reflejo de la puesta de sol en las gafas, es todo un mundo de detalles. ¿Quién más se une al club de los pliegues?", en: "Where geometry and texture meet. This low-poly art piece came to life with every meticulously designed paper fold. From the scarf to the sunset reflecting in the glasses, it’s a whole world of detail. Who else is joining the folding club?" },
         tags: ["Adobe Fireworks", "Photoshop"],
         imgUrl: "Images/galery/640184412_18556927060057387_3678659511849913627_n.webp"
     },
