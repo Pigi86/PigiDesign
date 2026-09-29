@@ -108,6 +108,7 @@ const translations = {
 
         heroEyebrow: "Perfil profesional",
         heroPitch: "Desarrollo soluciones digitales que combinan código, automatización y diseño: desde sitios y aplicaciones web hasta soluciones empresariales con Power Platform.",
+        heroPitch2: "El desarrollo de software transforma la sociedad al conectar personas, optimizar procesos y crear soluciones innovadoras. Desde la educación hasta la salud y los negocios, la tecnología impulsa nuevas oportunidades, mejora la calidad de vida y redefine nuestra forma de trabajar, comunicarnos y resolver problemas.",
         metaRole: "Rol",
         metaRoles: "Analista Programador Senior — Desarrollador Senior en Power Platform",
         metaLocation: "Ubicación",
@@ -238,6 +239,7 @@ const translations = {
 
         heroEyebrow: "Professional profile",
         heroPitch: "I develop digital solutions that combine code, automation, and design—ranging from websites and web applications to enterprise solutions using Power Platform.",
+        heroPitch2: "Software development transforms society by connecting people, optimizing processes, and creating innovative solutions. From education to healthcare and business, technology drives new opportunities, improves quality of life, and redefines how we work, communicate, and solve problems.",
         metaRole: "Role",
         metaRoles: "Senior Programmer Analyst — Power Platform Senior Developer",
         metaLocation: "Location",
