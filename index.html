@@ -483,7 +483,7 @@
             <div class="command-head"><span class="mono" id="command-title">COMMAND PALETTE</span><kbd>ESC</kbd></div>
             <div class="command-input-wrap"><i class="fa fa-search" aria-hidden="true"></i><input id="command-input" type="search" autocomplete="off" placeholder="Buscar una acción..." data-i18n-placeholder="commandPlaceholder"></div>
             <div id="command-list" class="command-list" role="listbox"></div>
-            <div class="command-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>ENTER</kbd> ejecutar</span><span><kbd>CTRL</kbd><kbd>K</kbd> abrir</span></div>
+            <div class="command-foot"><span><kbd>↑</kbd><kbd>↓</kbd> <span data-i18n="navegar">navegar</span></span><span><kbd>ENTER</kbd> <span data-i18n="ejecutar">ejecutar</span></span><span><kbd>CTRL</kbd><kbd>K</kbd> <span data-i18n="abrir"> abrir</span></span></div>
         </div>
     </div>
 
@@ -492,7 +492,7 @@
         <div class="terminal-backdrop" data-terminal-close></div>
         <div class="terminal-window" role="dialog" aria-modal="true" aria-labelledby="terminal-title">
             <div class="terminal-bar"><span class="terminal-dots"><i></i><i></i><i></i></span><span class="mono" id="terminal-title">leandro@portfolio:~</span><button type="button" data-terminal-close aria-label="Cerrar">×</button></div>
-            <div id="terminal-output" class="terminal-output" aria-live="polite"></div>
+            <div id="terminal-output" class="terminal-output" data-i18n="terminalWelcome" aria-live="polite"></div>
             <form id="terminal-form" class="terminal-form"><span class="terminal-prompt mono">visitor@portfolio:~$</span><input id="terminal-input" class="mono" autocomplete="off" spellcheck="false" aria-label="Terminal command"></form>
         </div>
     </div>
