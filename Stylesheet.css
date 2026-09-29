@@ -452,6 +452,14 @@ header {
     font-size: 12px;
 }
 
+.controlK {
+    color: var(--muted);
+}
+
+    .controlK kbd {
+        padding: 10px;
+    }
+
 nav {
     display: flex;
     align-items: center;
@@ -660,10 +668,10 @@ nav a.navlink {
 }
 
 .hero-pitch2 {
-    font-size: 1.0rem;
+    font-size: 0.9rem;
     color: var(--muted);
     max-width: 52ch;
-    font-style:italic;
+    font-style: italic;
 }
 
 .hero-meta {
@@ -1385,10 +1393,11 @@ section {
     border-radius: 18px;
     color: var(--muted);
     font-size: 12px;
-    transition: .2s ease;}
+    transition: .2s ease;
+}
 
     .contact-note:hover {
-        border: 1px solid var(--accent);        
+        border: 1px solid var(--accent);
         transform: translateY(-2px);
     }
 
@@ -1521,7 +1530,7 @@ footer {
             transition: clip-path .3s ease, opacity .25s ease;
         }
 
-        nav a.navlink {            
+        nav a.navlink {
             font-size: 17px;
             font-weight: 500;
             color: var(--text);
@@ -2130,6 +2139,19 @@ body.cookie-banner-visible {
         grid-template-columns: 1fr;
         gap: 38px
     }
+
+    .btn-primary, .btn-ghost, .btn-terminal {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .skill-popover {
+        display: none;
+    }
+
+    .controlK kbd {
+        display: none;
+    }
 }
 
 @media(max-width:650px) {
@@ -2552,7 +2574,7 @@ textarea:invalid.touched {
 @media (hover: hover) and (pointer: fine) {
     html, body {
         /*cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 3 L5 25 L11 19 L15 28 L19 26 L15 17 L24 17 Z' fill='%2307111f' stroke='%2365e6d2' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 8 L9 19' stroke='%23ffffff' stroke-width='1' opacity='.75'/%3E%3C/svg%3E") 5 3, auto;*/
-        cursor:none;
+        cursor: none;
     }
 
     a, button, [role="button"], input[type="submit"],
@@ -2927,14 +2949,14 @@ textarea:invalid.touched {
         color: var(--accent)
     }
 
-    .availability-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--accent);
-        box-shadow: 0 0 12px var(--accent);
-        animation: availabilityPulse 1.8s ease-in-out infinite
-    }
+.availability-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    animation: availabilityPulse 1.8s ease-in-out infinite
+}
 
 .share-button {
     cursor: pointer;
