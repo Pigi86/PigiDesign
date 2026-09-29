@@ -1053,6 +1053,7 @@ function openGdModal(imgSrc, title, desc, tags, url) {
         newSpan.textContent = tags[ii];
         newP.appendChild(newSpan);
         newP.append("\u00A0");
+        newP.append("\u00A0");
     }
     gdModalTags.appendChild(document.createElement("br"))
     if (url != null) {
