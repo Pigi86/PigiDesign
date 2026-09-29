@@ -1243,7 +1243,7 @@ section {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: auto
+    margin-top: auto;
 }
 
     .card-tags span {
@@ -1251,8 +1251,14 @@ section {
         border: 1px solid var(--line);
         padding: 4px 8px;
         border-radius: 999px;
-        color: var(--muted)
+        color: var(--muted);
+        transition: .2s ease;
     }
+
+        .card-tags span:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
 
 .website-preview {
     height: 175px;
@@ -2811,4 +2817,65 @@ textarea:invalid.touched {
     .hero-grid > :first-child > .hero-meta {
         margin-top: 24px;
     }
+}
+
+
+/* Fix: mantener visible la paginación de proyectos en pantallas móviles.
+   El selector específico evita que las reglas del menú responsive afecten
+   al nav de la galería. */
+@media (max-width: 900px) {
+    /* La paginación es un nav independiente del menú mobile.
+       Resetear las propiedades del drawer para que no herede
+       position: fixed, clip-path, width, padding, etc. */
+    #cards-pagination.pagination {
+        display: flex !important;
+        position: relative !important;
+        inset: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        max-width: 100%;
+        min-height: 38px;
+        height: auto;
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 28px auto 0;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        border-left: 0;
+        box-shadow: none;
+        clip-path: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        overflow: visible;
+        overscroll-behavior: auto;
+        z-index: 2;
+        transition: none;
+    }
+
+        #cards-pagination.pagination button {
+            display: inline-flex;
+            flex: 0 0 auto;
+            visibility: visible;
+        }
+}
+
+@media (max-width: 480px) {
+    #cards-pagination.pagination {
+        gap: 6px;
+        padding: 0 4px;
+    }
+
+        #cards-pagination.pagination button {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 9px;
+            font-size: 11px;
+        }
 }
