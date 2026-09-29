@@ -658,6 +658,13 @@ nav a.navlink {
     max-width: 52ch
 }
 
+.hero-pitch2 {
+    font-size: 1.0rem;
+    color: var(--muted);
+    max-width: 52ch;
+    font-style:italic;
+}
+
 .hero-meta {
     padding: 25px;
     border: 1px solid var(--line);
