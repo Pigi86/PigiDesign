@@ -170,7 +170,10 @@ const translations = {
         terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · IA",
         terminalContact: "Email: leandro.pignatta@live.com",
         terminalTheme: "Usá el botón de tema o escribí 'theme light' / 'theme dark'.",
-        terminalUnknown: "Comando no reconocido. Escribí 'help'."
+        terminalUnknown: "Comando no reconocido. Escribí 'help'.",
+        navegar: "navegar",
+        ejecutar: "ejecutar",
+        abrir: "abrir"
     },
     en: {
         introShort: "Development & Power Platform",
@@ -301,7 +304,10 @@ const translations = {
         terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · AI",
         terminalContact: "Email: leandro.pignatta@live.com",
         terminalTheme: "Use the theme button or type 'theme light' / 'theme dark'.",
-        terminalUnknown: "Unknown command. Type 'help'."
+        terminalUnknown: "Unknown command. Type 'help'.",
+        navegar: "browse",
+        ejecutar: "execute",
+        abrir: "open"
     }
 };
 
@@ -1618,7 +1624,9 @@ inputsRequired.forEach(input => {
     }
     function openPalette() { if (!palette) return; palette.classList.remove('hidden'); palette.setAttribute('aria-hidden', 'false'); activeIndex = 0; renderCommands(paletteInput?.value); setTimeout(function () { paletteInput?.focus() }, 20) }
     function closePalette() { if (!palette) return; palette.classList.add('hidden'); palette.setAttribute('aria-hidden', 'true') }
-    function openTerminal() { if (!terminal) return; terminal.classList.remove('hidden'); terminal.setAttribute('aria-hidden', 'false'); if (!terminalOutput?.children.length) print(t('terminalWelcome'), 'muted'); setTimeout(function () { terminalInput?.focus() }, 20) }
+    function openTerminal() {
+        if (!terminal) return; terminal.classList.remove('hidden'); terminal.setAttribute('aria-hidden', 'false'); if (!terminalOutput?.children.length) print(t[currentLang].terminalWelcome, 'muted'); setTimeout(function () { terminalInput?.focus() }, 20)
+}
     function closeTerminal() { if (!terminal) return; terminal.classList.add('hidden'); terminal.setAttribute('aria-hidden', 'true') }
     function print(value, kind) { if (!terminalOutput) return; var line = document.createElement('div'); line.className = 'terminal-line ' + (kind || ''); line.textContent = value; terminalOutput.appendChild(line); terminalOutput.scrollTop = terminalOutput.scrollHeight }
     function runCommand(raw) {
