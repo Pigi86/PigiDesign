@@ -791,7 +791,7 @@ nav a.navlink {
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(101,230,210,.18);
+        box-shadow: 0 12px 28px var(--accentInputShadow);
     }
 
 .btn-ghost {
@@ -924,8 +924,8 @@ section {
 
     .service:hover {
         transform: translateY(-5px);
-        border-color: rgba(101,230,210,.45);
-        background: rgba(101,230,210,.045)
+        border-color: var(--accentInputShadow);
+        background: var(--accentInputShadow);
     }
 
 .service-num {
@@ -2325,8 +2325,8 @@ textarea:invalid.touched {
 
         .profile-strip-grid > div:hover {
             transform: translateY(-5px);
-            border-color: rgba(101,230,210,.45);
-            background: rgba(101,230,210,.045)
+            border-color: var(--accentInputShadow);
+            background: var(--accentInputShadow);
         }
 
         .profile-strip-grid > div:last-child {
