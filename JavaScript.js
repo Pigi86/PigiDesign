@@ -153,7 +153,23 @@ const translations = {
         workSearchEmpty: "No se encontraron proyectos con esa búsqueda.",
         workSearchResultSingular: "proyecto encontrado",
         workSearchResultPlural: "proyectos encontrados",
-        externalButton: "Ir a sitio web"
+        externalButton: "Ir a sitio web",
+        availableStatus: "Disponible para nuevos proyectos",
+        sharePortfolio: "Compartir portfolio",
+        copyEmail: "Copiar email",
+        copiedEmail: "Email copiado",
+        sharedPortfolio: "Enlace compartido",
+        commandOpen: "Abrir comandos",
+        commandPlaceholder: "Buscar una acción...",
+        openTerminal: "Abrir Terminal",
+        terminalWelcome: "Terminal interactiva — escribí 'help' para ver los comandos.",
+        terminalHelp: "Comandos: about · projects · skills · contact · theme · clear · help",
+        terminalAbout: "Leandro Pignatta — desarrollo web, Power Platform y diseño.",
+        terminalProjects: "Proyectos publicados: ",
+        terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · IA",
+        terminalContact: "Email: leandro.pignatta@live.com",
+        terminalTheme: "Usá el botón de tema o escribí 'theme light' / 'theme dark'.",
+        terminalUnknown: "Comando no reconocido. Escribí 'help'."
     },
     en: {
         introShort: "Development & Power Platform",
@@ -267,7 +283,23 @@ const translations = {
         workSearchEmpty: "No projects matched your search.",
         workSearchResultSingular: "project found",
         workSearchResultPlural: "projects found",
-        externalButton: "Go to web page"
+        externalButton: "Go to web page",
+        availableStatus: "Available for new projects",
+        sharePortfolio: "Share portfolio",
+        copyEmail: "Copy email",
+        copiedEmail: "Email copied",
+        sharedPortfolio: "Link shared",
+        commandOpen: "Open commands",
+        commandPlaceholder: "Search an action...",
+        openTerminal: "Open Terminal",
+        terminalWelcome: "Interactive terminal — type 'help' to see commands.",
+        terminalHelp: "Commands: about · projects · skills · contact · theme · clear · help",
+        terminalAbout: "Leandro Pignatta — web development, Power Platform and design.",
+        terminalProjects: "Published projects: ",
+        terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · AI",
+        terminalContact: "Email: leandro.pignatta@live.com",
+        terminalTheme: "Use the theme button or type 'theme light' / 'theme dark'.",
+        terminalUnknown: "Unknown command. Type 'help'."
     }
 };
 
@@ -1100,10 +1132,25 @@ function renderHeroStats() {
     const areas = new Set(projects.map(p => p.cat)).size;
     const t = translations[currentLang];
     el.innerHTML = `
-        <div class="stat"><strong>${totalProjects}</strong><span>${t.statProjects}</span></div>
-        <div class="stat"><strong>${areas}</strong><span>${t.statAreas}</span></div>
-        <div class="stat"><strong>2</strong><span>${t.statLangs}</span></div>
+        <div class="stat"><strong data-count="${totalProjects}">0</strong><span>${t.statProjects}</span></div>
+        <div class="stat"><strong data-count="${areas}">0</strong><span>${t.statAreas}</span></div>
+        <div class="stat"><strong data-count="2">0</strong><span>${t.statLangs}</span></div>
     `;
+    el.style.display = 'flex';
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.querySelectorAll('[data-count]').forEach(function (node) {
+        const target = Number(node.getAttribute('data-count')) || 0;
+        if (reduced) { node.textContent = target; return; }
+        const start = performance.now();
+        const duration = 850;
+        function tick(now) {
+            const progress = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            node.textContent = Math.round(target * eased);
+            if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    });
 }
 renderHeroStats();
 
@@ -1525,4 +1572,142 @@ inputsRequired.forEach(input => {
     });
 
     requestAnimationFrame(animate);
+})();
+
+/* =========================================================
+   Premium interaction pack: palette, terminal, share, copy,
+   magnetic controls, skill interactions and easter egg.
+   ========================================================= */
+(function () {
+    var palette = document.getElementById('command-palette');
+    var paletteInput = document.getElementById('command-input');
+    var paletteList = document.getElementById('command-list');
+    var paletteOpen = document.getElementById('command-open');
+    var terminal = document.getElementById('terminal-modal');
+    var terminalOpen = document.getElementById('terminal-open');
+    var terminalInput = document.getElementById('terminal-input');
+    var terminalOutput = document.getElementById('terminal-output');
+    var commands = [
+        { label: { es: 'Ir a Inicio', en: 'Go to Home' }, icon: 'fa-home', action: function () { go('#hero') } },
+        { label: { es: 'Ir a Sobre mí', en: 'Go to About' }, icon: 'fa-user', action: function () { go('#sobre-mi') } },
+        { label: { es: 'Ver Servicios', en: 'View Services' }, icon: 'fa-cubes', action: function () { go('#servicios') } },
+        { label: { es: 'Ver Trabajo', en: 'View Work' }, icon: 'fa-th-large', action: function () { go('#trabajo') } },
+        { label: { es: 'Ir a Contacto', en: 'Go to Contact' }, icon: 'fa-envelope', action: function () { go('#contacto') } },
+        { label: { es: 'Abrir Terminal', en: 'Open Terminal' }, icon: 'fa-terminal', action: function () { openTerminal() } },
+        { label: { es: 'Cambiar tema', en: 'Toggle theme' }, icon: 'fa-adjust', action: function () { document.getElementById('theme-toggle')?.click() } },
+        { label: { es: 'Cambiar idioma', en: 'Switch language' }, icon: 'fa-language', action: function () { setLang(currentLang === 'es' ? 'en' : 'es') } },
+        { label: { es: 'Compartir portfolio', en: 'Share portfolio' }, icon: 'fa-share-alt', action: function () { sharePortfolio() } },
+        { label: { es: 'Copiar email', en: 'Copy email' }, icon: 'fa-copy', action: function () { copyEmail() } }
+    ];
+    var activeIndex = 0;
+    function t(key) { return (translations[currentLang] || translations.es)[key] || key }
+    function go(sel) { closePalette(); var el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+    function renderCommands(filter) {
+        if (!paletteList) return;
+        var q = (filter || '').trim().toLocaleLowerCase();
+        var visible = commands.filter(function (c) { return c.label[currentLang].toLocaleLowerCase().includes(q) });
+        paletteList.innerHTML = '';
+        visible.forEach(function (c, i) {
+            var b = document.createElement('button'); b.type = 'button'; b.className = 'command-item' + (i === activeIndex ? ' active' : '');
+            b.innerHTML = '<i class="fa ' + c.icon + '"></i><span>' + c.label[currentLang] + '</span>' + (i < 9 ? '<span class="command-key">' + (i + 1) + '</span>' : '');
+            b.addEventListener('click', c.action); paletteList.appendChild(b);
+        });
+        if (activeIndex >= visible.length) activeIndex = Math.max(0, visible.length - 1);
+    }
+    function openPalette() { if (!palette) return; palette.classList.remove('hidden'); palette.setAttribute('aria-hidden', 'false'); activeIndex = 0; renderCommands(paletteInput?.value); setTimeout(function () { paletteInput?.focus() }, 20) }
+    function closePalette() { if (!palette) return; palette.classList.add('hidden'); palette.setAttribute('aria-hidden', 'true') }
+    function openTerminal() { if (!terminal) return; terminal.classList.remove('hidden'); terminal.setAttribute('aria-hidden', 'false'); if (!terminalOutput?.children.length) print(t('terminalWelcome'), 'muted'); setTimeout(function () { terminalInput?.focus() }, 20) }
+    function closeTerminal() { if (!terminal) return; terminal.classList.add('hidden'); terminal.setAttribute('aria-hidden', 'true') }
+    function print(value, kind) { if (!terminalOutput) return; var line = document.createElement('div'); line.className = 'terminal-line ' + (kind || ''); line.textContent = value; terminalOutput.appendChild(line); terminalOutput.scrollTop = terminalOutput.scrollHeight }
+    function runCommand(raw) {
+        var cmd = (raw || '').trim().toLocaleLowerCase(); if (!cmd) return;
+        print('visitor@portfolio:~$ ' + raw, 'cmd');
+        if (cmd === 'help') print(t('terminalHelp'), 'muted');
+        else if (cmd === 'about') print(t('terminalAbout'));
+        else if (cmd === 'projects') print(t('terminalProjects') + projects.length, 'good');
+        else if (cmd === 'skills') print(t('terminalSkills'));
+        else if (cmd === 'contact') print(t('terminalContact'));
+        else if (cmd === 'clear') { terminalOutput.innerHTML = ''; return }
+        else if (cmd === 'theme') print(t('terminalTheme'), 'muted');
+        else if (cmd === 'theme light') { document.documentElement.setAttribute('data-theme', 'light'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: light', 'good') }
+        else if (cmd === 'theme dark') { document.documentElement.removeAttribute('data-theme'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: dark', 'good') }
+        else if (cmd === 'work' || cmd === 'portfolio') { closeTerminal(); go('#trabajo') }
+        else if (cmd === 'contact-me') { closeTerminal(); go('#contacto') }
+        else print(t('terminalUnknown'), 'muted');
+    }
+    if (paletteOpen) paletteOpen.addEventListener('click', openPalette);
+    if (terminalOpen) terminalOpen.addEventListener('click', openTerminal);
+    document.querySelectorAll('[data-command-close]').forEach(function (el) { el.addEventListener('click', closePalette) });
+    document.querySelectorAll('[data-terminal-close]').forEach(function (el) { el.addEventListener('click', closeTerminal) });
+    paletteInput && paletteInput.addEventListener('input', function () { activeIndex = 0; renderCommands(this.value) });
+    paletteInput && paletteInput.addEventListener('keydown', function (e) {
+        var items = paletteList ? Array.from(paletteList.querySelectorAll('.command-item')) : [];
+        if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(activeIndex + 1, items.length - 1); renderCommands(this.value) }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); renderCommands(this.value) }
+        else if (e.key === 'Enter') { e.preventDefault(); items[activeIndex]?.click() }
+        else if (e.key === 'Escape') closePalette();
+    });
+    terminal && terminal.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeTerminal() });
+    document.getElementById('terminal-form')?.addEventListener('submit', function (e) { e.preventDefault(); runCommand(terminalInput.value); terminalInput.value = '' });
+    document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palette?.classList.contains('hidden') ? openPalette() : closePalette() }
+        if (e.key === 'Escape') { closePalette(); closeTerminal() }
+    });
+    window.addEventListener('scroll', function () { if (!palette?.classList.contains('hidden')) closePalette() }, { passive: true });
+    window._portfolioOpenPalette = openPalette;
+    window._portfolioOpenTerminal = openTerminal;
+
+    // Skills: tooltip contextual al pasar/focalizar.
+    var skillInfo = {
+        web: { es: 'Interfaces, sitios y aplicaciones web responsive.', en: 'Responsive interfaces, websites and web applications.' },
+        power: { es: 'Apps, automatizaciones y soluciones conectadas con Power Platform.', en: 'Apps, automations and connected solutions with Power Platform.' },
+        design: { es: 'Interfaces y piezas visuales con foco en claridad y consistencia.', en: 'Interfaces and visual pieces focused on clarity and consistency.' }
+    };
+    document.querySelectorAll('.skillgroup-interactive').forEach(function (skill) {
+        var key = skill.getAttribute('data-skill');
+        var pop = document.createElement('span');
+        pop.className = 'skill-popover';
+        skill.appendChild(pop);
+        function update() { pop.textContent = skillInfo[key]?.[currentLang] || '' }
+        update();
+        skill.addEventListener('mouseenter', update);
+        skill.addEventListener('focus', update);
+    });
+})();
+
+(function () {
+    var toast;
+    function showToast(message) {
+        if (!toast) { toast = document.createElement('div'); toast.className = 'toast-premium'; document.body.appendChild(toast) }
+        toast.textContent = message; toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(function () { toast.classList.remove('show') }, 1800)
+    }
+    window.copyEmail = function () {
+        var email = 'leandro.pignatta@live.com';
+        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(email).then(function () { showToast((translations[currentLang] || translations.es).copiedEmail) }) }
+        else { var ta = document.createElement('textarea'); ta.value = email; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast((translations[currentLang] || translations.es).copiedEmail) } catch (e) { } ta.remove() }
+    };
+    document.getElementById('copy-email')?.addEventListener('click', copyEmail);
+    window.sharePortfolio = function () {
+        var data = { title: document.title, text: 'Leandro Carlos Pignatta — Portfolio', url: window.location.href };
+        if (navigator.share) { navigator.share(data).then(function () { showToast((translations[currentLang] || translations.es).sharedPortfolio) }).catch(function () { }) }
+        else if (navigator.clipboard) { navigator.clipboard.writeText(window.location.href).then(function () { showToast((translations[currentLang] || translations.es).sharedPortfolio) }) }
+        else showToast(window.location.href);
+    };
+    document.getElementById('share-portfolio')?.addEventListener('click', sharePortfolio);
+})();
+
+/* Magnetic buttons: subtle effect on fine pointers only. */
+(function () {
+    if (!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches)) return;
+    if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    document.querySelectorAll('.btn-primary,.btn-ghost,.btn-terminal,.share-button,.theme-toggle').forEach(function (el) {
+        el.addEventListener('mousemove', function (e) { var r = el.getBoundingClientRect(), x = (e.clientX - (r.left + r.width / 2)) / r.width, y = (e.clientY - (r.top + r.height / 2)) / r.height; el.style.transform = 'translate(' + x * 7 + 'px,' + y * 5 + 'px)' });
+        el.addEventListener('mouseleave', function () { el.style.transform = '' })
+    });
+})();
+
+/* Konami-style easter egg. */
+(function () {
+    var code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], i = 0;
+    document.addEventListener('keydown', function (e) { if (e.key === code[i]) { i++; if (i === code.length) { i = 0; document.body.classList.add('easter-egg'); setTimeout(function () { document.body.classList.remove('easter-egg') }, 4200) } } else { i = e.key === code[0] ? 1 : 0 } })
 })();
