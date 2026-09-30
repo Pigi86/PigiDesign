@@ -11,6 +11,36 @@
         intro.remove();
         return;
     }
+    // react to language changes requested outside this scope
+    window.addEventListener('lp:langchange', function (ev) {
+        try { renderCommands(paletteInput?.value || ''); } catch (e) { }
+        try {
+            // update any existing terminal output lines that match known system texts
+            var keys = ['terminalWelcome','terminalHelp','terminalAbout','terminalProjects','terminalSkills','terminalContact','terminalTheme','terminalUnknown'];
+            if (terminalOutput) {
+                Array.from(terminalOutput.querySelectorAll('.terminal-line')).forEach(function(line){
+                    var txt = (line.textContent || '').toString();
+                    // for each known language, check if the line matches that language's string and replace with currentLang
+                    Object.keys(translations).forEach(function(loc){
+                        keys.forEach(function(k){
+                            var prev = translations[loc] && translations[loc][k];
+                            var curr = translations[currentLang] && translations[currentLang][k];
+                            if (!prev || !curr) return;
+                            if (k === 'terminalProjects') {
+                                if (txt.indexOf(prev) === 0) {
+                                    line.textContent = curr + (projects ? projects.length : '');
+                                }
+                            } else {
+                                if (txt === prev) {
+                                    line.textContent = curr;
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+        } catch (e) { }
+    });
 
     document.documentElement.classList.add('intro-lock');
     let done = false;
@@ -1028,6 +1058,10 @@ if (serviceModal) {
 }
 
 function setLang(lang) {
+    const prevLang = currentLang;
+    // detect whether command palette was open so we can preserve its state
+    var _palette = document.getElementById('command-palette');
+    var _paletteWasOpen = _palette && !_palette.classList.contains('hidden');
     currentLang = lang;
     document.documentElement.lang = lang;
     document.getElementById('btn-es').classList.toggle('active', lang === 'es');
@@ -1053,6 +1087,10 @@ function setLang(lang) {
     renderCards();
     renderHeroStats();
     renderServiceModal();
+    // Notify other modules (command palette / terminal) that language changed
+    try { window.dispatchEvent(new CustomEvent('lp:langchange', { detail: { lang: lang } })); } catch (e) { }
+    // If the palette was open before the change, reopen it after handlers run so it stays open
+    try { if (_paletteWasOpen && typeof window._portfolioOpenPalette === 'function') window._portfolioOpenPalette(); } catch (e) {}
     if (typeof window.applyThemeLabels === 'function') window.applyThemeLabels();
 
     try { localStorage.setItem('lp-lang', lang); } catch (err) { /* storage no disponible */ }
@@ -1625,7 +1663,11 @@ inputsRequired.forEach(input => {
     function openPalette() { if (!palette) return; palette.classList.remove('hidden'); palette.setAttribute('aria-hidden', 'false'); activeIndex = 0; renderCommands(paletteInput?.value); setTimeout(function () { paletteInput?.focus() }, 20) }
     function closePalette() { if (!palette) return; palette.classList.add('hidden'); palette.setAttribute('aria-hidden', 'true') }
     function openTerminal() {
-        if (!terminal) return; terminal.classList.remove('hidden'); terminal.setAttribute('aria-hidden', 'false'); if (!terminalOutput?.children.length) print(t[currentLang].terminalWelcome, 'muted'); setTimeout(function () { terminalInput?.focus() }, 20)
+        if (!terminal) return;
+        terminal.classList.remove('hidden');
+        terminal.setAttribute('aria-hidden', 'false');
+        if (!terminalOutput?.children.length) print(t('terminalWelcome'), 'muted');
+        setTimeout(function () { terminalInput?.focus() }, 20);
     }
     function closeTerminal() { if (!terminal) return; terminal.classList.add('hidden'); terminal.setAttribute('aria-hidden', 'true') }
     function print(value, kind) { if (!terminalOutput) return; var line = document.createElement('div'); line.className = 'terminal-line ' + (kind || ''); line.textContent = value; terminalOutput.appendChild(line); terminalOutput.scrollTop = terminalOutput.scrollHeight }
