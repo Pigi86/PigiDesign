@@ -1626,7 +1626,7 @@ inputsRequired.forEach(input => {
     function closePalette() { if (!palette) return; palette.classList.add('hidden'); palette.setAttribute('aria-hidden', 'true') }
     function openTerminal() {
         if (!terminal) return; terminal.classList.remove('hidden'); terminal.setAttribute('aria-hidden', 'false'); if (!terminalOutput?.children.length) print(t[currentLang].terminalWelcome, 'muted'); setTimeout(function () { terminalInput?.focus() }, 20)
-}
+    }
     function closeTerminal() { if (!terminal) return; terminal.classList.add('hidden'); terminal.setAttribute('aria-hidden', 'true') }
     function print(value, kind) { if (!terminalOutput) return; var line = document.createElement('div'); line.className = 'terminal-line ' + (kind || ''); line.textContent = value; terminalOutput.appendChild(line); terminalOutput.scrollTop = terminalOutput.scrollHeight }
     function runCommand(raw) {
