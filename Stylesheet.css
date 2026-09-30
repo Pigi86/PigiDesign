@@ -3478,6 +3478,12 @@ body.easter-egg::after {
     transform: none
 }
 
+.aboutActualmente {
+    color: var(--muted);
+    position:relative;
+    top:-45px;
+}
+
 @media(max-width:650px) {
     .skillgroup-interactive .skill-popover {
         position: relative;
