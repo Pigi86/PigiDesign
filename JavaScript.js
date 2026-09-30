@@ -1812,3 +1812,138 @@ inputsRequired.forEach(input => {
     var code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], i = 0;
     document.addEventListener('keydown', function (e) { if (e.key === code[i]) { i++; if (i === code.length) { i = 0; document.body.classList.add('easter-egg'); setTimeout(function () { document.body.classList.remove('easter-egg') }, 4200) } } else { i = e.key === code[0] ? 1 : 0 } })
 })();
+
+/* =========================================================
+   Premium footer enhancement
+   Builds the footer from the current JS so it stays in sync
+   with the active language, sharing, theme and back-to-top UX.
+   ========================================================= */
+(function () {
+    function initPremiumFooter() {
+        var footer = document.querySelector('footer.footer');
+        if (!footer || footer.dataset.premiumReady === '1') return;
+        footer.dataset.premiumReady = '1';
+
+        var cssId = 'premium-footer-runtime-css';
+        if (!document.getElementById(cssId)) {
+            var style = document.createElement('style');
+            style.id = cssId;
+            style.textContent = `
+                
+                .footer-premium .footer-cta{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding-bottom:42px}
+                .footer-premium .footer-kicker{margin:0 0 12px;color:var(--accent);font:11px/1.2 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
+                .footer-premium .footer-title{margin:0;max-width:780px;font-size:clamp(34px,6vw,78px);line-height:.95;letter-spacing:-.045em}
+                .footer-premium .footer-title span{color:var(--accent)}
+                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:700;transition:transform .25s ease,border-color .25s ease,background .25s ease}
+                .footer-premium .footer-cta-button:hover{transform:translateY(-3px);border-color:var(--accent);background:var(--surface-2)}
+                .footer-premium .footer-main{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:28px;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+                .footer-premium .footer-brand{font-size:15px;color:var(--muted);line-height:1.7}
+                .footer-premium .footer-logo{display:inline-block;margin-bottom:10px;color:var(--text);font:700 25px/1 'JetBrains Mono',monospace;letter-spacing:-.06em;text-decoration:none}
+                .footer-premium .footer-logo b{color:var(--accent)}
+                .footer-premium .footer-label{display:block;margin-bottom:12px;color:var(--muted);font:10px/1.2 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
+                .footer-premium .footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+                .footer-premium .footer-links a{position:relative;color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s ease,transform .2s ease}
+                .footer-premium .footer-links a:hover{color:var(--accent);transform:translateX(4px)}
+                .footer-premium .footer-socials{display:flex;flex-wrap:wrap;gap:8px}
+                .footer-premium .footer-socials a{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;color:var(--muted);text-decoration:none;transition:transform .2s ease,color .2s ease,border-color .2s ease}
+                .footer-premium .footer-socials a:hover{transform:translateY(-3px);color:var(--accent);border-color:var(--accent)}
+                .footer-premium .footer-status{display:flex;align-items:center;gap:8px;color:var(--muted);font:10px/1.4 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+                .footer-premium .footer-status-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 12%,transparent);animation:footerPulse 2s ease-in-out infinite}
+                .footer-premium .footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-top:18px;color:var(--muted);font:10px/1.5 'JetBrains Mono',monospace}
+                .footer-premium .footer-bottom-actions{display:flex;align-items:center;gap:14px}
+                .footer-premium .footer-share{border:0;background:transparent;color:var(--muted);font:inherit;cursor:pointer;padding:0;transition:color .2s ease}
+                .footer-premium .footer-share:hover{color:var(--accent)}
+                .footer-premium .footer-top{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--text);cursor:pointer;transition:transform .2s ease,border-color .2s ease,color .2s ease}
+                .footer-premium .footer-top:hover{transform:translateY(-3px);border-color:var(--accent);color:var(--accent)}
+                @keyframes footerPulse{0%,100%{opacity:.65;transform:scale(.9)}50%{opacity:1;transform:scale(1)}}
+                @media (max-width:900px){.footer-premium .footer-cta{align-items:flex-start;flex-direction:column}.footer-premium .footer-main{grid-template-columns:repeat(2,minmax(0,1fr))}}
+                @media (max-width:560px){.footer-premium .footer-main{grid-template-columns:1fr}.footer-premium .footer-bottom{align-items:flex-start;flex-direction:column}.footer-premium .footer-title{font-size:clamp(34px,12vw,58px)}}
+                @media (prefers-reduced-motion:reduce){.footer-premium .footer-status-dot{animation:none}.footer-premium *{scroll-behavior:auto!important;transition:none!important}}
+            `;
+            document.head.appendChild(style);
+        }
+
+        footer.classList.add('footer-premium');
+        footer.innerHTML = `           
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a class="footer-logo" href="#hero" aria-label="Leandro Pignatta"><img class="mark-box" src="Images/favicon.png" /></a>
+                    <p data-footer-key="description">Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.</p>
+                </div>
+                <div>
+                    <span class="footer-label" data-footer-key="navLabel">Navegación</span>
+                    <nav class="footer-links" aria-label="Footer navigation">
+                        <a href="#hero" data-footer-key="home">Inicio</a>
+                        <a href="#sobre-mi" data-footer-key="about">Sobre mí</a>
+                        <a href="#servicios" data-footer-key="services">Servicios</a>
+                        <a href="#trabajo" data-footer-key="work">Trabajo</a>
+                        <a href="#contacto" data-footer-key="contact">Contacto</a>
+                    </nav>
+                </div>
+                <div>
+                    <span class="footer-label" data-footer-key="socialLabel">Conectemos</span>
+                    <div class="footer-socials">
+                        <a href="https://www.linkedin.com/in/leandro-carlos-pignatta-8379b017/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                        <a href="https://github.com/Pigi86/" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa fa-github"></i></a>
+                        <a href="mailto:leandro.pignatta@live.com" aria-label="Email"><i class="fa fa-envelope"></i></a>
+                        <a href="https://www.instagram.com/lea.pigi86/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+                    </div>
+                    <div class="footer-status" style="margin-top:18px"><span class="footer-status-dot"></span><span data-footer-key="status">STATUS: ONLINE</span></div>
+                    <br><a class="footer-cta-button" href="#contacto" data-footer-key="cta">Hablemos <span aria-hidden="true">↗</span></a>
+                </div>
+                <div class="footer-brand">
+                    <span class="footer-label" data-footer-key="availabilityLabel">Disponibilidad</span>
+                    <p data-footer-key="availability">Disponible para nuevos proyectos, colaboraciones y oportunidades profesionales.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© <span class="footer-year"></span> Leandro Carlos Pignatta — <span data-footer-key="rights">Todos los derechos reservados.</span></span>
+                <div class="footer-bottom-actions">
+                    <button class="footer-share" type="button" data-footer-key="share">Compartir portfolio</button>                    
+                </div>
+            </div>
+        `;
+
+        footer.querySelector('.footer-year').textContent = new Date().getFullYear();
+
+        function updateFooterLanguage() {
+            var es = currentLang !== 'en';
+            var labels = es ? {
+                kicker: '01 / CONTACTO', title: 'Construyamos algo <span>juntos.</span>', cta: 'Hablemos <span aria-hidden="true">↗</span>',
+                description: 'Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.',
+                navLabel: 'Navegación', home: 'Inicio', about: 'Sobre mí', services: 'Servicios', work: 'Trabajo', contact: 'Contacto',
+                socialLabel: 'Conectemos', status: 'STATUS: ONLINE', availabilityLabel: 'Disponibilidad',
+                availability: 'Disponible para nuevos proyectos, colaboraciones y oportunidades profesionales.', rights: 'Todos los derechos reservados.', share: 'Compartir portfolio'
+            } : {
+                kicker: '01 / CONTACT', title: 'Let’s build something <span>together.</span>', cta: 'Let’s talk <span aria-hidden="true">↗</span>',
+                description: 'Web development, Power Platform and design for clear, functional and professional digital solutions.',
+                navLabel: 'Navigation', home: 'Home', about: 'About me', services: 'Services', work: 'Work', contact: 'Contact',
+                socialLabel: 'Connect', status: 'STATUS: ONLINE', availabilityLabel: 'Availability',
+                availability: 'Available for new projects, collaborations and professional opportunities.', rights: 'All rights reserved.', share: 'Share portfolio'
+            };
+            footer.querySelectorAll('[data-footer-key]').forEach(function (el) {
+                var key = el.getAttribute('data-footer-key');
+                if (labels[key] != null) el.innerHTML = labels[key];
+            });
+        }
+        updateFooterLanguage();
+        window.addEventListener('lp:langchange', updateFooterLanguage);
+
+        footer.querySelectorAll('a[href^="#"]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                var target = document.querySelector(link.getAttribute('href'));
+                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            });
+        });
+        footer.querySelector('.footer-share')?.addEventListener('click', function () {
+            if (typeof window.sharePortfolio === 'function') window.sharePortfolio();
+        });
+        footer.querySelector('.footer-top')?.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPremiumFooter);
+    else initPremiumFooter();
+})();
+
