@@ -1058,10 +1058,17 @@ if (serviceModal) {
 }
 
 function setLang(lang) {
+    //debugger;
     const prevLang = currentLang;
-    // detect whether command palette was open so we can preserve its state
+    // detect whether command palette or terminal were open so we can preserve their state
     var _palette = document.getElementById('command-palette');
+    var _paletteInput = document.getElementById('command-input');
     var _paletteWasOpen = _palette && !_palette.classList.contains('hidden');
+    var _paletteValue = _paletteInput ? _paletteInput.value : '';
+    var _terminal = document.getElementById('terminal-modal');
+    var _terminalInput = document.getElementById('terminal-input');
+    var _terminalWasOpen = _terminal && !_terminal.classList.contains('hidden');
+    var _terminalValue = _terminalInput ? _terminalInput.value : '';
     currentLang = lang;
     document.documentElement.lang = lang;
     document.getElementById('btn-es').classList.toggle('active', lang === 'es');
@@ -1089,8 +1096,33 @@ function setLang(lang) {
     renderServiceModal();
     // Notify other modules (command palette / terminal) that language changed
     try { window.dispatchEvent(new CustomEvent('lp:langchange', { detail: { lang: lang } })); } catch (e) { }
-    // If the palette was open before the change, reopen it after handlers run so it stays open
-    try { if (_paletteWasOpen && typeof window._portfolioOpenPalette === 'function') window._portfolioOpenPalette(); } catch (e) { }
+    // If the palette or terminal were open before the change, reopen them after handlers run so they stay open
+    try {
+        if (_paletteWasOpen && typeof window._portfolioOpenPalette === 'function') {
+            // Reopen AFTER the click event finishes bubbling. The command
+            // palette has a close handler on its backdrop, so reopening
+            // synchronously here can be immediately undone by that handler.
+            setTimeout(function () {
+                try { window._portfolioOpenPalette(); } catch (e) { }
+                if (_paletteInput) {
+                    _paletteInput.value = _paletteValue || '';
+                    try { renderCommands(_paletteInput.value || ''); } catch (e) { }
+                    try { _paletteInput.focus(); } catch (e) { }
+                }
+            }, 0);
+        }
+    } catch (e) { }
+    try {
+        if (_terminalWasOpen && typeof window._portfolioOpenTerminal === 'function') {
+            window._portfolioOpenTerminal();
+            setTimeout(function () {
+                if (_terminalInput) {
+                    _terminalInput.value = _terminalValue || '';
+                    try { _terminalInput.focus(); } catch (e) { }
+                }
+            }, 40);
+        }
+    } catch (e) { }
     if (typeof window.applyThemeLabels === 'function') window.applyThemeLabels();
 
     try { localStorage.setItem('lp-lang', lang); } catch (err) { /* storage no disponible */ }
@@ -1666,7 +1698,7 @@ inputsRequired.forEach(input => {
         if (!terminal) return;
         terminal.classList.remove('hidden');
         terminal.setAttribute('aria-hidden', 'false');
-        try {           
+        try {
             // Avoid printing welcome twice: check if a welcome line (in any language) already exists
             if (terminalOutput.innerText == "") print(t('terminalWelcome'), 'muted');
         } catch (e) { if (!terminalOutput?.children.length) print(t('terminalWelcome'), 'muted'); }
@@ -1702,7 +1734,15 @@ inputsRequired.forEach(input => {
         else if (e.key === 'Enter') { e.preventDefault(); items[activeIndex]?.click() }
         else if (e.key === 'Escape') closePalette();
     });
-    terminal && terminal.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeTerminal() });
+    terminal && terminal.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+            closeTerminal();
+            // Return to the Command Window after the current key event finishes.
+            setTimeout(function () { try { openPalette(); } catch (err) { } }, 0);
+        }
+    });
     document.getElementById('terminal-form')?.addEventListener('submit', function (e) { e.preventDefault(); runCommand(terminalInput.value); terminalInput.value = '' });
     document.addEventListener('keydown', function (e) {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palette?.classList.contains('hidden') ? openPalette() : closePalette() }
