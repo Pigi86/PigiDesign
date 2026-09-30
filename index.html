@@ -90,7 +90,6 @@
             <div class="mark">
                 <a href="#hero">
                     <img class="mark-box" src="Images/favicon.png" />
-
                 </a>
                 <a href="#hero">
                     <span data-i18n="nameShort">Leandro Pignatta</span>
@@ -468,12 +467,41 @@
         </section>
     </main>
 
-    <footer class="wrap footer">
-        <span data-i18n="footerNote2">
-            ©
-            <script>document.write(new Date().getFullYear());</script> Leandro Carlos Pignatta - Todos Los Derechos Reservados
-        </span>
-        <span data-i18n="footerNote">Sitio de portfolio</span>
+    <footer class="wrap footer" id="site-footer">
+        <div class="footer-main">
+            <div class="footer-brand">
+                <a class="footer-mark" href="#top" aria-label="Volver al inicio">LP<span>_</span></a>
+                <p data-i18n="footerBrandText">Desarrollo web · Power Platform · UI Design</p>
+                <div class="footer-status"><span class="footer-status-dot"></span><span data-i18n="footerStatus">Disponible para nuevos proyectos</span></div>
+            </div>
+
+            <div class="footer-links">
+                <span class="footer-label mono" data-i18n="footerExplore">EXPLORAR</span>
+                <a href="#sobre-mi" data-i18n="navAbout">01 Sobre mí</a>
+                <a href="#servicios" data-i18n="navServices">02 Servicios</a>
+                <a href="#proceso" data-i18n="navFlow">03 Proceso</a>
+                <a href="#trabajo" data-i18n="navWork">04 Trabajo</a>
+                <a href="#contacto" data-i18n="navContact">05 Contacto</a>
+            </div>
+
+            <div class="footer-links footer-socials">
+                <span class="footer-label mono" data-i18n="footerConnect">CONECTAR</span>
+                <a href="https://www.linkedin.com/in/leandro-carlos-pignatta-8379b017/" target="_blank" rel="noopener noreferrer">LinkedIn <span>↗</span></a>
+                <a href="https://github.com/Pigi86/" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a>
+                <a href="mailto:leandro.pignatta@live.com">Email <span>↗</span></a>
+                <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:location.href)}.catch(()=>{});}else{navigator.clipboard?.writeText(location.href);} return false;" data-i18n="footerShare">Compartir portfolio <span>↗</span></a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span data-i18n="footerNote2">
+                ©
+                <script>document.write(new Date().getFullYear());</script> Leandro Carlos Pignatta · Todos los derechos reservados
+            </span>
+            <span class="footer-tech mono"><span>STATUS:</span> <b data-i18n="footerOnline">ONLINE</b></span>
+            <a class="footer-cta-button" href="#contacto" data-i18n="footerCta">Hablemos <span aria-hidden="true">↗</span></a>
+            <button class="footer-top" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" data-i18n-aria="footerTopAria" aria-label="Volver al inicio">↑ <span data-i18n="footerTop">Volver arriba</span></button>
+        </div>
     </footer>
     <br>
     <button id="back-to-top" class="back-to-top hidden" aria-label="Volver al inicio"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
