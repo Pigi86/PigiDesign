@@ -3760,6 +3760,10 @@ body.easter-egg::after {
     top: -45px;
 }
 
+.nameShort {
+    color:var(--text);
+}
+
 @media(max-width:650px) {
     .skillgroup-interactive .skill-popover {
         position: relative;
