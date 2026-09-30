@@ -16,13 +16,13 @@
         try { renderCommands(paletteInput?.value || ''); } catch (e) { }
         try {
             // update any existing terminal output lines that match known system texts
-            var keys = ['terminalWelcome','terminalHelp','terminalAbout','terminalProjects','terminalSkills','terminalContact','terminalTheme','terminalUnknown'];
+            var keys = ['terminalWelcome', 'terminalHelp', 'terminalAbout', 'terminalProjects', 'terminalSkills', 'terminalContact', 'terminalTheme', 'terminalUnknown'];
             if (terminalOutput) {
-                Array.from(terminalOutput.querySelectorAll('.terminal-line')).forEach(function(line){
+                Array.from(terminalOutput.querySelectorAll('.terminal-line')).forEach(function (line) {
                     var txt = (line.textContent || '').toString();
                     // for each known language, check if the line matches that language's string and replace with currentLang
-                    Object.keys(translations).forEach(function(loc){
-                        keys.forEach(function(k){
+                    Object.keys(translations).forEach(function (loc) {
+                        keys.forEach(function (k) {
                             var prev = translations[loc] && translations[loc][k];
                             var curr = translations[currentLang] && translations[currentLang][k];
                             if (!prev || !curr) return;
@@ -1090,7 +1090,7 @@ function setLang(lang) {
     // Notify other modules (command palette / terminal) that language changed
     try { window.dispatchEvent(new CustomEvent('lp:langchange', { detail: { lang: lang } })); } catch (e) { }
     // If the palette was open before the change, reopen it after handlers run so it stays open
-    try { if (_paletteWasOpen && typeof window._portfolioOpenPalette === 'function') window._portfolioOpenPalette(); } catch (e) {}
+    try { if (_paletteWasOpen && typeof window._portfolioOpenPalette === 'function') window._portfolioOpenPalette(); } catch (e) { }
     if (typeof window.applyThemeLabels === 'function') window.applyThemeLabels();
 
     try { localStorage.setItem('lp-lang', lang); } catch (err) { /* storage no disponible */ }
@@ -1666,7 +1666,10 @@ inputsRequired.forEach(input => {
         if (!terminal) return;
         terminal.classList.remove('hidden');
         terminal.setAttribute('aria-hidden', 'false');
-        if (!terminalOutput?.children.length) print(t('terminalWelcome'), 'muted');
+        try {           
+            // Avoid printing welcome twice: check if a welcome line (in any language) already exists
+            if (terminalOutput.innerText == "") print(t('terminalWelcome'), 'muted');
+        } catch (e) { if (!terminalOutput?.children.length) print(t('terminalWelcome'), 'muted'); }
         setTimeout(function () { terminalInput?.focus() }, 20);
     }
     function closeTerminal() { if (!terminal) return; terminal.classList.add('hidden'); terminal.setAttribute('aria-hidden', 'true') }
