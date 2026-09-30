@@ -473,16 +473,44 @@ nav {
 }
 
 nav a.navlink {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
     font-size: 12px;
     text-decoration: none;
     color: var(--muted);
-    transition: .2s;
+    transition: color .2s ease, transform .2s ease;
     font-family: 'JetBrains Mono',monospace;
+    padding: 4px 0 7px;
 }
+
+    nav a.navlink::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 999px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform .28s cubic-bezier(.22,.61,.36,1);
+    }
 
     nav a.navlink:hover {
         color: var(--accent);
         transform: translateY(-2px);
+    }
+
+        nav a.navlink:hover::after,
+        nav a.navlink:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+    nav a.navlink:focus-visible {
+        outline: none;
+        color: var(--accent);
     }
 
 .langswitch {
