@@ -1867,7 +1867,7 @@ inputsRequired.forEach(input => {
         footer.innerHTML = `           
             <div class="footer-main">
                 <div class="footer-brand">
-                    <a class="footer-logo" href="#hero" aria-label="Leandro Pignatta"><img class="mark-box" src="Images/favicon.png" /></a>
+                    <a class="footer-logo" href="#hero" aria-label="Leandro Pignatta"><img class="mark-boxFooter" src="Images/favicon.png" /></a>
                     <p data-footer-key="description">Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.</p>
                 </div>
                 <div>
