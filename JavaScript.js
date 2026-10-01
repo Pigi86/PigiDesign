@@ -1867,7 +1867,7 @@ inputsRequired.forEach(input => {
         footer.innerHTML = `           
             <div class="footer-main">
                 <div class="footer-brand">
-                     <div class="mark"><a class="footer-logo" href="#hero" aria-label="Leandro Pignatta"><img class="mark-boxFooter" src="Images/favicon.png" /></a> <span data-i18n="nameShort" class="nameShort">Leandro Pignatta</span></div>
+                     <div class="markFooter"><a class="footer-logo" href="#hero" aria-label="Leandro Pignatta"><img class="mark-boxFooter" src="Images/favicon.png" /></a> <span data-i18n="nameShort" class="nameShort">Leandro</span><span class="lastNameFooter nameShort"> Pignatta</span></div>
                     <p data-footer-key="description">Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.</p>
                 </div>
                 <div>
@@ -1946,4 +1946,3 @@ inputsRequired.forEach(input => {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPremiumFooter);
     else initPremiumFooter();
 })();
-
