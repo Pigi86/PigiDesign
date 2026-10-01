@@ -441,6 +441,14 @@ header {
         text-decoration: none;
     }
 
+.markFooter {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-family: 'Manrope';
+    font-weight: 800
+}
+
 .mark-box {
     width: 36px;
     height: 36px;
@@ -453,8 +461,8 @@ header {
 }
 
 .mark-boxFooter {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 11px;
     display: grid;
     place-items: center;
@@ -749,6 +757,30 @@ nav a.navlink {
     flex-wrap: wrap;
     gap: 9px;
     margin-top: 25px
+}
+
+.lastName:before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    box-shadow: 0 0 18px var(--accent)
+}
+
+.lastNameFooter{
+    margin-left:0px !important;
+}
+
+.lastNameFooter:before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    box-shadow: 0 0 18px var(--accent)
 }
 
 .badge {
@@ -1451,7 +1483,7 @@ footer {
     position: relative;
 }
 
-    /*.footer::before {
+/*.footer::before {
         content: "";
         display: block;
         height: 1px;
@@ -3761,7 +3793,9 @@ body.easter-egg::after {
 }
 
 .nameShort {
-    color:var(--text);
+    color: var(--text);
+    margin-left: 10px;
+    margin-bottom: 10px;
 }
 
 @media(max-width:650px) {
