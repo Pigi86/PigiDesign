@@ -345,6 +345,20 @@ const translations = {
     }
 };
 
+translations.es.workspaceSubTitle = "Sistema / Espacio de Trabajo";
+translations.es.workspaceTitle = "Mi entorno de trabajo";
+translations.es.workspaceText = "Una representación visual de cómo conviven código, diseño, datos y automatización en mi día a día.";
+translations.es.workspaceCode = "Código";
+translations.es.workspaceDesign = "Diseño";
+translations.es.workspaceAutomation = "Automatización";
+translations.es.workspaceSubTitle = "System / Workspace";
+translations.en.workspaceTitle = "My workspace";
+translations.en.workspaceText = "A visual representation of how code, design, data and automation come together in my daily work.";
+translations.en.workspaceCode = "Code";
+translations.en.workspaceDesign = "Design";
+translations.en.workspaceAutomation = "Automation";
+
+
 const projects = [
     {
         id: 1, cat: "web", thumb: "thumb-web-1", ref: "WEB-2021-01",
@@ -1945,4 +1959,68 @@ inputsRequired.forEach(input => {
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPremiumFooter);
     else initPremiumFooter();
+})();
+
+/* ===== Modern workstation interaction ===== */
+(function initModernWorkstation() {
+    function setup() {
+        var workstation = document.querySelector('[data-workstation]');
+        if (!workstation) return;
+
+        var monitor = workstation.querySelector('.monitor-wrap');
+        var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!reduced && monitor && window.matchMedia('(pointer:fine)').matches) {
+            workstation.addEventListener('pointermove', function (ev) {
+                var rect = workstation.getBoundingClientRect();
+                var x = (ev.clientX - rect.left) / rect.width - .5;
+                var y = (ev.clientY - rect.top) / rect.height - .5;
+                monitor.style.transform =
+                    'rotateX(' + (3 - y * 5).toFixed(2) + 'deg) ' +
+                    'rotateY(' + (-5 + x * 8).toFixed(2) + 'deg) translateY(-4px)';
+            });
+
+            workstation.addEventListener('pointerleave', function () {
+                monitor.style.transform = '';
+            });
+        }
+
+        function updateLanguage() {
+            var lang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'es';
+            var title = workstation.querySelector('[data-i18n="workspaceTitle"]');
+            var text = workstation.querySelector('[data-i18n="workspaceText"]');
+            var subTitle = workstation.querySelector('[data-i18n="workspaceSubTitle"]');
+            var code = workstation.querySelector('[data-i18n="workspaceCode"]');
+            var design = workstation.querySelector('[data-i18n="workspaceDesign"]');
+            var automation = workstation.querySelector('[data-i18n="workspaceAutomation"]');
+
+            if (title && translations[lang] && translations[lang].workspaceTitle) {
+                title.textContent = translations[lang].workspaceTitle;
+            }
+            if (text && translations[lang] && translations[lang].workspaceText) {
+                text.textContent = translations[lang].workspaceText;
+            }
+            if (subTitle && translations[lang] && translations[lang].workspaceSubTitle) {
+                subTitle.textContent = translations[lang].workspaceSubTitle;
+            }
+            if (code && translations[lang] && translations[lang].workspaceCode) {
+                code.textContent = translations[lang].workspaceCode;
+            }
+            if (design && translations[lang] && translations[lang].workspaceDesign) {
+                design.textContent = translations[lang].workspaceDesign;
+            }
+            if (automation && translations[lang] && translations[lang].workspaceAutomation) {
+                automation.textContent = translations[lang].workspaceAutomation;
+            }
+        }
+
+        updateLanguage();
+        window.addEventListener('lp:langchange', updateLanguage);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setup);
+    } else {
+        setup();
+    }
 })();
