@@ -761,8 +761,8 @@ nav a.navlink {
 
 .lastName:before {
     content: "";
-    width: 5px;
-    height: 5px;
+    width: 3px;
+    height: 3px;
     border-radius: 50%;
     background: var(--accent);
     display: inline-block;
@@ -770,13 +770,13 @@ nav a.navlink {
 }
 
 .lastNameFooter {
-    margin-left: 0px !important;
+    margin-left: -1px !important;
 }
 
     .lastNameFooter:before {
         content: "";
-        width: 5px;
-        height: 5px;
+        width: 3px;
+        height: 3px;
         border-radius: 50%;
         background: var(--accent);
         display: inline-block;
