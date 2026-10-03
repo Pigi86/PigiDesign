@@ -3847,18 +3847,18 @@ body.easter-egg::after {
 }
 
 .modern-workstation {
-    top:-30px;
+    top: 0px;
 }
 
-    .workspace-copy {
-        max-width: 360px;
-    }
+.workspace-copy {
+    max-width: 360px;
+}
 
 .workspace-kicker {
     display: inline-flex;
     margin-bottom: 13px;
     color: var(--accent);
-    font-size: 11px;        
+    font-size: 11px;
 }
 
 .workspace-copy h3 {
@@ -4434,13 +4434,13 @@ body.easter-egg::after {
     perspective: 1400px;
 }
 
-.modern-workstation-3d .workstation-glow {
-    z-index: 0;
-    width: 76%;
-    height: 64%;
-    top: 12%;
-    pointer-events: none;
-}
+    .modern-workstation-3d .workstation-glow {
+        z-index: 0;
+        width: 76%;
+        height: 64%;
+        top: 22%;
+        pointer-events: none;
+    }
 
 .three-workstation-canvas {
     position: absolute;
@@ -4451,11 +4451,11 @@ body.easter-egg::after {
     cursor: crosshair;
 }
 
-.three-workstation-canvas canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-}
+    .three-workstation-canvas canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
 
 .three-workstation-overlay {
     position: absolute;
@@ -4479,14 +4479,14 @@ body.easter-egg::after {
     letter-spacing: .12em;
 }
 
-.three-status i {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 10px var(--accent);
-    animation: threeStatusPulse 1.8s ease-in-out infinite;
-}
+    .three-status i {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 10px var(--accent);
+        animation: threeStatusPulse 1.8s ease-in-out infinite;
+    }
 
 .three-workstation-loader {
     position: absolute;
@@ -4511,10 +4511,10 @@ body.easter-egg::after {
     pointer-events: none;
 }
 
-.three-workstation-loader.is-hidden {
-    opacity: 0;
-    visibility: hidden;
-}
+    .three-workstation-loader.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
 
 .three-loader-ring {
     width: 13px;
@@ -4526,26 +4526,52 @@ body.easter-egg::after {
 }
 
 @keyframes threeLoaderSpin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes threeStatusPulse {
-    50% { opacity: .35; transform: scale(.72); }
+    50% {
+        opacity: .35;
+        transform: scale(.72);
+    }
 }
 
 @media (max-width: 900px) {
-    .modern-workstation-3d { min-height: 340px; }
-    .three-workstation-canvas { inset: -18px -12px -8px; }
+    .modern-workstation-3d {
+        min-height: 340px;
+    }
+
+    .three-workstation-canvas {
+        inset: -18px -12px -8px;
+    }
 }
 
 @media (max-width: 650px) {
-    .modern-workstation-3d { min-height: 285px; }
-    .three-workstation-canvas { inset: -8px -10px 0; border-radius: 18px; }
-    .three-workstation-overlay { top: 8px; right: 7px; }
-    .three-status { font-size: 7px; padding: 6px 8px; }
+    .modern-workstation-3d {
+        min-height: 285px;
+    }
+
+    .three-workstation-canvas {
+        inset: -8px -10px 0;
+        border-radius: 18px;
+    }
+
+    .three-workstation-overlay {
+        top: 8px;
+        right: 7px;
+    }
+
+    .three-status {
+        font-size: 7px;
+        padding: 6px 8px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .three-status i,
-    .three-loader-ring { animation: none !important; }
+    .three-loader-ring {
+        animation: none !important;
+    }
 }
