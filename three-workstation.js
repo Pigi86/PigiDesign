@@ -102,16 +102,16 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/
                 const label = loaderUI.querySelector("span:last-child");
                 if (label) {
                     label.textContent =
-                        "Cargando entorno 3D " +
+                        "Loading environment 3D " +
                         Math.round(progress.loaded / progress.total * 100) +
                         "%";
                 }
             },
             error => {
-                console.error("No se pudo cargar assets/workstation-hero.glb", error);
+                console.error("Could not load assets", error);
                 if (loaderUI) {
                     const label = loaderUI.querySelector("span:last-child");
-                    if (label) label.textContent = "No se pudo cargar el entorno 3D";
+                    if (label) label.textContent = "The 3D environment could not be loaded.";
                 }
             }
         );
