@@ -278,57 +278,16 @@
                         </div>
                     </div>
 
-                    <div class="modern-workstation" aria-label="Computadora moderna animada">
+                    <div class="modern-workstation modern-workstation-3d" data-three-workstation aria-label="Computadora 3D interactiva">
                         <div class="workstation-glow"></div>
-                        <div class="monitor-wrap">
-                            <div class="monitor">
-                                <div class="monitor-camera"></div>
-                                <div class="monitor-frame">
-                                    <div class="monitor-topbar">
-                                        <span class="monitor-brand">LP / STUDIO</span>
-                                        <span class="monitor-live"><i></i> LIVE</span>
-                                    </div>
-                                    <div class="monitor-screen">
-                                        <div class="screen-sidebar">
-                                            <span class="screen-dot active"></span>
-                                            <span class="screen-dot"></span>
-                                            <span class="screen-dot"></span>
-                                            <span class="screen-dot"></span>
-                                        </div>
-                                        <div class="screen-content">
-                                            <div class="screen-heading">
-                                                <span class="mono">workspace</span>
-                                                <b>01</b>
-                                            </div>
-                                            <div class="screen-code" aria-hidden="true">
-                                                <span><i>const</i> solution = {</span>
-                                                <span class="indent"><em>web:</em> <strong>true</strong>,</span>
-                                                <span class="indent"><em>power:</em> <strong>true</strong>,</span>
-                                                <span class="indent"><em>design:</em> <strong>true</strong>,</span>
-                                                <span class="indent"><em>focus:</em> <q>user</q></span>
-                                                <span>};</span>
-                                            </div>
-                                            <div class="screen-progress"><span></span></div>
-                                        </div>
-                                        <div class="screen-orbit orbit-one"></div>
-                                        <div class="screen-orbit orbit-two"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="monitor-neck"></div>
-                            <div class="monitor-base"></div>
+                        <div class="three-workstation-canvas" id="three-workstation-canvas"></div>
+                        <div class="three-workstation-overlay" aria-hidden="true">
+                            <span class="three-status"><i></i> GLTF / THREE.JS</span>
                         </div>
-                        <div class="desk">
-                            <div class="keyboard">
-                                <span></span><span></span><span></span><span></span><span></span><span></span>
-                                <span></span><span></span><span></span><span></span><span></span><span></span>
-                                <span></span><span></span><span></span><span></span><span></span><span></span>
-                            </div>
-                            <div class="mouse-device"></div>
-                            <div class="desk-light"></div>
+                        <div class="three-workstation-loader" id="three-workstation-loader">
+                            <span class="three-loader-ring"></span>
+                            <span>Inicializando entorno 3D</span>
                         </div>
-                        <div class="workspace-float workspace-float-one"><i class="fa fa-code"></i><span>BUILD</span></div>
-                        <div class="workspace-float workspace-float-two"><i class="fa fa-bolt"></i><span>AUTO</span></div>
                     </div>
                 </div>
 
@@ -638,5 +597,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="JavaScript.js"></script>
+    <script type="module" src="three-workstation.js"></script>
 </body>
 </html>
