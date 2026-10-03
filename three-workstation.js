@@ -72,9 +72,8 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/
     function loadModel() {
         const loader = new GLTFLoader();
 
-        loader.load(
-            "assets/workstation.glb",
-            /*"assets/workstation-hero.glb",*/
+        loader.load(            
+            "assets/workstation-hero.glb",
             gltf => {
                 model = gltf.scene;
 
