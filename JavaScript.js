@@ -1848,7 +1848,7 @@ inputsRequired.forEach(input => {
                 .footer-premium .footer-kicker{margin:0 0 12px;color:var(--accent);font:11px/1.2 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
                 .footer-premium .footer-title{margin:0;max-width:780px;font-size:clamp(34px,6vw,78px);line-height:.95;letter-spacing:-.045em}
                 .footer-premium .footer-title span{color:var(--accent)}
-                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:0;transition:transform .25s ease,border-color .25s ease,background .25s ease}
+                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:700;transition:transform .25s ease,border-color .25s ease,background .25s ease}
                 .footer-premium .footer-cta-button:hover{transform:translateY(-3px);border-color:var(--accent);background:var(--surface-2)}
                 .footer-premium .footer-main{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:28px;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
                 .footer-premium .footer-brand{font-size:15px;color:var(--muted);line-height:1.7}
