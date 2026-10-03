@@ -1536,7 +1536,7 @@ footer {
     color: var(--text);
     background: color-mix(in srgb, var(--accent) 8%, transparent);
     text-decoration: none;
-    font: 1 11px 'JetBrains Mono', monospace;
+    font: 700 11px 'JetBrains Mono', monospace;
     transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
 }
 
