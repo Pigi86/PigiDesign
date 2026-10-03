@@ -1536,7 +1536,7 @@ footer {
     color: var(--text);
     background: color-mix(in srgb, var(--accent) 8%, transparent);
     text-decoration: none;
-    font: 700 11px 'JetBrains Mono', monospace;
+    font: 1 11px 'JetBrains Mono', monospace;
     transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
 }
 
@@ -4419,4 +4419,133 @@ body.easter-egg::after {
     .monitor-wrap {
         transition: none;
     }
+}
+
+
+/* =========================================================
+   Three.js / GLTF interactive workstation
+   ========================================================= */
+.modern-workstation-3d {
+    position: relative;
+    min-height: 390px;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+    perspective: 1400px;
+}
+
+.modern-workstation-3d .workstation-glow {
+    z-index: 0;
+    width: 76%;
+    height: 64%;
+    top: 12%;
+    pointer-events: none;
+}
+
+.three-workstation-canvas {
+    position: absolute;
+    inset: -22px -24px -12px;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 24px;
+    cursor: crosshair;
+}
+
+.three-workstation-canvas canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.three-workstation-overlay {
+    position: absolute;
+    top: 14px;
+    right: 12px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.three-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    border: 1px solid rgba(101,230,210,.24);
+    border-radius: 999px;
+    background: rgba(15,32,53,.68);
+    backdrop-filter: blur(12px);
+    color: var(--muted);
+    font: 600 8px/1 'JetBrains Mono', monospace;
+    letter-spacing: .12em;
+}
+
+.three-status i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: threeStatusPulse 1.8s ease-in-out infinite;
+}
+
+.three-workstation-loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    transform: translate(-50%, -50%);
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(15,32,53,.82);
+    backdrop-filter: blur(14px);
+    color: var(--muted);
+    white-space: nowrap;
+    font: 500 9px/1 'JetBrains Mono', monospace;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    transition: opacity .35s ease, visibility .35s ease;
+    pointer-events: none;
+}
+
+.three-workstation-loader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.three-loader-ring {
+    width: 13px;
+    height: 13px;
+    border: 1px solid rgba(101,230,210,.22);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: threeLoaderSpin .75s linear infinite;
+}
+
+@keyframes threeLoaderSpin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes threeStatusPulse {
+    50% { opacity: .35; transform: scale(.72); }
+}
+
+@media (max-width: 900px) {
+    .modern-workstation-3d { min-height: 340px; }
+    .three-workstation-canvas { inset: -18px -12px -8px; }
+}
+
+@media (max-width: 650px) {
+    .modern-workstation-3d { min-height: 285px; }
+    .three-workstation-canvas { inset: -8px -10px 0; border-radius: 18px; }
+    .three-workstation-overlay { top: 8px; right: 7px; }
+    .three-status { font-size: 7px; padding: 6px 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .three-status i,
+    .three-loader-ring { animation: none !important; }
 }
