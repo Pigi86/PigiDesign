@@ -75,7 +75,7 @@ const translations = {
         introShort: "Desarrollo & Power Platform",
         introShort2: "Desarrollo web · Power Platform · Diseño",
         introShort3: "DISEÑO",
-        nameShort: "Leandro",
+        nameShort: "Leandro Pignatta",
         navAbout: "01 Sobre mí",
         navWork: "04 Trabajo",
         navServices: "02 Servicios",
@@ -211,7 +211,7 @@ const translations = {
         introShort: "Development & Power Platform",
         introShort2: "Web Development · Power Platform · Design",
         introShort3: "DESIGN",
-        nameShort: "Leandro",
+        nameShort: "Leandro Pignatta",
         navAbout: "01 About",
         navWork: "04 Work",
         navFlow: "03 Workflow",
@@ -1848,7 +1848,7 @@ inputsRequired.forEach(input => {
                 .footer-premium .footer-kicker{margin:0 0 12px;color:var(--accent);font:11px/1.2 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
                 .footer-premium .footer-title{margin:0;max-width:780px;font-size:clamp(34px,6vw,78px);line-height:.95;letter-spacing:-.045em}
                 .footer-premium .footer-title span{color:var(--accent)}
-                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:700;transition:transform .25s ease,border-color .25s ease,background .25s ease}
+                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:0;transition:transform .25s ease,border-color .25s ease,background .25s ease}
                 .footer-premium .footer-cta-button:hover{transform:translateY(-3px);border-color:var(--accent);background:var(--surface-2)}
                 .footer-premium .footer-main{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:28px;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
                 .footer-premium .footer-brand{font-size:15px;color:var(--muted);line-height:1.7}
@@ -1961,66 +1961,3 @@ inputsRequired.forEach(input => {
     else initPremiumFooter();
 })();
 
-/* ===== Modern workstation interaction ===== */
-(function initModernWorkstation() {
-    function setup() {
-        var workstation = document.querySelector('[data-workstation]');
-        if (!workstation) return;
-
-        var monitor = workstation.querySelector('.monitor-wrap');
-        var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        if (!reduced && monitor && window.matchMedia('(pointer:fine)').matches) {
-            workstation.addEventListener('pointermove', function (ev) {
-                var rect = workstation.getBoundingClientRect();
-                var x = (ev.clientX - rect.left) / rect.width - .5;
-                var y = (ev.clientY - rect.top) / rect.height - .5;
-                monitor.style.transform =
-                    'rotateX(' + (3 - y * 5).toFixed(2) + 'deg) ' +
-                    'rotateY(' + (-5 + x * 8).toFixed(2) + 'deg) translateY(-4px)';
-            });
-
-            workstation.addEventListener('pointerleave', function () {
-                monitor.style.transform = '';
-            });
-        }
-
-        function updateLanguage() {
-            var lang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'es';
-            var title = workstation.querySelector('[data-i18n="workspaceTitle"]');
-            var text = workstation.querySelector('[data-i18n="workspaceText"]');
-            var subTitle = workstation.querySelector('[data-i18n="workspaceSubTitle"]');
-            var code = workstation.querySelector('[data-i18n="workspaceCode"]');
-            var design = workstation.querySelector('[data-i18n="workspaceDesign"]');
-            var automation = workstation.querySelector('[data-i18n="workspaceAutomation"]');
-
-            if (title && translations[lang] && translations[lang].workspaceTitle) {
-                title.textContent = translations[lang].workspaceTitle;
-            }
-            if (text && translations[lang] && translations[lang].workspaceText) {
-                text.textContent = translations[lang].workspaceText;
-            }
-            if (subTitle && translations[lang] && translations[lang].workspaceSubTitle) {
-                subTitle.textContent = translations[lang].workspaceSubTitle;
-            }
-            if (code && translations[lang] && translations[lang].workspaceCode) {
-                code.textContent = translations[lang].workspaceCode;
-            }
-            if (design && translations[lang] && translations[lang].workspaceDesign) {
-                design.textContent = translations[lang].workspaceDesign;
-            }
-            if (automation && translations[lang] && translations[lang].workspaceAutomation) {
-                automation.textContent = translations[lang].workspaceAutomation;
-            }
-        }
-
-        updateLanguage();
-        window.addEventListener('lp:langchange', updateLanguage);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setup);
-    } else {
-        setup();
-    }
-})();
