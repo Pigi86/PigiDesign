@@ -198,7 +198,7 @@
         </section>
 
         <!-- PROFILE STRIP -->
-        <section class="profile-strip" aria-label="Áreas principales">
+        <section class="profile-strip" data-route="hero" aria-label="Áreas principales">
             <div class="wrap">
                 <div class="profile-strip-grid">
                     <div><strong>WEB</strong><span data-i18n="strip1">Desarrollo &amp; interfaces</span></div>
@@ -372,10 +372,29 @@
                     <div class="section-tag mono" data-i18n="processTag">De la idea al resultado</div>
                 </div>
                 <div class="process">
-                    <div class="step" data-process="understand" role="button" tabindex="0" aria-haspopup="dialog"><strong>01</strong><h3 data-i18n="step1Title">Entender</h3><p data-i18n="step1Text">Objetivos, usuarios, necesidades y alcance.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
-                    <div class="step" data-process="design" role="button" tabindex="0" aria-haspopup="dialog"><strong>02</strong><h3 data-i18n="step2Title">Diseñar</h3><p data-i18n="step2Text">Estructura, experiencia visual y solución técnica.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
-                    <div class="step" data-process="build" role="button" tabindex="0" aria-haspopup="dialog"><strong>03</strong><h3 data-i18n="step3Title">Construir</h3><p data-i18n="step3Text">Desarrollo iterativo, integración y validación.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
-                    <div class="step" data-process="improve" role="button" tabindex="0" aria-haspopup="dialog"><strong>04</strong><h3 data-i18n="step4Title">Mejorar</h3><p data-i18n="step4Text">Ajustes, rendimiento y evolución del producto.</p><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                    <div class="step" data-process="understand" role="button" tabindex="0" aria-haspopup="dialog"><strong>01</strong><h3 data-i18n="step1Title">Entender</h3><p data-i18n="step1Text">Objetivos, usuarios, necesidades y alcance.</p><span class="step-time mono" data-i18n="step1Time">x</span><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                    <div class="step" data-process="design" role="button" tabindex="0" aria-haspopup="dialog"><strong>02</strong><h3 data-i18n="step2Title">Diseñar</h3><p data-i18n="step2Text">Estructura, experiencia visual y solución técnica.</p><span class="step-time mono" data-i18n="step2Time">x</span><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                    <div class="step" data-process="build" role="button" tabindex="0" aria-haspopup="dialog"><strong>03</strong><h3 data-i18n="step3Title">Construir</h3><p data-i18n="step3Text">Desarrollo iterativo, integración y validación.</p><span class="step-time mono" data-i18n="step3Time">x</span><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                    <div class="step" data-process="improve" role="button" tabindex="0" aria-haspopup="dialog"><strong>04</strong><h3 data-i18n="step4Title">Mejorar</h3><p data-i18n="step4Text">Ajustes, rendimiento y evolución del producto.</p><span class="step-time mono" data-i18n="step4Time">x</span><span class="service-more" data-i18n="serviceMore">Ver detalle</span></div>
+                </div>
+
+                <div class="principles-head">
+                    <span class="mono" data-i18n="principlesTag">PRINCIPIOS</span>
+                    <h3 data-i18n="principlesTitle">Lo que no cambia en ningún proyecto</h3>
+                </div>
+                <div class="principles">
+                    <div class="principle"><strong class="mono">01</strong><h3 data-i18n="pr1Title">Comunicación clara</h3><p data-i18n="pr1Text">Sin tecnicismos innecesarios: sabés en qué estado está tu proyecto en cada etapa.</p></div>
+                    <div class="principle"><strong class="mono">02</strong><h3 data-i18n="pr2Title">Entregas parciales</h3><p data-i18n="pr2Text">Avances que podés ver y probar, para corregir el rumbo a tiempo y no al final.</p></div>
+                    <div class="principle"><strong class="mono">03</strong><h3 data-i18n="pr3Title">Código mantenible</h3><p data-i18n="pr3Text">Estructura ordenada y documentada, pensada para que el proyecto pueda crecer.</p></div>
+                    <div class="principle"><strong class="mono">04</strong><h3 data-i18n="pr4Title">Tiempos honestos</h3><p data-i18n="pr4Text">Plazos realistas desde el inicio. Si algo cambia, te aviso apenas lo sé.</p></div>
+                </div>
+
+                <div class="process-cta">
+                    <div>
+                        <h3 data-i18n="processCtaTitle">¿Arrancamos con el paso 01?</h3>
+                        <p data-i18n="processCtaText">Contame tu idea y en la primera conversación definimos objetivos, alcance y próximos pasos.</p>
+                    </div>
+                    <a class="btn-primary" href="#contacto" data-i18n="processCtaBtn">x</a>
                 </div>
             </div>
         </section>
@@ -398,17 +417,23 @@
                     <a data-i18n="workCta2" href="#contacto" class="work-cta work-ctaLink">¿Tenés un proyecto? <span>→</span></a>
                 </div>
 
-                <div class="work-search" role="search">
-                    <label class="sr-only" for="work-search-input" data-i18n="workSearchLabel">Buscar proyectos</label>
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                    <input id="work-search-input" type="search" autocomplete="off" spellcheck="false"
-                           data-i18n-placeholder="workSearchPlaceholder"
-                           placeholder="Buscar por proyecto, tecnología..."
-                           aria-controls="cards" />
-                    <button id="work-search-clear" class="work-search-clear" type="button"
-                            data-i18n-aria="workSearchClear" aria-label="Limpiar búsqueda" hidden>
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </button>
+                <div id="featured-projects" class="featured-projects" hidden></div>
+
+                <div class="moreWork">
+                    <div class="hero-eyebrow mono" data-i18n="navMoreWork">Más trabajo</div>
+
+                    <div class="work-search" role="search">
+                        <label class="sr-only" for="work-search-input" data-i18n="workSearchLabel">Buscar proyectos</label>
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <input id="work-search-input" type="search" autocomplete="off" spellcheck="false"
+                               data-i18n-placeholder="workSearchPlaceholder"
+                               placeholder="Buscar por proyecto, tecnología..."
+                               aria-controls="cards" />
+                        <button id="work-search-clear" class="work-search-clear" type="button"
+                                data-i18n-aria="workSearchClear" aria-label="Limpiar búsqueda" hidden>
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
                 <div id="work-search-count" class="work-search-count" role="status" aria-live="polite" hidden></div>
 
