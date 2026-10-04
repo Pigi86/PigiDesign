@@ -1902,7 +1902,7 @@ inputsRequired.forEach(input => {
                         <a href="mailto:leandro.pignatta@live.com" aria-label="Email"><i class="fa fa-envelope"></i></a>
                         <a href="https://www.instagram.com/lea.pigi86/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
                     </div>
-                    <div class="footer-status" style="margin-top:18px"><span class="footer-status-dot"></span><span data-footer-key="status">STATUS: ONLINE</span></div>
+                    <div class="footer-status" style="margin-top:18px"><span class="footer-status-dot"></span><span data-footer-key="status">STATUS: </span><span style="color: var(--accent)">ONLINE</span></div>
                     <br><a class="footer-cta-button" href="#contacto" data-footer-key="cta">Hablemos <span aria-hidden="true">↗</span></a>
                 </div>
                 <div class="footer-brand">
@@ -1926,13 +1926,13 @@ inputsRequired.forEach(input => {
                 kicker: '01 / CONTACTO', title: 'Construyamos algo <span>juntos.</span>', cta: 'Hablemos <span aria-hidden="true">↗</span>',
                 description: 'Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.',
                 navLabel: 'Navegación', home: 'Inicio', about: 'Sobre mí', services: 'Servicios', work: 'Trabajo', contact: 'Contacto',
-                socialLabel: 'Conectemos', status: 'STATUS: ONLINE', availabilityLabel: 'Disponibilidad',
+                socialLabel: 'Conectemos', status: 'STATUS: ', availabilityLabel: 'Disponibilidad',
                 availability: 'Disponible para nuevos proyectos, colaboraciones y oportunidades profesionales.', rights: 'Todos los derechos reservados.', share: 'Compartir portfolio'
             } : {
                 kicker: '01 / CONTACT', title: 'Let’s build something <span>together.</span>', cta: 'Let’s talk <span aria-hidden="true">↗</span>',
                 description: 'Web development, Power Platform and design for clear, functional and professional digital solutions.',
                 navLabel: 'Navigation', home: 'Home', about: 'About me', services: 'Services', work: 'Work', contact: 'Contact',
-                socialLabel: 'Connect', status: 'STATUS: ONLINE', availabilityLabel: 'Availability',
+                socialLabel: 'Connect', status: 'STATUS: ', availabilityLabel: 'Availability',
                 availability: 'Available for new projects, collaborations and professional opportunities.', rights: 'All rights reserved.', share: 'Share portfolio'
             };
             footer.querySelectorAll('[data-footer-key]').forEach(function (el) {
