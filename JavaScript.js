@@ -81,6 +81,7 @@ const translations = {
         navServices: "02 Servicios",
         navFlow: "03 Proceso",
         navContact: "05 Contacto",
+        navMoreWork: "Más Trabajo",
         heroTitle: "Construyo experiencias digitales, desde la pantalla hasta el <span class='.hero-label'>sistema</span>.",
         strip1: "Desarrollo & interfaces",
         strip2: "Apps & automatización",
@@ -218,6 +219,7 @@ const translations = {
         navFlow: "03 Workflow",
         navServices: "02 Services",
         navContact: "05 Contact",
+        navMoreWork: "More Work",
         heroTitle: "I build digital experiences from the screen to the <span class='.hero-label'>system</span>.",
         strip1: "Development and interfaces",
         strip2: "Apps & automation",
@@ -359,13 +361,54 @@ translations.en.workspaceText = "A visual representation of how code, design, da
 translations.en.workspaceCode = "Code";
 translations.en.workspaceDesign = "Design";
 translations.en.workspaceAutomation = "Automation";
+translations.es.featuredLabel = "Proyecto destacado";
+translations.es.featuredDetail = "Ver detalle";
+translations.es.featuredLive = "Visitar sitio";
+translations.en.featuredLabel = "Featured project";
+translations.en.featuredDetail = "View details";
+translations.en.featuredLive = "Visit site";
+
+translations.es.step1Time = "Duración orientativa: 1–3 días";
+translations.es.step2Time = "Duración orientativa: 3–7 días";
+translations.es.step3Time = "Duración orientativa: 1–4 semanas";
+translations.es.step4Time = "Duración orientativa: continuo";
+translations.es.principlesTag = "PRINCIPIOS";
+translations.es.principlesTitle = "Lo que no cambia en ningún proyecto";
+translations.es.pr1Title = "Comunicación clara";
+translations.es.pr1Text = "Sin tecnicismos innecesarios: sabés en qué estado está tu proyecto en cada etapa.";
+translations.es.pr2Title = "Entregas parciales";
+translations.es.pr2Text = "Avances que podés ver y probar, para corregir el rumbo a tiempo y no al final.";
+translations.es.pr3Title = "Código mantenible";
+translations.es.pr3Text = "Estructura ordenada y documentada, pensada para que el proyecto pueda crecer.";
+translations.es.pr4Title = "Tiempos honestos";
+translations.es.pr4Text = "Plazos realistas desde el inicio. Si algo cambia, te aviso apenas lo sé.";
+translations.es.processCtaTitle = "¿Arrancamos con el paso 01?";
+translations.es.processCtaText = "Contame tu idea y en la primera conversación definimos objetivos, alcance y próximos pasos.";
+translations.es.processCtaBtn = "Empecemos";
+translations.en.step1Time = "Estimated time: 1–3 days";
+translations.en.step2Time = "Estimated time: 3–7 days";
+translations.en.step3Time = "Estimated time: 1–4 weeks";
+translations.en.step4Time = "Estimated time: ongoing";
+translations.en.principlesTag = "PRINCIPLES";
+translations.en.principlesTitle = "What never changes across projects";
+translations.en.pr1Title = "Clear communication";
+translations.en.pr1Text = "No unnecessary jargon: you always know where your project stands at every stage.";
+translations.en.pr2Title = "Partial deliveries";
+translations.en.pr2Text = "Progress you can see and test, so we correct course early rather than at the end.";
+translations.en.pr3Title = "Maintainable code";
+translations.en.pr3Text = "Clean, documented structure built so the project can keep growing.";
+translations.en.pr4Title = "Honest timelines";
+translations.en.pr4Text = "Realistic deadlines from the start. If something changes, you hear it from me right away.";
+translations.en.processCtaTitle = "Shall we start with step 01?";
+translations.en.processCtaText = "Tell me your idea and in the first conversation we define goals, scope and next steps.";
+translations.en.processCtaBtn = "Let's start";
 
 
 const projects = [
     {
         id: 1, cat: "web", thumb: "thumb-web-1", ref: "WEB-2021-01",
         title: { es: "Project Vanguard Sitio Web", en: "Project Vanguard Web Page" },
-        desc: { es: "Project Vanguard es un juego que hice en Unity a modo de aprendizaje.", en: "Project Vanguard is a game I made in Unity as a learning experience." },
+        desc: { es: "Project Vanguard es un juego que hice en Unity a modo de aprendizaje. Lucha en esta aventura de terror y ciencia ficción utilizando tus herramientas, encontrando diferentes llaves para avanzar y explorando la nave espacial para completar tu misión.", en: "Project Vanguard is a game I made in Unity as a learning experience. Fight in this sci-fi horror adventure by using your tools, finding differents keys to advance and exploring the spaceship to complete your mission." },
         tags: ["Unity", "C#", "Assests"],
         url: "https://pigi86.github.io/ProjectVanguardWeb/",
         imgUrl: "Images/webpage1.png"
@@ -373,7 +416,7 @@ const projects = [
     {
         id: 2, cat: "web", thumb: "thumb-web-2", ref: "WEB-2026-03",
         title: { es: "Plastyvial SRL Sitio Web", en: "Plastyvial SRL Web Page" },
-        desc: { es: "Página Web de una empresa especializada en Servicio Técnico de Mantenimiento.", en: "Web Page of a company specializing in Technical Maintenance Service." },
+        desc: { es: "Página Web de una empresa especializada en Servicio Técnico de Mantenimiento. Cuando en una empresa, sus equipos operativos, destinados al movimiento de cargas y mercaderías, llegan a situaciones limites o más aun finales.", en: "Web Page of a company specializing in Technical Maintenance Service. When a company's operational teams, dedicated to the movement of cargo and merchandise, reach critical or even critical situations." },
         tags: ["HTML", "JavaScript", "CSS"],
         url: "https://pigi86.github.io/PlastyvialSRL/",
         imgUrl: "Images/webpage2.png"
@@ -483,6 +526,7 @@ const projects = [
 ];
 
 let currentLang = 'es';
+const FEATURED_IDS = [1, 2]; // proyectos destacados (ids de `projects`)
 let currentFilter = 'all';
 let currentSearch = '';
 let currentPage = 1;
@@ -493,7 +537,11 @@ function renderCards() {
     container.innerHTML = '';
 
     const query = currentSearch.trim().toLocaleLowerCase();
+    // Los destacados se muestran arriba; con búsqueda activa o filtro de diseño se ocultan y vuelven a la galería
+    const featuredVisible = !query && currentFilter !== 'gd';
+    renderFeatured(featuredVisible);
     const filtered = projects.filter(p => {
+        if (featuredVisible && FEATURED_IDS.indexOf(p.id) !== -1) return false;
         const matchesCategory = currentFilter === 'all' || p.cat === currentFilter;
         if (!matchesCategory) return false;
         if (!query) return true;
@@ -565,6 +613,56 @@ function renderCards() {
     renderPagination(totalPages);
 }
 
+function renderFeatured(show) {
+    const box = document.getElementById('featured-projects');
+    if (!box) return;
+    box.innerHTML = '';
+    box.hidden = !show;
+    if (!show) return;
+    const t = translations[currentLang];
+
+    FEATURED_IDS.map(id => projects.find(p => p.id === id)).filter(Boolean).forEach((p, i) => {
+        const year = (p.ref.split('-')[1]) || '';
+        let host = '';
+        try {
+            const u = new URL(p.url);
+            host = u.host + u.pathname.replace(/\/$/, '');
+        } catch (e) { /* sin url */ }
+
+        const el = document.createElement('article');
+        el.className = 'featured';
+        el.innerHTML = `
+    <div class="featured-copy">
+        <div class="featured-meta mono">
+            <span>${String(i + 1).padStart(2, '0')}</span><span>${year}</span><i></i><span class="featured-label">${t.featuredLabel}</span>
+        </div>
+        <h3>${p.title[currentLang]}</h3>
+        <p>${p.desc[currentLang]}</p>
+        <div class="card-tags">${p.tags.map(tag => `<span>${tag}</span>`).join('')}</div>
+        <div class="featured-links">
+            <button type="button" class="featured-link" data-featured-detail>${t.featuredDetail} <span aria-hidden="true">↗</span></button>
+            ${p.url ? `<a class="featured-link" href="${p.url}" target="_blank" rel="noopener">${t.featuredLive}</a>` : ''}
+        </div>
+    </div>
+    <div class="browser" role="button" tabindex="0" data-featured-detail>
+        <div class="browser-bar">
+            <span class="browser-dots"><i></i><i></i><i></i></span>
+            <span class="browser-url mono">${host}</span>
+        </div>
+        <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" />
+    </div>`;
+
+        const open = () => openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang], p.tags, p.url);
+        el.querySelectorAll('[data-featured-detail]').forEach(node => {
+            node.addEventListener('click', open);
+            node.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+            });
+        });
+        box.appendChild(el);
+    });
+}
+
 function renderPagination(totalPages) {
     const nav = document.getElementById('cards-pagination');
     if (!nav) return;
@@ -603,7 +701,7 @@ function goToPage(page) {
     currentPage = page;
     renderCards();
     const section = document.getElementById('trabajo');
-    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    //if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function setFilter(filter, btn) {
@@ -1392,6 +1490,10 @@ inputsRequired.forEach(input => {
         '.tech-stack',
         '.service',
         '.step',
+        '.featured',
+        '.principles-head',
+        '.principle',
+        '.process-cta',
         '.card',
         '.contact-info',
         '.contact-form-card'
@@ -1702,7 +1804,7 @@ inputsRequired.forEach(input => {
     ];
     var activeIndex = 0;
     function t(key) { return (translations[currentLang] || translations.es)[key] || key }
-    function go(sel) { closePalette(); var el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+    function go(sel) { closePalette(); if (typeof window.showRoute === 'function') window.showRoute(sel); var el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
     function renderCommands(filter) {
         if (!paletteList) return;
         var q = (filter || '').trim().toLocaleLowerCase();
@@ -1851,7 +1953,7 @@ inputsRequired.forEach(input => {
                 .footer-premium .footer-kicker{margin:0 0 12px;color:var(--accent);font:11px/1.2 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
                 .footer-premium .footer-title{margin:0;max-width:780px;font-size:clamp(34px,6vw,78px);line-height:.95;letter-spacing:-.045em}
                 .footer-premium .footer-title span{color:var(--accent)}
-                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:700;transition:transform .25s ease,border-color .25s ease,background .25s ease}
+                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:0;transition:transform .25s ease,border-color .25s ease,background .25s ease}
                 .footer-premium .footer-cta-button:hover{transform:translateY(-3px);border-color:var(--accent);background:var(--surface-2)}
                 .footer-premium .footer-main{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:28px;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
                 .footer-premium .footer-brand{font-size:15px;color:var(--muted);line-height:1.7}
@@ -1888,7 +1990,7 @@ inputsRequired.forEach(input => {
                     <p data-footer-key="description">Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.</p>
                 </div>
                 <div>
-                    <span class="footer-label" data-footer-key="navLabel">Navegación</span>
+                    <span class="footer-label navigationLabel" data-footer-key="navLabel">Navegación</span>
                     <nav class="footer-links" aria-label="Footer navigation">
                         <a href="#hero" data-footer-key="home">Inicio</a>
                         <a href="#sobre-mi" data-footer-key="about">Sobre mí</a>
@@ -1962,4 +2064,85 @@ inputsRequired.forEach(input => {
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPremiumFooter);
     else initPremiumFooter();
+})();
+
+/* =========================================================
+   Router de secciones
+   Todas las secciones de <main> arrancan ocultas y solo se
+   muestra la que visita el usuario (según el hash de la URL).
+   Sin hash -> se muestra el inicio (#hero).
+   ========================================================= */
+(function () {
+    var sections = Array.from(document.querySelectorAll('main > section'));
+    var routes = Object.create(null);
+    sections.forEach(function (s) {
+        var key = s.getAttribute('data-route') || s.id;
+        if (!key) return;
+        (routes[key] = routes[key] || []).push(s);
+    });
+
+    var navLinks = Array.from(document.querySelectorAll('#site-nav a.navlink'));
+    var current = null;
+
+    function normalize(id) { return id === 'top' ? 'hero' : id; }
+
+    function show(key, scrollTop) {
+        if (!routes[key]) return false;
+        if (current !== key) {
+            sections.forEach(function (s) { s.classList.remove('is-active'); });
+            routes[key].forEach(function (s) { s.classList.add('is-active'); });
+            current = key;
+            navLinks.forEach(function (a) {
+                var on = a.getAttribute('href') === '#' + key;
+                a.classList.toggle('active', on);
+                if (on) a.setAttribute('aria-current', 'page');
+                else a.removeAttribute('aria-current');
+            });
+            // El layout cambió: avisa a lo que depende del tamaño (canvas 3D, barra de progreso)
+            requestAnimationFrame(function () { window.dispatchEvent(new Event('resize')); });
+        }
+        if (scrollTop) window.scrollTo({ top: 0, behavior: 'instant' });
+        return true;
+    }
+
+    function apply(scrollTop) {
+        var id = '';
+        try { id = decodeURIComponent(location.hash.replace(/^#/, '')); } catch (e) { id = location.hash.replace(/^#/, ''); }
+        id = normalize(id);
+        if (!id) { show('hero', scrollTop); return; }
+        if (routes[id]) { show(id, scrollTop); return; }
+        // hash que no es una sección (ej. #main-content): no cambia la vista actual
+        if (!current) show('hero', false);
+    }
+
+    // API pública: usada por la paleta de comandos y la terminal
+    window.showRoute = function (hash) {
+        var id = normalize(String(hash).replace(/^#/, ''));
+        if (!routes[id]) return false;
+        if (location.hash !== '#' + id) {
+            try { history.pushState(null, '', '#' + id); } catch (e) { location.hash = id; }
+        }
+        show(id, true);
+        return true;
+    };
+
+    // Cualquier link interno (#sobre-mi, #contacto...) cambia de sección.
+    // Va en fase de captura para que la sección ya sea visible cuando
+    // otros handlers (ej. el del footer) hagan scrollIntoView.
+    document.addEventListener('click', function (e) {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        var a = e.target.closest && e.target.closest('a[href^="#"]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.length < 2) return;
+        if (routes[normalize(href.slice(1))]) {
+            e.preventDefault();
+            window.showRoute(href);
+        }
+    }, true);
+
+    window.addEventListener('hashchange', function () { apply(true); });
+    window.addEventListener('popstate', function () { apply(true); });
+
+    apply(false);
 })();
