@@ -556,7 +556,7 @@ nav a.navlink {
     }
 
         .langswitch button.active {
-            background: var(--text);
+            background: var(--accent);
             color: var(--bg)
         }
 
