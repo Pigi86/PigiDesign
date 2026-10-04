@@ -526,7 +526,7 @@ const projects = [
 ];
 
 let currentLang = 'es';
-const FEATURED_IDS = [1, 2]; // proyectos destacados (ids de `projects`)
+const FEATURED_IDS = [2, 3]; // proyectos destacados (ids de `projects`)
 let currentFilter = 'all';
 let currentSearch = '';
 let currentPage = 1;
