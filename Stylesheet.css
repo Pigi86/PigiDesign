@@ -651,9 +651,9 @@ nav a.navlink {
     }
 
 .hero h1 {
-    font-size: clamp(3.4rem,8vw,5.8rem);
+    font-size: clamp(3.4rem,8vw,4.8rem);
     line-height: .93;
-    max-width: 8ch
+    max-width: 11ch
 }
 
 /* Title with image to the right */
@@ -1786,7 +1786,7 @@ footer {
     }
 
     .hero h1 {
-        font-size: clamp(3rem,16vw,5rem)
+        font-size: clamp(3rem,16vw,3rem)
     }
 
     /* Stack hero title and image on small screens */
