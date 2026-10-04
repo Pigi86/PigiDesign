@@ -81,7 +81,7 @@ const translations = {
         navServices: "02 Servicios",
         navFlow: "03 Proceso",
         navContact: "05 Contacto",
-        heroTitle: "Construyo experiencias digitales, desde la pantalla hasta el sistema.",
+        heroTitle: "Construyo experiencias digitales, desde la pantalla hasta el <span class='.hero-label'>sistema</span>.",
         strip1: "Desarrollo & interfaces",
         strip2: "Apps & automatización",
         strip3: "Aplicaciones & backend",
@@ -218,7 +218,7 @@ const translations = {
         navFlow: "03 Workflow",
         navServices: "02 Services",
         navContact: "05 Contact",
-        heroTitle: "I build digital experiences from the screen to the system.",
+        heroTitle: "I build digital experiences from the screen to the <span class='.hero-label'>system</span>.",
         strip1: "Development and interfaces",
         strip2: "Apps & automation",
         strip3: "Applications  & backend",
@@ -1096,7 +1096,7 @@ function setLang(lang) {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[lang][key] !== undefined) {
-            el.textContent = translations[lang][key];
+            el.innerHTML = translations[lang][key];
         }
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
@@ -1384,6 +1384,7 @@ inputsRequired.forEach(input => {
 (function () {
     var ITEM_SELECTOR = [
         '.hero-eyebrow',
+        '.hero-title',
         '.hero-grid > *',
         '.section-head',
         '.about-grid > div',
