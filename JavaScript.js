@@ -1,2148 +1,4984 @@
-(function () {
-    const intro = document.getElementById('intro');
-    if (!intro) return;
-
-    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    let seen = null;
-    try { seen = sessionStorage.getItem('lp-intro-seen'); } catch (err) { /* storage no disponible */ }
-
-    if (reduced || seen) {
-        intro.remove();
-        return;
-    }
-    // react to language changes requested outside this scope
-    window.addEventListener('lp:langchange', function (ev) {
-        try { renderCommands(paletteInput?.value || ''); } catch (e) { }
-        try {
-            // update any existing terminal output lines that match known system texts
-            var keys = ['terminalWelcome', 'terminalHelp', 'terminalAbout', 'terminalProjects', 'terminalSkills', 'terminalContact', 'terminalTheme', 'terminalUnknown'];
-            if (terminalOutput) {
-                Array.from(terminalOutput.querySelectorAll('.terminal-line')).forEach(function (line) {
-                    var txt = (line.textContent || '').toString();
-                    // for each known language, check if the line matches that language's string and replace with currentLang
-                    Object.keys(translations).forEach(function (loc) {
-                        keys.forEach(function (k) {
-                            var prev = translations[loc] && translations[loc][k];
-                            var curr = translations[currentLang] && translations[currentLang][k];
-                            if (!prev || !curr) return;
-                            if (k === 'terminalProjects') {
-                                if (txt.indexOf(prev) === 0) {
-                                    line.textContent = curr + (projects ? projects.length : '');
-                                }
-                            } else {
-                                if (txt === prev) {
-                                    line.textContent = curr;
-                                }
-                            }
-                        });
-                    });
-                });
-            }
-        } catch (e) { }
-    });
-
-    document.documentElement.classList.add('intro-lock');
-    let done = false;
-
-    function finish() {
-        if (done) return;
-        done = true;
-        intro.classList.add('intro-done');
-        document.documentElement.classList.remove('intro-lock');
-        try { sessionStorage.setItem('lp-intro-seen', '1'); } catch (err) { /* storage no disponible */ }
-        window.setTimeout(function () { intro.remove(); }, 1200);
-    }
-
-    const AUTO_DISMISS_MS = 2000;
-    const timer = window.setTimeout(finish, AUTO_DISMISS_MS);
-
-    // Cualquier intento de interactuar salta directo al sitio
-    ['click', 'touchstart', 'keydown', 'wheel'].forEach(function (evt) {
-        window.addEventListener(evt, function onSkip() {
-            window.clearTimeout(timer);
-            finish();
-        }, { once: true, passive: true });
-    });
-})();
-
-if (typeof emailjs !== 'undefined') {
-    emailjs.init("S9WsrwTxTRrOPivcb");
+:root {
+    --bg: #07111f;
+    --bg-2: #0b1728;
+    --surface: #0f2035;
+    --surface-2: #122943;
+    --text: #f4f7fb;
+    --muted: #9eafc3;
+    --line: rgba(255,255,255,.10);
+    --accent: #65e6d2;
+    --accentInput: rgba(101, 230, 210,.72);
+    --accentInputShadow: rgba(101, 230, 210,.08);
+    --accent-2: #8aa7ff;
+    --white: #fff;
+    --whiteIntro: rgba(255,255,255,0.09);
+    --radius: 22px;
+    --shadow: 0 20px 70px rgba(0,0,0,.28);
+    /* superficies translucidas: se redefinen por tema para no quedar
+       invisibles (o invertidas) al pasar de fondo oscuro a claro */
+    --header-bg: rgba(7,17,31,.76);
+    --header-bg-solid: rgba(7,17,31,.97);
+    --grid-line: rgba(255,255,255,.025);
+    --ov-025: rgba(255,255,255,.025);
+    --ov-03: rgba(255,255,255,.03);
+    --ov-035: rgba(255,255,255,.035);
+    --ov-04: rgba(255,255,255,.04);
+    --grad-hero-a: rgba(255,255,255,.07);
+    --grad-hero-b: rgba(255,255,255,.025);
+    --grad-service-a: rgba(255,255,255,.055);
+    --grad-service-b: rgba(255,255,255,.018);
+    --input-bg: rgba(7,17,31,.72);
+    --input-bg-focus: rgba(7,17,31,.9);
+    --card-shadow-hover: 0 10px 30px rgba(0,0,0,.35);
+    --liText: #cbd6e4;
+    --linkText: #dce5ef;
+    --buttonText: black;
 }
 
-const translations = {
-    es: {
-        introShort: "Desarrollo & Power Platform",
-        introShort2: "Desarrollo web · Power Platform · Diseño",
-        introShort3: "DISEÑO",
-        nameShort: "Leandro",
-        navAbout: "<span style='color:var(--accent);padding-right:8px'>01 </span> Sobre mí",
-        navWork: "<span style='color:var(--accent);padding-right:8px'>03 </span> Trabajo",
-        navServices: "<span style='color:var(--accent);padding-right:8px'>02 </span> Servicios",
-        navFlow: "Proceso",
-        navContact: "Contáctame",
-        navMoreWork: "Más Trabajo",
-        heroTitle: "Construyo experiencias digitales, desde la pantalla hasta el <span class='.hero-label'>sistema</span>.",
-        strip1: "Desarrollo & interfaces",
-        strip2: "Apps & automatización",
-        strip3: "Aplicaciones & backend",
-        strip4: "Datos & soluciones",
-        techStack: "Tecnologías",
-        workCta1: "Una selección de proyectos donde combino desarrollo, automatización y diseño para resolver necesidades concretas.",
-        workCta2: "¿Tenés un proyecto?",
-        servicesTitle: "Qué puedo hacer",
-        servicesTag: "Servicios / soluciones",
-        serviceWebTitle: "Desarrollo web",
-        serviceWebText: "Sitios institucionales, landing pages y aplicaciones web rápidas, responsive y pensadas para crecer.",
-        servicePowerTitle: "Power Platform",
-        servicePowerText: "Aplicaciones y automatizaciones con Power Apps, Power Automate, SharePoint y soluciones conectadas.",
-        serviceDesignTitle: "Diseño Gráfico",
-        serviceDesignText: "Interfaces, identidad visual y piezas gráficas con foco en claridad, consistencia y detalle.",
-        serviceCSharpTitle: "C#",
-        serviceCSharpText: "Desarrollo de aplicaciones backend y servicios con C#.",
-        serviceSqlTitle: "SQL Server",
-        serviceSqlText: "Modelado de datos, consultas y optimización en SQL Server.",
-        serviceAiTitle: "Inteligencia Artificial",
-        serviceAiText: "Integración de modelos y soluciones de IA para proyectos.",
-        serviceMore: "Ver detalle",
-        serviceIncludes: "Qué incluye",
-        serviceTools: "Herramientas",
-        serviceCta: "Consultar por este servicio",
-        serviceClose: "Cerrar",
-        processIncludes: "Qué hago en esta etapa",
-        processDeliver: "Qué obtenés",
-        processTitle: "Cómo trabajo",
-        processTag: "De la idea al resultado",
-        step1Title: "Entender",
-        step1Text: "Objetivos, usuarios, necesidades y alcance.",
-        step2Title: "Diseñar",
-        step2Text: "Estructura, experiencia visual y solución técnica.",
-        step3Title: "Construir",
-        step3Text: "Desarrollo iterativo, integración y validación.",
-        step4Title: "Mejorar",
-        step4Text: "Ajustes, rendimiento y evolución del producto.",
-        contactTitle2: "01 / Contacto",
-        formName: "Nombre *",
-        formCompany: "Empresa *",
-        formEmail: "Email *",
-        formPhone: "Teléfono",
-        formMessage: "Mensaje *",
-        formSubmit: "Enviar mensaje",
-        formTitle: "Enviame un mensaje",
-        formNameError: "Ingrese su Nombre Completo",
-        formCompanyError: "Ingrese su Empresa",
-        formEmailError: "Ingrese su Email",
-        formMessageError: "Ingrese su Mensaje",
-        formInputEmail: "info@empresa.com",
-        formInputName: "Su Nombre",
-        formInputCompany: "Su Companía",
-        fDesc: "He recibido tu mensaje! Me comunicaré contigo a la brevedad.",
-
-        heroEyebrow: "Perfil profesional",
-        heroPitch: "Desarrollo soluciones digitales que combinan código, automatización y diseño: desde sitios y aplicaciones web hasta soluciones empresariales con Power Platform.",
-        heroPitch2: "El desarrollo de software transforma la sociedad al conectar personas, optimizar procesos y crear soluciones innovadoras. Desde la educación hasta la salud y los negocios, la tecnología impulsa nuevas oportunidades, mejora la calidad de vida y redefine nuestra forma de trabajar, comunicarnos y resolver problemas.",
-        metaRole: "Rol",
-        metaRoles: "Analista Programador Senior — Desarrollador Senior en Power Platform",
-        metaLocation: "Ubicación",
-        metaLocationValue: "Buenos Aires, Argentina",
-        metaFocus: "Enfoque",
-        metaFocusValue: "Desarrollo web · Power Platform · Diseño gráfico",
-        aboutTitle: "Acerca de mí",
-        aboutTag: "Perfil / competencias",
-        aboutP1: "Analista programador senior con foco en Power Platform y desarrollo web. Trabajo tanto en la construcción de aplicaciones y flujos como en la resolución del lado visual de un proyecto, desde interfaces hasta piezas de diseño gráfico.",
-        aboutP2: "Este espacio reúne una selección de trabajos propios: proyectos web y piezas de diseño gráfico realizadas en distintos contextos, personales y profesionales.",
-        aboutActualmente: "Actualmente",
-        aboutActualmenteP1: "Desarrollador Senior en Power Platform fulltime en Remoting Coders.",
-        skillWeb: "Desarrollo web",
-        skillPlatform: "Power Platform",
-        skillDesign: "Diseño gráfico",
-        workTitle: "Trabajo seleccionado",
-        filterAll: "Todos",
-        filterWeb: "Web",
-        filterGd: "Diseño gráfico",
-        contactTitle: "Hablemos de un proyecto",
-        contactPitch: "Disponible para proyectos de desarrollo web, soluciones de Power Platform o piezas de diseño gráfico. Escribime y coordinamos.",
-        contactNote: "Disponible para conversar sobre nuevos proyectos, colaboraciones y oportunidades profesionales.",
-        footerNote: "Sitio de portfolio",
-        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - Todos Los Derechos Reservados",
-        skipToContent: "Saltar al contenido",
-        themeToggleAria: "Cambiar a tema claro",
-        themeToggleAriaLight: "Cambiar a tema oscuro",
-        heroCtaContact: "Hablemos de un proyecto",
-        heroCtaCvLabel: "Descargar CV PDF",
-        heroCtaCvLabel2: "Curriculum",
-        heroCtaCvLabel3: "Abrir en una pestaña nueva",
-        statProjects: "Proyectos publicados",
-        statAreas: "Áreas de especialización",
-        statLangs: "Idiomas del sitio",
-        fSending: "Enviando...",
-        fError: "No se pudo enviar el mensaje. Probá de nuevo o escribime por mail.",
-        cookieText: "Este sitio usa fuentes y recursos de terceros (Google Fonts, Font Awesome) y guarda tu preferencia de tema en el almacenamiento local de tu navegador. No se usan cookies de seguimiento ni analítica activa.",
-        cookieAccept: "Entendido",
-        pagPrev: "Anterior",
-        pagNext: "Siguiente",
-        pagPage: "Página",
-        workSearchLabel: "Buscar proyectos",
-        workSearchPlaceholder: "Buscar por proyecto, tecnología...",
-        workSearchClear: "Limpiar búsqueda",
-        workSearchEmpty: "No se encontraron proyectos con esa búsqueda.",
-        workSearchResultSingular: "proyecto encontrado",
-        workSearchResultPlural: "proyectos encontrados",
-        externalButton: "Ir a sitio web",
-        availableStatus: "Disponible para nuevos proyectos",
-        sharePortfolio: "Compartir portfolio",
-        copyEmail: "Copiar email",
-        copiedEmail: "Email copiado",
-        sharedPortfolio: "Enlace compartido",
-        commandOpen: "Abrir comandos",
-        commandPlaceholder: "Buscar una acción...",
-        openTerminal: "Abrir Terminal",
-        terminalWelcome: "Terminal interactiva — escribí 'help' para ver los comandos.",
-        terminalHelp: "Comandos: about · projects · skills · contact · theme · clear · help",
-        terminalAbout: "Leandro Pignatta — desarrollo web, Power Platform y diseño.",
-        terminalProjects: "Proyectos publicados: ",
-        terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · IA",
-        terminalContact: "Email: leandro.pignatta@live.com",
-        terminalTheme: "Usá el botón de tema o escribí 'theme light' / 'theme dark'.",
-        terminalUnknown: "Comando no reconocido. Escribí 'help'.",
-        navegar: "navegar",
-        ejecutar: "ejecutar",
-        abrir: "abrir"
-    },
-    en: {
-        introShort: "Development & Power Platform",
-        introShort2: "Web Development · Power Platform · Design",
-        introShort3: "DESIGN",
-        nameShort: "Leandro",
-        navAbout: "<span style='color:var(--accent);padding-right:8px'>01 </span> About",
-        navWork: "<span style='color:var(--accent);padding-right:8px'>03 </span> Work",
-        navFlow: "Workflow",
-        navServices: "<span style='color:var(--accent);padding-right:8px'>02 </span> Services",
-        navContact: "Contact me",
-        navMoreWork: "More Work",
-        heroTitle: "I build digital experiences from the screen to the <span class='.hero-label'>system</span>.",
-        strip1: "Development and interfaces",
-        strip2: "Apps & automation",
-        strip3: "Applications  & backend",
-        strip4: "Data and solutions",
-        techStack: "Technologies",
-        workCta1: "A selection of projects where I combine development, automation, and design to address specific needs.",
-        workCta2: "Do you have a project?",
-        servicesTitle: "What I can do",
-        servicesTag: "Services / solutions",
-        serviceWebTitle: "Web development",
-        serviceWebText: "Institutional sites, landing pages and web applications built to be fast, responsive and scalable.",
-        servicePowerTitle: "Power Platform",
-        servicePowerText: "Apps and automations with Power Apps, Power Automate, SharePoint and connected solutions.",
-        serviceDesignTitle: "Graphic Design",
-        serviceDesignText: "Interfaces, visual identities and graphic pieces focused on clarity, consistency and detail.",
-        serviceCSharpTitle: "C#",
-        serviceCSharpText: "Backend applications and services development with C#.",
-        serviceSqlTitle: "SQL Server",
-        serviceSqlText: "Data modeling, queries and optimization in SQL Server.",
-        serviceAiTitle: "Artificial Intelligence",
-        serviceAiText: "Integration of models and AI solutions into projects.",
-        serviceMore: "View details",
-        serviceIncludes: "What's included",
-        serviceTools: "Tools",
-        serviceCta: "Ask about this service",
-        serviceClose: "Close",
-        processIncludes: "What I do at this stage",
-        processDeliver: "What you get",
-        processTitle: "How I work",
-        processTag: "From idea to result",
-        step1Title: "Understand",
-        step1Text: "Goals, users, needs and scope.",
-        step2Title: "Design",
-        step2Text: "Structure, visual experience and technical solution.",
-        step3Title: "Build",
-        step3Text: "Iterative development, integration and validation.",
-        step4Title: "Improve",
-        step4Text: "Refinement, performance and product evolution.",
-        contactTitle2: "01 / Contact",
-        formName: "Fullname *",
-        formCompany: "Company *",
-        formEmail: "Email *",
-        formPhone: "Phone",
-        formMessage: "Message *",
-        formSubmit: "Send message",
-        formTitle: "Send me a message",
-        formNameError: "Enter your Fullname",
-        formCompanyError: "Enter your Company",
-        formEmailError: "Enter your Email",
-        formMessageError: "Enter your Message",
-        formInputEmail: "info@company.com",
-        formInputName: "Your Fullname",
-        formInputCompany: "Your Company",
-        fDesc: "I have received your message! I will get in touch with you shortly.",
-
-        heroEyebrow: "Professional profile",
-        heroPitch: "I develop digital solutions that combine code, automation, and design—ranging from websites and web applications to enterprise solutions using Power Platform.",
-        heroPitch2: "Software development transforms society by connecting people, optimizing processes, and creating innovative solutions. From education to healthcare and business, technology drives new opportunities, improves quality of life, and redefines how we work, communicate, and solve problems.",
-        metaRole: "Role",
-        metaRoles: "Senior Programmer Analyst — Power Platform Senior Developer",
-        metaLocation: "Location",
-        metaLocationValue: "Buenos Aires, Argentina",
-        metaFocus: "Focus",
-        metaFocusValue: "Web development · Power Platform · Graphic design",
-        aboutTitle: "About me",
-        aboutTag: "Profile / skills",
-        aboutP1: "Senior programmer analyst focused on Power Platform and web development. I work both on building applications and workflows and on the visual side of a project, from interfaces to graphic design pieces.",
-        aboutP2: "This space gathers a selection of my own work: web projects and graphic design pieces made in different contexts, personal and professional.",
-        aboutActualmente: "Currently",
-        aboutActualmenteP1: "Power Platform Senior Developer fulltime at Remoting Coders.",
-        skillWeb: "Web development",
-        skillPlatform: "Power Platform",
-        skillDesign: "Graphic design",
-        workTitle: "Selected work",
-        filterAll: "All",
-        filterWeb: "Web",
-        filterGd: "Graphic design",
-        contactTitle: "Let's talk about a project",
-        contactPitch: "Available for web development projects, Power Platform solutions or graphic design pieces. Get in touch and we'll set up a time.",
-        contactNote: "Available to discuss new projects, collaborations, and professional opportunities.",
-        footerNote: "Portfolio site",
-        footerNote2: "© " + new Date().getFullYear() + " Leandro Carlos Pignatta - All Rights Reserved",
-        skipToContent: "Skip to content",
-        themeToggleAria: "Switch to light theme",
-        themeToggleAriaLight: "Switch to dark theme",
-        heroCtaContact: "Let's talk about a project",
-        heroCtaCvLabel: "Download CV PDF",
-        heroCtaCvLabel2: "Resume",
-        heroCtaCvLabel3: "Open in a new tab",
-        statProjects: "Published projects",
-        statAreas: "Areas of expertise",
-        statLangs: "Site languages",
-        fSending: "Sending...",
-        fError: "Couldn't send the message. Try again or email me directly.",
-        cookieText: "This site uses third-party fonts and resources (Google Fonts, Font Awesome) and stores your theme preference in your browser's local storage. No tracking cookies or active analytics are used.",
-        cookieAccept: "Got it",
-        pagPrev: "Previous",
-        pagNext: "Next",
-        pagPage: "Page",
-        workSearchLabel: "Search projects",
-        workSearchPlaceholder: "Search by project, technology...",
-        workSearchClear: "Clear search",
-        workSearchEmpty: "No projects matched your search.",
-        workSearchResultSingular: "project found",
-        workSearchResultPlural: "projects found",
-        externalButton: "Go to web page",
-        availableStatus: "Available for new projects",
-        sharePortfolio: "Share portfolio",
-        copyEmail: "Copy email",
-        copiedEmail: "Email copied",
-        sharedPortfolio: "Link shared",
-        commandOpen: "Open commands",
-        commandPlaceholder: "Search an action...",
-        openTerminal: "Open Terminal",
-        terminalWelcome: "Interactive terminal — type 'help' to see commands.",
-        terminalHelp: "Commands: about · projects · skills · contact · theme · clear · help",
-        terminalAbout: "Leandro Pignatta — web development, Power Platform and design.",
-        terminalProjects: "Published projects: ",
-        terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · AI",
-        terminalContact: "Email: leandro.pignatta@live.com",
-        terminalTheme: "Use the theme button or type 'theme light' / 'theme dark'.",
-        terminalUnknown: "Unknown command. Type 'help'.",
-        navegar: "browse",
-        ejecutar: "execute",
-        abrir: "open"
-    }
-};
-
-translations.es.workspaceSubTitle = "Sistema / Espacio de Trabajo";
-translations.es.workspaceTitle = "Mi entorno de trabajo";
-translations.es.workspaceText = "Una representación visual de cómo conviven código, diseño, datos y automatización en mi día a día.";
-translations.es.workspaceCode = "Código";
-translations.es.workspaceDesign = "Diseño";
-translations.es.workspaceAutomation = "Automatización";
-translations.en.workspaceSubTitle = "System / Workspace";
-translations.en.workspaceTitle = "My workspace";
-translations.en.workspaceText = "A visual representation of how code, design, data and automation come together in my daily work.";
-translations.en.workspaceCode = "Code";
-translations.en.workspaceDesign = "Design";
-translations.en.workspaceAutomation = "Automation";
-translations.es.featuredLabel = "Proyecto destacado";
-translations.es.featuredDetail = "Ver detalle";
-translations.es.featuredLive = "Visitar sitio";
-translations.en.featuredLabel = "Featured project";
-translations.en.featuredDetail = "View details";
-translations.en.featuredLive = "Visit site";
-
-translations.es.step1Time = "Duración orientativa: 1–3 días";
-translations.es.step2Time = "Duración orientativa: 3–7 días";
-translations.es.step3Time = "Duración orientativa: 1–4 semanas";
-translations.es.step4Time = "Duración orientativa: continuo";
-translations.es.principlesTag = "PRINCIPIOS";
-translations.es.principlesTitle = "Lo que no cambia en ningún proyecto";
-translations.es.pr1Title = "Comunicación clara";
-translations.es.pr1Text = "Sin tecnicismos innecesarios: sabés en qué estado está tu proyecto en cada etapa.";
-translations.es.pr2Title = "Entregas parciales";
-translations.es.pr2Text = "Avances que podés ver y probar, para corregir el rumbo a tiempo y no al final.";
-translations.es.pr3Title = "Código mantenible";
-translations.es.pr3Text = "Estructura ordenada y documentada, pensada para que el proyecto pueda crecer.";
-translations.es.pr4Title = "Tiempos honestos";
-translations.es.pr4Text = "Plazos realistas desde el inicio. Si algo cambia, te aviso apenas lo sé.";
-translations.es.processCtaTitle = "¿Arrancamos con el paso 01?";
-translations.es.processCtaText = "Contame tu idea y en la primera conversación definimos objetivos, alcance y próximos pasos.";
-translations.es.processCtaBtn = "Empecemos";
-translations.en.step1Time = "Estimated time: 1–3 days";
-translations.en.step2Time = "Estimated time: 3–7 days";
-translations.en.step3Time = "Estimated time: 1–4 weeks";
-translations.en.step4Time = "Estimated time: ongoing";
-translations.en.principlesTag = "PRINCIPLES";
-translations.en.principlesTitle = "What never changes across projects";
-translations.en.pr1Title = "Clear communication";
-translations.en.pr1Text = "No unnecessary jargon: you always know where your project stands at every stage.";
-translations.en.pr2Title = "Partial deliveries";
-translations.en.pr2Text = "Progress you can see and test, so we correct course early rather than at the end.";
-translations.en.pr3Title = "Maintainable code";
-translations.en.pr3Text = "Clean, documented structure built so the project can keep growing.";
-translations.en.pr4Title = "Honest timelines";
-translations.en.pr4Text = "Realistic deadlines from the start. If something changes, you hear it from me right away.";
-translations.en.processCtaTitle = "Shall we start with step 01?";
-translations.en.processCtaText = "Tell me your idea and in the first conversation we define goals, scope and next steps.";
-translations.en.processCtaBtn = "Let's start";
-
-
-const projects = [
-    {
-        id: 1, cat: "web", thumb: "thumb-web-1", ref: "WEB-2021-01",
-        title: { es: "Project Vanguard Sitio Web", en: "Project Vanguard Web Page" },
-        desc: { es: "Project Vanguard es un juego que hice en Unity a modo de aprendizaje. Lucha en esta aventura de terror y ciencia ficción utilizando tus herramientas, encontrando diferentes llaves para avanzar y explorando la nave espacial para completar tu misión.", en: "Project Vanguard is a game I made in Unity as a learning experience. Fight in this sci-fi horror adventure by using your tools, finding differents keys to advance and exploring the spaceship to complete your mission." },
-        tags: ["Unity", "C#", "Assests"],
-        url: "https://pigi86.github.io/ProjectVanguardWeb/",
-        imgUrl: "Images/webpage1.png"
-    },
-    {
-        id: 2, cat: "web", thumb: "thumb-web-2", ref: "WEB-2026-03",
-        title: { es: "Plastyvial SRL Sitio Web", en: "Plastyvial SRL Web Page" },
-        desc: { es: "Página Web de una empresa especializada en Servicio Técnico de Mantenimiento. Cuando en una empresa, sus equipos operativos, destinados al movimiento de cargas y mercaderías, llegan a situaciones limites o más aun finales.", en: "Web Page of a company specializing in Technical Maintenance Service. When a company's operational teams, dedicated to the movement of cargo and merchandise, reach critical or even critical situations." },
-        tags: ["HTML", "JavaScript", "CSS"],
-        url: "https://pigi86.github.io/PlastyvialSRL/",
-        imgUrl: "Images/webpage2.png"
-    },
-    {
-        id: 3, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-07",
-        title: { es: "Argentair Sitio Web", en: "Argentair Web Page" },
-        desc: { es: "Argentair Service Integral repara y mantiene el aire acondicionado y la calefacción de tu auto, nacional o importado, con técnicos mecánicos y electrónicos en un mismo taller.", en: "Argentair Service Integral repairs and maintains the air conditioning and heating of your car, domestic or imported, with mechanical and electronic technicians in the same workshop." },
-        tags: ["HTML", "JavaScript", "CSS"],
-        url: "https://pigi86.github.io/Argentair/",
-        imgUrl: "Images/webpage3.png"
-    },
-    {
-        id: 4, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-09",
-        title: { es: "Amperio Marketplace Sitio Web", en: "Amperio Marketplace Web Page" },
-        desc: { es: "Amperio es un marketplace de tecnología moderno y profesional, diseñado para ofrecer una experiencia de compra rápida, clara y atractiva. El sitio presenta un catálogo de productos tecnológicos, con una interfaz visual cuidada, navegación intuitiva y elementos orientados a facilitar la compra.", en: "Amperio is a modern, professional technology marketplace designed to offer a fast, clear, and engaging shopping experience. The site features a catalog of technology products, with a polished visual interface, intuitive navigation, and elements designed to facilitate the purchasing process." },
-        tags: ["HTML", "JavaScript", "CSS"],
-        url: "https://pigi86.github.io/Marketplace/",
-        imgUrl: "Images/webpage4.png"
-    },
-    {
-        id: 5, cat: "web", thumb: "thumb-web-3", ref: "WEB-2025-04",
-        title: { es: "Ledger Coin Sitio Web", en: "Ledger Coin Web Page" },
-        desc: { es: "Ledger Coin es una plataforma web de simulación y análisis del mercado de criptomonedas, diseñada con una interfaz moderna, profesional y responsive. La web permite consultar precios simulados de criptomonedas, visualizar su evolución mediante gráficos interactivos, analizar estadísticas como capitalización, volumen y variaciones de precio, y gestionar una cartera virtual mediante operaciones de compra y venta.", en: "Ledger is a web-based platform for cryptocurrency market simulation and analysis, featuring a modern, professional, and responsive interface. The platform allows users to check simulated cryptocurrency prices, visualize price trends via interactive charts, analyze statistics such as market capitalization, volume, and price fluctuations, and manage a virtual portfolio through buy and sell transactions." },
-        tags: ["HTML", "JavaScript", "CSS"],
-        url: "https://pigi86.github.io/LedgerCoin/",
-        imgUrl: "Images/webpage5.png"
-    },
-    {
-        id: 6, cat: "web", thumb: "thumb-web-3", ref: "WEB-2025-08",
-        title: { es: "Service Flow Sitio Web", en: "Service Flow Web Page" },
-        desc: { es: "Plataforma web empresarial diseñada para centralizar la gestión de tickets, clientes, equipos y operaciones. Incluye dashboard de métricas, seguimiento de incidencias, filtros, búsqueda, reportes y administración de usuarios, con una interfaz moderna, responsive y orientada a mejorar la eficiencia operativa.", en: "An enterprise web platform designed to centralize the management of tickets, clients, teams, and operations. It features a metrics dashboard, incident tracking, filtering, search capabilities, reporting, and user administration, all within a modern, responsive interface aimed at improving operational efficiency." },
-        tags: ["HTML", "JavaScript", "CSS", "Power Apps"],
-        url: "https://pigi86.github.io/ServiceFlow/",
-        imgUrl: "Images/webpage6.png"
-    },
-    {
-        id: 7, cat: "gd", thumb: "thumb-gd-1", ref: "GD-2026-09",
-        title: { es: "El Tiempo Geológico", en: "Geologic Time" },
-        desc: { es: "Donde el tiempo geológico se encuentra con el pulso del mañana. Un fragmento de eternidad petrificado en pirita y cristal, ahora convertido en la brújula que traza un rumbo a través de los océanos del tiempo y el espacio profundo. De la materia prima a la proyección de la luz, el tiempo no es solo medida; es la esencia de lo que fuimos y seremos. El viaje comienza en la muñeca.", en: "Where geological time meets the pulse of tomorrow. A fragment of eternity—petrified in pyrite and crystal—now transformed into a compass charting a course across the oceans of time and deep space. From raw material to the projection of light, time is not merely a measurement; it is the essence of who we were and who we will become. The journey begins on the wrist." },
-        tags: ["Adobe Fireworks", "Illustrator", "IA"],
-        imgUrl: "Images/galery/803323368_18615402526057387_5107416572513340125_n.jpg"
-    },
-    {
-        id: 8, cat: "gd", thumb: "thumb-gd-2", ref: "GD-2026-06",
-        title: { es: "Construyendo el Futuro", en: "Building the Future" },
-        desc: { es: "Entre datos, estrellas y posibilidades infinitas. Construyendo el futuro una línea de código, una idea y un desafío a la vez.", en: "Amidst data, stars, and infinite possibilities. Building the future—one line of code, one idea, and one challenge at a time." },
-        tags: ["Photoshop", "Adobe Fireworks", "IA"],
-        imgUrl: "Images/galery/723238858_18588151651057387_7384351274187935941_n.jpg"
-    },
-    {
-        id: 9, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-01",
-        title: { es: "La Sombra del Tigre de Plata", en: "The Shadow of the Silver Tiger" },
-        desc: { es: "Imponente ilustración de un guerrero antropomórfico con rasgos de tigre blanco y armadura de combate labrada. Sus ojos resplandecen con una intensa energía azul que contrasta con el aura mística de tonos púrpuras que lo rodea, proyectando la figura de un jefe legendario de la fantasía oscura.", en: "A striking illustration of an anthropomorphic warrior with the features of a white tiger and intricately carved battle armor. His eyes glow with an intense blue energy that contrasts with the mystical, purple aura surrounding him, projecting the image of a legendary dark fantasy chieftain." },
-        tags: ["Adobe Fireworks", "IA"],
-        imgUrl: "Images/galery/Pigi_white_tiger_dark_souls_c2c4fbe2-1bb7-4dec-a34e-504f74f97540 - Copy.jpg"
-    },
-    {
-        id: 10, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-03",
-        title: { es: "La Historia", en: "The Story" },
-        desc: { es: "Cada línea cuenta una historia. Cada idea deja una marca.", en: "Every line tells a story. Every idea leaves a mark." },
-        tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "Images/galery/651168257_18561585814057387_8236522324979950329_n.webp"
-    },
-    {
-        id: 11, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-04",
-        title: { es: "La Identidad", en: "The Identity" },
-        desc: { es: "Entre tinta y experiencias, se dibuja la identidad.", en: "Identity takes shape amidst ink and experiences." },
-        tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "Images/galery/492042516_18493622977057387_8673969118512317235_n.webp"
-    },
-    {
-        id: 12, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-01",
-        title: { es: "La Experiencia", en: "The Experience" },
-        desc: { es: "La experiencia no se mide por los años, sino por los desafíos que te animaste a enfrentar.", en: "Experience is not measured by years, but by the challenges you dared to face." },
-        tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "Images/galery/475783606_18476939866057387_694745016303068710_n.webp"
-    },
-    {
-        id: 13, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2025-10",
-        title: { es: "El Guardián del Bit y el Oro", en: "The Guardian of Bit and Gold" },
-        desc: { es: "Surgiendo del vacío, este antiguo guardián ha regresado. Fríos ojos azules que todo lo ven. Llamas púrpuras que purgan la sombra.", en: "Emerging from the void, this ancient guardian has returned. Cold blue eyes that see all. Purple flames that purge the shadow." },
-        tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "Images/galery/572384413_18529890895057387_2985686607725497839_n.webp"
-    },
-    {
-        id: 14, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2026-02",
-        title: { es: "No es solo un dibujo... es papel", en: "It's not just a drawing... it's paper." },
-        desc: { es: "Donde la geometría y la textura se encuentran. Esta pieza de arte low-poly cobró vida con cada pliegue de papel meticulosamente diseñado. Desde la bufanda hasta el reflejo de la puesta de sol en las gafas, es todo un mundo de detalles. ¿Quién más se une al club de los pliegues?", en: "Where geometry and texture meet. This low-poly art piece came to life with every meticulously designed paper fold. From the scarf to the sunset reflecting in the glasses, it’s a whole world of detail. Who else is joining the folding club?" },
-        tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "Images/galery/640184412_18556927060057387_3678659511849913627_n.webp"
-    },
-    {
-        id: 15, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2019-10",
-        title: { es: "Un Cosmos en mis Manos", en: "A Cosmos in My Hands" },
-        desc: { es: "Tejiendo estrellas y sosteniendo planetas. ✨ El poder del cosmos está en nuestras manos, si nos atrevemos a mirar más allá de la oscuridad. ¿Cuál es tu rincón favorito del universo?", en: "Weaving stars and holding planets. ✨ The power of the cosmos lies in our hands, if we dare to look beyond the darkness. What is your favorite corner of the universe?" },
-        tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "Images/galery/633354222_18389236897159490_5365674072843004945_n.jpg"
-    },
-    {
-        id: 16, cat: "gd", thumb: "thumb-gd-3", ref: "GD-2023-09",
-        title: { es: "El Hombre de la Máscara", en: "The Man in the Mask" },
-        desc: { es: "“Detrás de cada máscara hay un rostro, y detrás de este, una historia.” ― Marty Rubin", en: "“Behind every mask, there is a face, and behind that a story.” ― Marty Rubin" },
-        tags: ["Adobe Fireworks", "Photoshop"],
-        imgUrl: "Images/galery/625059809_18090390788063260_6516125498507490905_n.jpg"
-    }
-];
-
-let currentLang = 'es';
-const FEATURED_IDS = [2, 3]; // proyectos destacados (ids de `projects`)
-let currentFilter = 'all';
-let currentSearch = '';
-let currentPage = 1;
-const CARDS_PER_PAGE = 6;
-
-function renderCards() {
-    const container = document.getElementById('cards');
-    container.innerHTML = '';
-
-    const query = currentSearch.trim().toLocaleLowerCase();
-    // Los destacados se muestran arriba; con búsqueda activa o filtro de diseño se ocultan y vuelven a la galería
-    const featuredVisible = !query && currentFilter !== 'gd';
-    renderFeatured(featuredVisible);
-    const filtered = projects.filter(p => {
-        if (featuredVisible && FEATURED_IDS.indexOf(p.id) !== -1) return false;
-        const matchesCategory = currentFilter === 'all' || p.cat === currentFilter;
-        if (!matchesCategory) return false;
-        if (!query) return true;
-
-        const searchable = [
-            p.title && p.title[currentLang],
-            p.title && p.title.es,
-            p.title && p.title.en,
-            p.desc && p.desc[currentLang],
-            p.desc && p.desc.es,
-            p.desc && p.desc.en,
-            p.ref,
-            ...(p.tags || [])
-        ].filter(Boolean).join(' ').toLocaleLowerCase();
-
-        return searchable.includes(query);
-    });
-
-    const hasSearch = query.length > 0;
-
-    const emptyState = document.getElementById('work-empty');
-    if (emptyState) emptyState.hidden = !hasSearch || filtered.length !== 0;
-
-    const resultCount = document.getElementById('work-search-count');
-    if (resultCount) {
-        resultCount.hidden = !hasSearch;
-        if (hasSearch) {
-            const t = translations[currentLang];
-            const label = filtered.length === 1 ? t.workSearchResultSingular : t.workSearchResultPlural;
-            resultCount.textContent = filtered.length + ' ' + label;
-        } else {
-            resultCount.textContent = '';
-        }
-    }
-
-    const totalPages = Math.max(1, Math.ceil(filtered.length / CARDS_PER_PAGE));
-    if (currentPage > totalPages) currentPage = totalPages;
-    if (currentPage < 1) currentPage = 1;
-
-    const start = (currentPage - 1) * CARDS_PER_PAGE;
-    const pageItems = filtered.slice(start, start + CARDS_PER_PAGE);
-
-    pageItems
-        .forEach(p => {
-            const card = document.createElement('div');
-            card.className = 'card ticked';
-            card.setAttribute('data-cat', p.cat);
-            card.setAttribute('data-img', p.imgUrl || '');
-            card.innerHTML = `    
-    <div class="card-thumb">
-        <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" width="400" height="225" />
-        <span class="card-ref mono">${p.ref}</span>
-    </div>
-    <h3>${p.title[currentLang]}</h3>
-    <p>${p.desc[currentLang]}</p>
-    <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
-    <span class="service-more" data-i18n="serviceMore">${translations[currentLang].serviceMore}</span>
-    `;
-            // If this is a graphic design item, open modal on click
-            //if (p.cat === 'gd') {
-            card.addEventListener('click', () => {
-                openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang], p.tags, p.url);
-            });
-            //}
-            container.appendChild(card);
-
-        });
-
-    renderPagination(totalPages);
+/* Hide the old intro-name on large screens (we use intro-headline there); keep for small viewports */
+.intro-name {
+    display: none;
 }
 
-function renderFeatured(show) {
-    const box = document.getElementById('featured-projects');
-    if (!box) return;
-    box.innerHTML = '';
-    box.hidden = !show;
-    if (!show) return;
-    const t = translations[currentLang];
-
-    FEATURED_IDS.map(id => projects.find(p => p.id === id)).filter(Boolean).forEach((p, i) => {
-        const year = (p.ref.split('-')[1]) || '';
-        let host = '';
-        try {
-            const u = new URL(p.url);
-            host = u.host + u.pathname.replace(/\/$/, '');
-        } catch (e) { /* sin url */ }
-
-        const el = document.createElement('article');
-        el.className = 'featured';
-        el.innerHTML = `
-    <div class="featured-copy">
-        <div class="featured-meta mono">
-            <span>${String(i + 1).padStart(2, '0')}</span><span>${year}</span><i></i><span class="featured-label">${t.featuredLabel}</span>
-        </div>
-        <h3>${p.title[currentLang]}</h3>
-        <p>${p.desc[currentLang]}</p>
-        <div class="card-tags">${p.tags.map(tag => `<span>${tag}</span>`).join('')}</div>
-        <div class="featured-links">
-            <button type="button" class="featured-link" data-featured-detail>${t.featuredDetail} <span aria-hidden="true">↗</span></button>
-            ${p.url ? `<a class="featured-link" href="${p.url}" target="_blank" rel="noopener">${t.featuredLive}</a>` : ''}
-        </div>
-    </div>
-    <div class="browser" role="button" tabindex="0" data-featured-detail>
-        <div class="browser-bar">
-            <span class="browser-dots"><i></i><i></i><i></i></span>
-            <span class="browser-url mono">${host}</span>
-        </div>
-        <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" />
-    </div>`;
-
-        const open = () => openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang], p.tags, p.url);
-        el.querySelectorAll('[data-featured-detail]').forEach(node => {
-            node.addEventListener('click', open);
-            node.addEventListener('keydown', e => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
-            });
-        });
-        box.appendChild(el);
-    });
+/* ===== Tema claro =====
+   Se activa con [data-theme="light"] en <html>; el toggle de tema
+   guarda la eleccion en localStorage y respeta prefers-color-scheme
+   como valor inicial cuando el usuario no eligio nada todavia. */
+:root[data-theme="light"] {
+    --bg: #f6f8fb;
+    --bg-2: #eef2f7;
+    --surface: #ffffff;
+    --surface-2: #eef2f7;
+    --text: #101826;
+    --muted: #55647a;
+    --line: rgba(16,24,38,.12);
+    --white: #101826;
+    --whiteIntro: rgba(16,24,38,0.09);
+    --shadow: 0 20px 60px rgba(16,24,38,.10);
+    --header-bg: rgba(246,248,251,.82);
+    --header-bg-solid: rgba(246,248,251,.97);
+    --grid-line: rgba(16,24,38,.035);
+    --ov-025: rgba(16,24,38,.035);
+    --ov-03: rgba(16,24,38,.04);
+    --ov-035: rgba(16,24,38,.045);
+    --ov-04: rgba(16,24,38,.05);
+    --grad-hero-a: rgba(16,24,38,.05);
+    --grad-hero-b: rgba(16,24,38,.02);
+    --grad-service-a: rgba(16,24,38,.045);
+    --grad-service-b: rgba(16,24,38,.015);
+    --input-bg: rgba(16,24,38,.035);
+    --input-bg-focus: rgba(16,24,38,.05);
+    --card-shadow-hover: 0 10px 26px rgba(16,24,38,.14);
+    --accent: darkblue;
+    --accentInput: rgba(0, 0, 139,.72);
+    --accentInputShadow: rgba(0, 0, 139,.08);
+    --liText: black;
+    --linkText: black;
+    --buttonText: white;
 }
 
-function renderPagination(totalPages) {
-    const nav = document.getElementById('cards-pagination');
-    if (!nav) return;
-    nav.innerHTML = '';
-
-    if (totalPages <= 1) return;
-
-    const t = translations[currentLang];
-
-    function makeButton(label, targetPage, opts) {
-        opts = opts || {};
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.textContent = label;
-        if (opts.current) {
-            btn.className = 'active';
-            btn.setAttribute('aria-current', 'page');
-        }
-        btn.disabled = !!opts.disabled;
-        btn.addEventListener('click', () => goToPage(targetPage));
-        return btn;
-    }
-
-    nav.appendChild(makeButton('← ' + t.pagPrev, currentPage - 1, { disabled: currentPage === 1 }));
-
-    for (let i = 1; i <= totalPages; i++) {
-        const btn = makeButton(String(i), i, { current: i === currentPage });
-        btn.setAttribute('aria-label', t.pagPage + ' ' + i);
-        nav.appendChild(btn);
-    }
-
-    nav.appendChild(makeButton(t.pagNext + ' →', currentPage + 1, { disabled: currentPage === totalPages }));
+* {
+    box-sizing: border-box
 }
 
-function goToPage(page) {
-    currentPage = page;
-    renderCards();
-    const section = document.getElementById('trabajo');
-    //if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+html {
+    scroll-behavior: smooth;
 }
 
-function setFilter(filter, btn) {
-    currentFilter = filter;
-    currentPage = 1;
-    document.querySelectorAll('.work-toggle button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderCards();
+/* =========================
+   CUSTOM SCROLLBAR
+   ========================= */
+
+::-webkit-scrollbar {
+    /* width: 10px;*/
 }
 
-// Search de proyectos: filtra por título, descripción, referencia y tecnologías.
-(function () {
-    const input = document.getElementById('work-search-input');
-    const clear = document.getElementById('work-search-clear');
-    if (!input) return;
-
-    function updateSearch(value) {
-        currentSearch = value || '';
-        currentPage = 1;
-        if (clear) clear.hidden = !currentSearch.trim();
-        renderCards();
-    }
-
-    input.addEventListener('input', function () {
-        updateSearch(this.value);
-    });
-
-    if (clear) {
-        clear.addEventListener('click', function () {
-            input.value = '';
-            updateSearch('');
-            input.focus();
-        });
-    }
-
-    input.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && input.value) {
-            input.value = '';
-            updateSearch('');
-        }
-    });
-})();
-
-// Back to top button behavior
-(function () {
-    const backBtn = document.getElementById('back-to-top');
-    const firstSection = document.querySelector('section.hero') || document.querySelector('main section');
-    if (!backBtn) return;
-
-    function scrollToFirst() {
-        if (firstSection) {
-            //firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
-
-    backBtn.addEventListener('click', scrollToFirst);
-
-    function updateVisibility() {
-        if (window.scrollY > 220) backBtn.classList.remove('hidden');
-        else backBtn.classList.add('hidden');
-    }
-
-    window.addEventListener('scroll', updateVisibility, { passive: true });
-    // initial state
-    updateVisibility();
-})();
-
-// Mobile nav (hamburger) behavior
-(function () {
-    const toggle = document.getElementById('nav-toggle');
-    const nav = document.getElementById('site-nav');
-    const backdrop = document.getElementById('nav-backdrop');
-    if (!toggle || !nav) return;
-
-    function openNav() {
-        nav.classList.add('open');
-        toggle.classList.add('open');
-        toggle.setAttribute('aria-expanded', 'true');
-        if (backdrop) backdrop.classList.add('show');
-    }
-
-    function closeNav() {
-        nav.classList.remove('open');
-        toggle.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-        if (backdrop) backdrop.classList.remove('show');
-    }
-
-    toggle.addEventListener('click', function () {
-        if (nav.classList.contains('open')) closeNav();
-        else openNav();
-    });
-
-    if (backdrop) backdrop.addEventListener('click', closeNav);
-
-    // Close after tapping a link or the language switch
-    nav.querySelectorAll('a.navlink, a.navlinkContact, .langswitch button, #theme-toggle').forEach(el => {
-        el.addEventListener('click', closeNav);
-    });
-
-    window.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeNav();
-    });
-
-    window.addEventListener('resize', function () {
-        if (window.innerWidth > 780) closeNav();
-    });
-})();
-
-// Service detail modal
-const serviceDetails = {
-    web: {
-        num: "01 / WEB",
-        titleKey: "serviceWebTitle",
-        tools: ["HTML", "CSS", "JavaScript", "React", "Node.js", "WordPress"],
-        es: {
-            lead: "Diseño y desarrollo sitios y aplicaciones web pensados para verse bien y funcionar rápido en cualquier dispositivo, con una base de código ordenada que se pueda mantener y ampliar con el tiempo.",
-            includes: [
-                "Sitios institucionales y landing pages a medida.",
-                "Aplicaciones web con React y Node.js.",
-                "Sitios administrables en WordPress, cuando necesitás editar tu propio contenido.",
-                "Diseño responsive, buen rendimiento y estructura pensada para buscadores.",
-                "Formularios de contacto, integraciones y publicación del sitio."
-            ]
-        },
-        en: {
-            lead: "I design and build websites and web applications that look good and run fast on any device, on a clean codebase that can be maintained and extended over time.",
-            includes: [
-                "Custom institutional sites and landing pages.",
-                "Web applications with React and Node.js.",
-                "Editable WordPress sites, when you need to manage your own content.",
-                "Responsive design, solid performance and search-friendly structure.",
-                "Contact forms, integrations and site deployment."
-            ]
-        }
-    },
-    power: {
-        num: "02 / POWER",
-        titleKey: "servicePowerTitle",
-        tools: ["Power Apps", "Power Automate", "SharePoint", "SQL Server"],
-        es: {
-            lead: "Automatizo procesos y construyo aplicaciones internas sobre Power Platform para que los equipos dejen de depender de planillas, mails y tareas manuales.",
-            includes: [
-                "Aplicaciones con Power Apps para cargar, aprobar y gestionar información.",
-                "Flujos con Power Automate: notificaciones, aprobaciones e integraciones entre sistemas.",
-                "Sitios, listas y bibliotecas de SharePoint como repositorio de datos y documentos.",
-                "Conexión con SQL Server y otras fuentes de datos.",
-                "Acompañamiento en la puesta en marcha y ajustes posteriores."
-            ]
-        },
-        en: {
-            lead: "I automate processes and build internal applications on Power Platform so teams can stop relying on spreadsheets, emails and manual tasks.",
-            includes: [
-                "Power Apps applications to capture, approve and manage information.",
-                "Power Automate flows: notifications, approvals and integrations between systems.",
-                "SharePoint sites, lists and libraries as a data and document repository.",
-                "Connection to SQL Server and other data sources.",
-                "Support during rollout and follow-up adjustments."
-            ]
-        }
-    },
-    design: {
-        num: "03 / DESIGN",
-        titleKey: "serviceDesignTitle",
-        tools: ["Figma", "Illustrator", "Photoshop", "InDesign", "Fireworks"],
-        es: {
-            lead: "Resuelvo el lado visual de un proyecto: desde la interfaz de una aplicación hasta la identidad y las piezas gráficas que la acompañan, cuidando la claridad y la consistencia.",
-            includes: [
-                "Diseño de interfaces y prototipos en Figma.",
-                "Identidad visual: logotipos, paleta de color y tipografías.",
-                "Piezas gráficas para redes sociales y material impreso.",
-                "Maquetación de documentos y publicaciones con InDesign.",
-                "Retoque y edición de imágenes con Photoshop e Illustrator."
-            ]
-        },
-        en: {
-            lead: "I take care of the visual side of a project: from an application's interface to the identity and graphic pieces that go with it, focused on clarity and consistency.",
-            includes: [
-                "Interface design and prototypes in Figma.",
-                "Visual identity: logos, color palette and typography.",
-                "Graphic pieces for social media and print material.",
-                "Document and publication layout with InDesign.",
-                "Image retouching and editing with Photoshop and Illustrator."
-            ]
-        }
-    },
-    csharp: {
-        num: "04 / CSHARP",
-        titleKey: "serviceCSharpTitle",
-        tools: ["C#", ".NET", "SQL Server"],
-        es: {
-            lead: "Desarrollo la lógica de negocio y los servicios que hay detrás de una aplicación, con C# y .NET, priorizando un código claro y fácil de mantener.",
-            includes: [
-                "Aplicaciones y servicios backend con C# y .NET.",
-                "APIs para conectar aplicaciones web y sistemas existentes.",
-                "Acceso a datos y trabajo conjunto con SQL Server.",
-                "Mantenimiento y evolución de sistemas que ya están en producción.",
-                "Automatización de procesos internos."
-            ]
-        },
-        en: {
-            lead: "I build the business logic and services behind an application with C# and .NET, prioritizing clear, maintainable code.",
-            includes: [
-                "Backend applications and services with C# and .NET.",
-                "APIs to connect web applications and existing systems.",
-                "Data access and close work with SQL Server.",
-                "Maintenance and evolution of systems already in production.",
-                "Internal process automation."
-            ]
-        }
-    },
-    sql: {
-        num: "05 / SQL",
-        titleKey: "serviceSqlTitle",
-        tools: ["SQL Server", "C#", "Power Platform"],
-        es: {
-            lead: "Diseño y mejoro la capa de datos: estructuras claras, consultas eficientes y bases que sigan funcionando bien a medida que la información crece.",
-            includes: [
-                "Modelado de bases de datos: tablas, relaciones y restricciones.",
-                "Consultas, vistas y procedimientos almacenados.",
-                "Optimización de consultas lentas y diseño de índices.",
-                "Extracción de datos y reportes para otras aplicaciones.",
-                "Integración con aplicaciones en C# y con Power Platform."
-            ]
-        },
-        en: {
-            lead: "I design and improve the data layer: clear structures, efficient queries and databases that keep performing well as the data grows.",
-            includes: [
-                "Database modeling: tables, relationships and constraints.",
-                "Queries, views and stored procedures.",
-                "Slow query optimization and index design.",
-                "Data extraction and reporting for other applications.",
-                "Integration with C# applications and Power Platform."
-            ]
-        }
-    },
-    ai: {
-        num: "06 / AI",
-        titleKey: "serviceAiTitle",
-        tools: ["C#", "JavaScript", "Power Automate"],
-        es: {
-            lead: "Incorporo inteligencia artificial en proyectos concretos, donde aporta valor real: asistentes, análisis de texto y automatización de tareas repetitivas.",
-            includes: [
-                "Integración de modelos de lenguaje en sitios y aplicaciones.",
-                "Asistentes conectados a la información de tu negocio.",
-                "Resumen, clasificación y extracción de datos desde texto y documentos.",
-                "Automatización de flujos combinando IA con Power Automate.",
-                "Evaluación de dónde conviene usar IA y dónde no."
-            ]
-        },
-        en: {
-            lead: "I bring artificial intelligence into concrete projects where it adds real value: assistants, text analysis and automation of repetitive tasks.",
-            includes: [
-                "Integration of language models into websites and applications.",
-                "Assistants connected to your business information.",
-                "Summarizing, classifying and extracting data from text and documents.",
-                "Workflow automation combining AI with Power Automate.",
-                "Assessing where AI makes sense and where it doesn't."
-            ]
-        }
-    }
-};
-
-const processDetails = {
-    understand: {
-        titleKey: "step1Title",
-        es: {
-            num: "Paso 01 / 04",
-            lead: "Antes de abrir un editor de código o una herramienta de diseño, me tomo el tiempo de entender qué problema hay que resolver y para quién, así el proyecto arranca con un rumbo claro.",
-            includes: [
-                "Una primera conversación para conocer el negocio, los objetivos y el contexto del proyecto.",
-                "Identificar quiénes van a usar la solución y qué necesitan de ella.",
-                "Relevar los procesos, sistemas y datos con los que hay que trabajar.",
-                "Definir el alcance: qué entra ahora, qué queda para más adelante y qué es prioritario.",
-                "Acordar tiempos y forma de trabajo."
-            ],
-            deliverables: ["Objetivos claros", "Alcance definido", "Prioridades acordadas", "Plan de trabajo"]
-        },
-        en: {
-            num: "Step 01 / 04",
-            lead: "Before opening a code editor or a design tool, I take the time to understand which problem needs solving and for whom, so the project starts with a clear direction.",
-            includes: [
-                "An initial conversation to get to know the business, the goals and the project context.",
-                "Identifying who will use the solution and what they need from it.",
-                "Mapping the processes, systems and data involved.",
-                "Defining the scope: what goes in now, what waits for later and what is a priority.",
-                "Agreeing on timelines and ways of working."
-            ],
-            deliverables: ["Clear goals", "Defined scope", "Agreed priorities", "Work plan"]
-        }
-    },
-    design: {
-        titleKey: "step2Title",
-        es: {
-            num: "Paso 02 / 04",
-            lead: "Con el alcance definido, planteo cómo va a ser la solución: cómo se organiza, cómo se ve y cómo se construye, para validar el rumbo antes de desarrollar.",
-            includes: [
-                "Estructura de la información y flujos de navegación o de proceso.",
-                "Diseño visual de las pantallas y prototipos en Figma para validar antes de programar.",
-                "Definición de la solución técnica: tecnologías, datos e integraciones.",
-                "Revisión conjunta para ajustar lo necesario antes de pasar a construir."
-            ],
-            deliverables: ["Estructura y flujos", "Prototipo", "Diseño visual", "Solución técnica"]
-        },
-        en: {
-            num: "Step 02 / 04",
-            lead: "With the scope defined, I lay out what the solution will be: how it is organized, how it looks and how it is built, so the direction is validated before development starts.",
-            includes: [
-                "Information structure and navigation or process flows.",
-                "Visual design of the screens and Figma prototypes to validate before coding.",
-                "Definition of the technical solution: technologies, data and integrations.",
-                "A joint review to adjust whatever is needed before moving on to build."
-            ],
-            deliverables: ["Structure and flows", "Prototype", "Visual design", "Technical solution"]
-        }
-    },
-    build: {
-        titleKey: "step3Title",
-        es: {
-            num: "Paso 03 / 04",
-            lead: "Desarrollo la solución en etapas cortas y muestro avances, para que puedas ver el proyecto tomar forma y opinar mientras todavía es fácil hacer cambios.",
-            includes: [
-                "Desarrollo iterativo, con entregas parciales que se pueden revisar.",
-                "Integración con los sistemas, bases de datos y servicios necesarios.",
-                "Pruebas para validar que todo funcione como se acordó, en distintos dispositivos y escenarios.",
-                "Incorporación de tus comentarios en cada etapa."
-            ],
-            deliverables: ["Avances revisables", "Integraciones", "Pruebas", "Versión lista para publicar"]
-        },
-        en: {
-            num: "Step 03 / 04",
-            lead: "I build the solution in short stages and show progress, so you can see the project take shape and give feedback while changes are still easy to make.",
-            includes: [
-                "Iterative development, with partial deliveries that can be reviewed.",
-                "Integration with the required systems, databases and services.",
-                "Testing to confirm everything works as agreed, across devices and scenarios.",
-                "Incorporating your feedback at every stage."
-            ],
-            deliverables: ["Reviewable progress", "Integrations", "Testing", "Release-ready version"]
-        }
-    },
-    improve: {
-        titleKey: "step4Title",
-        es: {
-            num: "Paso 04 / 04",
-            lead: "Publicar no es el final. Después del lanzamiento reviso cómo se usa la solución y la ajusto para que siga funcionando bien y evolucionando junto con el negocio.",
-            includes: [
-                "Puesta en marcha y seguimiento de los primeros días de uso.",
-                "Corrección de errores y ajustes a partir del uso real.",
-                "Mejoras de rendimiento y de experiencia de uso.",
-                "Nuevas funcionalidades a medida que cambian las necesidades."
-            ],
-            deliverables: ["Puesta en marcha", "Ajustes", "Mejor rendimiento", "Nuevas funciones"]
-        },
-        en: {
-            num: "Step 04 / 04",
-            lead: "Launching is not the end. After release I look at how the solution is used and fine-tune it so it keeps working well and evolving alongside the business.",
-            includes: [
-                "Rollout and follow-up during the first days of use.",
-                "Bug fixes and adjustments based on real usage.",
-                "Performance and user experience improvements.",
-                "New features as needs change."
-            ],
-            deliverables: ["Rollout", "Adjustments", "Better performance", "New features"]
-        }
-    }
-};
-
-const serviceModal = document.getElementById('service-modal');
-let activeServiceKind = 'service';
-let activeServiceKey = null;
-let serviceTrigger = null;
-
-function renderServiceModal() {
-    if (!serviceModal || !activeServiceKey) return;
-    const isProcess = activeServiceKind === 'process';
-    const d = (isProcess ? processDetails : serviceDetails)[activeServiceKey];
-    const c = d[currentLang];
-    const t = translations[currentLang];
-
-    document.getElementById('service-modal-num').textContent = c.num || d.num;
-    document.getElementById('service-modal-title').textContent = t[d.titleKey];
-    document.getElementById('service-modal-lead').textContent = c.lead;
-    document.getElementById('service-modal-h-list').textContent = isProcess ? t.processIncludes : t.serviceIncludes;
-    document.getElementById('service-modal-h-extra').textContent = isProcess ? t.processDeliver : t.serviceTools;
-    document.getElementById('service-modal-cta').textContent = isProcess ? t.heroCtaContact : t.serviceCta;
-
-    const list = document.getElementById('service-modal-list');
-    list.innerHTML = '';
-    c.includes.forEach(text => {
-        const li = document.createElement('li');
-        li.textContent = text;
-        list.appendChild(li);
-    });
-
-    const chips = document.getElementById('service-modal-tools');
-    chips.innerHTML = '';
-    (isProcess ? c.deliverables : d.tools).forEach(text => {
-        const span = document.createElement('span');
-        span.textContent = text;
-        chips.appendChild(span);
-    });
+::-webkit-scrollbar-track {
+    background: var(--bg);
 }
 
-function openServiceModal(kind, key, trigger) {
-    const source = kind === 'process' ? processDetails : serviceDetails;
-    if (!serviceModal || !source[key]) return;
-    activeServiceKind = kind;
-    activeServiceKey = key;
-    serviceTrigger = trigger || null;
-    renderServiceModal();
-    serviceModal.querySelector('.service-modal-content').scrollTop = 0;
-    serviceModal.classList.remove('hidden');
-    serviceModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    serviceModal.querySelector('.service-modal-close').focus();
+::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 999px;
+    border: 2px solid #0b1020;
 }
 
-function closeServiceModal(restoreFocus) {
-    if (!serviceModal || serviceModal.classList.contains('hidden')) return;
-    serviceModal.classList.add('hidden');
-    serviceModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    activeServiceKey = null;
-    if (restoreFocus !== false && serviceTrigger) serviceTrigger.focus();
-    serviceTrigger = null;
-}
-
-if (serviceModal) {
-    // Tarjetas de servicios y pasos del proceso abren el mismo popup
-    [['.service[data-service]', 'data-service', 'service'],
-    ['.step[data-process]', 'data-process', 'process']].forEach(([selector, attr, kind]) => {
-        document.querySelectorAll(selector).forEach(card => {
-            const open = () => openServiceModal(kind, card.getAttribute(attr), card);
-            card.addEventListener('click', open);
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    open();
-                }
-            });
-        });
-    });
-
-    serviceModal.addEventListener('click', (ev) => {
-        if (ev.target.getAttribute('data-action') === 'close') closeServiceModal();
-        if (ev.target.closest('[data-action="contact"]')) closeServiceModal(false);
-    });
-    serviceModal.querySelector('.service-modal-close').addEventListener('click', () => closeServiceModal());
-
-    window.addEventListener('keydown', (e) => {
-        if (serviceModal.classList.contains('hidden')) return;
-        if (e.key === 'Escape') {
-            closeServiceModal();
-        } else if (e.key === 'Tab') {
-            // mantiene el foco dentro del popup
-            const focusables = serviceModal.querySelectorAll('button, a[href]');
-            const first = focusables[0];
-            const last = focusables[focusables.length - 1];
-            if (e.shiftKey && document.activeElement === first) {
-                e.preventDefault();
-                last.focus();
-            } else if (!e.shiftKey && document.activeElement === last) {
-                e.preventDefault();
-                first.focus();
-            }
-        }
-    });
-}
-
-function setLang(lang) {
-    //debugger;
-    const prevLang = currentLang;
-    // detect whether command palette or terminal were open so we can preserve their state
-    var _palette = document.getElementById('command-palette');
-    var _paletteInput = document.getElementById('command-input');
-    var _paletteWasOpen = _palette && !_palette.classList.contains('hidden');
-    var _paletteValue = _paletteInput ? _paletteInput.value : '';
-    var _terminal = document.getElementById('terminal-modal');
-    var _terminalInput = document.getElementById('terminal-input');
-    var _terminalWasOpen = _terminal && !_terminal.classList.contains('hidden');
-    var _terminalValue = _terminalInput ? _terminalInput.value : '';
-    currentLang = lang;
-    document.documentElement.lang = lang;
-    document.getElementById('btn-es').classList.toggle('active', lang === 'es');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang][key] !== undefined) {
-            el.innerHTML = translations[lang][key];
-        }
-    });
-    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.getAttribute("data-i18n-placeholder");
-        if (translations[lang][key] !== undefined) {
-            el.placeholder = translations[lang][key];
-        }
-    });
-    document.querySelectorAll("[data-i18n-aria]").forEach(el => {
-        const key = el.getAttribute("data-i18n-aria");
-        if (translations[lang][key] !== undefined) {
-            el.setAttribute('aria-label', translations[lang][key]);
-        }
-    });
-    renderCards();
-    renderHeroStats();
-    renderServiceModal();
-    // Notify other modules (command palette / terminal) that language changed
-    try { window.dispatchEvent(new CustomEvent('lp:langchange', { detail: { lang: lang } })); } catch (e) { }
-    // If the palette or terminal were open before the change, reopen them after handlers run so they stay open
-    try {
-        if (_paletteWasOpen && typeof window._portfolioOpenPalette === 'function') {
-            // Reopen AFTER the click event finishes bubbling. The command
-            // palette has a close handler on its backdrop, so reopening
-            // synchronously here can be immediately undone by that handler.
-            setTimeout(function () {
-                try { window._portfolioOpenPalette(); } catch (e) { }
-                if (_paletteInput) {
-                    _paletteInput.value = _paletteValue || '';
-                    try { renderCommands(_paletteInput.value || ''); } catch (e) { }
-                    try { _paletteInput.focus(); } catch (e) { }
-                }
-            }, 0);
-        }
-    } catch (e) { }
-    try {
-        if (_terminalWasOpen && typeof window._portfolioOpenTerminal === 'function') {
-            window._portfolioOpenTerminal();
-            setTimeout(function () {
-                if (_terminalInput) {
-                    _terminalInput.value = _terminalValue || '';
-                    try { _terminalInput.focus(); } catch (e) { }
-                }
-            }, 40);
-        }
-    } catch (e) { }
-    if (typeof window.applyThemeLabels === 'function') window.applyThemeLabels();
-
-    try { localStorage.setItem('lp-lang', lang); } catch (err) { /* storage no disponible */ }
-}
-
-// Restaura el idioma elegido en esta misma sesion (si lo hay)
-(function () {
-    let savedLang = null;
-    try { savedLang = localStorage.getItem('lp-lang'); } catch (err) { /* storage no disponible */ }
-    if (savedLang && savedLang !== currentLang && translations[savedLang]) {
-        setLang(savedLang);
+    ::-webkit-scrollbar-thumb:hover {
+        background: #e0c263;
     }
-})();
 
-renderCards();
+/* Firefox */
+html {
+    /* scrollbar-width: thin;*/
+    scrollbar-color: var(--accent) var(--bg);
+}
 
-// Graphic-design modal handling
-const gdModal = document.getElementById('gd-modal');
-const gdModalImg = document.getElementById('gd-modal-img');
-const gdModalTitle = document.getElementById('gd-modal-title');
-const gdModalDesc = document.getElementById('gd-modal-desc');
-const gdModalTags = document.getElementById('gd-modal-tags');
-const gdModalButton = document.getElementById('gd-modal-button');
+body {
+    margin: 0;
+    background: radial-gradient(circle at 80% 0%,rgba(101,230,210,.11),transparent 28rem), radial-gradient(circle at 10% 20%,rgba(138,167,255,.10),transparent 30rem), var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans',sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
 
-function openGdModal(imgSrc, title, desc, tags, url) {
-    if (!gdModal) return;
-    gdModalImg.src = imgSrc || '';
-    gdModalImg.alt = title || '';
-    gdModalTitle.textContent = title || '';
-    gdModalDesc.textContent = desc || '';
-    gdModal.classList.remove('hidden');
-    gdModal.setAttribute('aria-hidden', 'false');
-    gdModalTags.replaceChildren();
-    gdModalButton.replaceChildren();
-    var newP = gdModalTags.appendChild(document.createElement("p"));
-    for (var ii = 0; ii < tags.length; ii++) {
-        const newSpan = document.createElement('span');
-        newSpan.textContent = tags[ii];
-        newP.appendChild(newSpan);
-        newP.append("\u00A0");
-        newP.append("\u00A0");
+    body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: .18;
+        background-image: linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+        background-size: 48px 48px;
+        mask-image: linear-gradient(to bottom,#000,transparent 75%);
     }
-    gdModalTags.appendChild(document.createElement("br"))
-    if (url != null) {
-        var newP2 = gdModalTags.appendChild(document.createElement("p"));
-        const newAnchor = document.createElement('a');
-        newAnchor.textContent = translations[currentLang].externalButton;
-        newAnchor.className = "btn-primary";
-        newAnchor.href = url;
-        newAnchor.setAttribute("data-i18n", "externalButton");
-        newAnchor.target = "_blank";
-        gdModalButton.appendChild(newAnchor);
+
+/* ===== Intro animada ===== */
+html.intro-lock body {
+    overflow: hidden;
+}
+
+.intro {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 38%,rgba(101,230,210,.14),transparent 55%), var(--bg);
+    transition: opacity .55s ease, visibility 0s .55s;
+}
+
+    .intro.intro-done {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
     }
-    // prevent body scroll
-    document.body.style.overflow = 'hidden';
+
+.intro-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
 }
 
-function closeGdModal() {
-    if (!gdModal) return;
-    gdModal.classList.add('hidden');
-    gdModal.setAttribute('aria-hidden', 'true');
-    gdModalImg.src = '';
-    document.body.style.overflow = '';
+.intro-mark {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    font: 700 24px 'Manrope',sans-serif;
+    color: var(--buttonText,#07111f);
+    background: linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow: 0 18px 40px rgba(101,230,210,.22);
+    opacity: 0;
+    transform: scale(.55);
+    animation: introMark .65s cubic-bezier(.22,.9,.3,1) .1s forwards;
 }
 
-// Bind modal events
-if (gdModal) {
-    // close buttons / backdrop
-    gdModal.addEventListener('click', (ev) => {
-        const action = ev.target.getAttribute('data-action');
-        if (action === 'close') closeGdModal();
-    });
-    const closeBtn = gdModal.querySelector('.gd-modal-close');
-    if (closeBtn) closeBtn.addEventListener('click', closeGdModal);
-    // ESC to close
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !gdModal.classList.contains('hidden')) closeGdModal();
-    });
+.intro-name {
+    font: 700 20px 'Manrope',sans-serif;
+    letter-spacing: .01em;
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(12px);
+    animation: introUp .5s ease .5s forwards;
 }
 
-function renderHeroStats() {
-    const el = document.getElementById('hero-stats');
-    if (!el) return;
-    const totalProjects = projects.length;
-    const areas = new Set(projects.map(p => p.cat)).size;
-    const t = translations[currentLang];
-    el.innerHTML = `
-        <div class="stat"><strong data-count="${totalProjects}">0</strong><span>${t.statProjects}</span></div>
-        <div class="stat"><strong data-count="${areas}">0</strong><span>${t.statAreas}</span></div>
-        <div class="stat"><strong data-count="2">0</strong><span>${t.statLangs}</span></div>
-    `;
-    el.style.display = 'flex';
-    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    el.querySelectorAll('[data-count]').forEach(function (node) {
-        const target = Number(node.getAttribute('data-count')) || 0;
-        if (reduced) { node.textContent = target; return; }
-        const start = performance.now();
-        const duration = 850;
-        function tick(now) {
-            const progress = Math.min(1, (now - start) / duration);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            node.textContent = Math.round(target * eased);
-            if (progress < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-    });
+.intro-role {
+    font: 500 12px 'JetBrains Mono',monospace;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: introUp .5s ease .68s forwards;
 }
-renderHeroStats();
 
-const errorLabel = document.getElementById('errorLabel');
-errorLabel.style.display = "none";
+.intro-line {
+    width: 120px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+    opacity: 0;
+    animation: introLineIn .3s ease .9s forwards;
+}
 
-function handleSubmit(e) {
-    e.preventDefault();
+    .intro-line span {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg,var(--accent),var(--accent-2));
+        transform: scaleX(0);
+        transform-origin: left center;
+        animation: introSweep .55s cubic-bezier(.4,0,.2,1) 1.05s forwards;
+    }
 
-    errorLabel.innerText = "";
-    errorLabel.style.display = "none";
-    errorLabel.classList.remove('is-error');
-
-    const myForm = document.querySelector('#contactForm');
-    const isValid = myForm.reportValidity();
-
-    if (isValid) {
-        const btn = document.getElementById('submit-btn');
-        sendEmail(btn);
+@keyframes introMark {
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
-function sendEmail(btn) {
-    const parametros = {
-        name: document.getElementById("contact-name").value,
-        email: document.getElementById("contact-email").value,
-        empresa: document.getElementById("contact-company").value,
-        phone: document.getElementById("contact-phone").value,
-        mensaje: document.getElementById("contact-message").value
-    };
-
-    if (typeof emailjs === 'undefined') {
-        errorLabel.innerText = translations[currentLang].fError;
-        errorLabel.classList.add('is-error');
-        errorLabel.style.display = "block";
-        errorLabel.style.width = "100%";
-        return;
+@keyframes introUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-
-    const originalLabel = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<span>${translations[currentLang].fSending}</span>`;
-
-    emailjs.send(
-        "service_4w6zys5",
-        "template_ioolxbg",
-        parametros
-    )
-        .then(function () {
-            errorLabel.innerText = translations[currentLang].fDesc;
-            errorLabel.classList.remove('is-error');
-            errorLabel.style.display = "block";
-            errorLabel.style.width = "100%";
-            btn.innerHTML = originalLabel;
-            btn.disabled = false;
-            const form = document.getElementById('contactForm');
-            form.reset();
-            form.querySelectorAll('.touched').forEach(el => el.classList.remove('touched'));
-        })
-        .catch(function (error) {
-            console.error(error);
-            errorLabel.innerText = translations[currentLang].fError;
-            errorLabel.classList.add('is-error');
-            errorLabel.style.display = "block";
-            errorLabel.style.width = "100%";
-            btn.innerHTML = originalLabel;
-            btn.disabled = false;
-        });
 }
 
-const inputsRequired = document.querySelectorAll('[required]');
-inputsRequired.forEach(input => {
-    input.addEventListener('blur', () => {
-        input.classList.add('touched');
-    });
+@keyframes introLineIn {
+    to {
+        opacity: 1;
+    }
+}
 
-    input.addEventListener('invalid', (e) => {
-        e.preventDefault();
-        input.classList.add('touched');
-    });
-});
+@keyframes introSweep {
+    to {
+        transform: scaleX(1);
+    }
+}
 
-(function () {
-    const root = document.documentElement;
-    const toggle = document.getElementById('theme-toggle');
-    const icon = toggle ? toggle.querySelector('i') : null;
-    const STORAGE_KEY = 'lp-theme';
+@media(prefers-reduced-motion:reduce) {
+    .intro {
+        display: none;
+    }
+}
 
-    function apply(theme) {
-        if (theme === 'light') {
-            root.setAttribute('data-theme', 'light');
-            if (icon) { icon.classList.remove('fa-moon-o'); icon.classList.add('fa-sun-o'); }
-            if (toggle) toggle.setAttribute('aria-label', (translations[currentLang] || translations.es).themeToggleAriaLight);
-        } else {
-            root.removeAttribute('data-theme');
-            if (icon) { icon.classList.remove('fa-sun-o'); icon.classList.add('fa-moon-o'); }
-            if (toggle) toggle.setAttribute('aria-label', (translations[currentLang] || translations.es).themeToggleAria);
+.intro {
+    overflow: hidden;
+}
+
+.intro-watermark {
+    position: absolute;
+    left: 50%;
+    top: 18%;
+    transform: translateX(-50%);
+    font-family: 'Manrope',sans-serif;
+    font-weight: 900;
+    font-size: clamp(5rem, 12vw, 12rem);
+    color: var(--whiteIntro);
+    letter-spacing: .08em;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.intro-title-group {
+    position: relative;
+    z-index: 3;
+    margin-top: 8px;
+}
+
+.intro-headline {
+    margin: 0;
+    font-family: 'Manrope',sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem,6vw,5rem);
+    line-height: 0.95;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: introHeadlineIn .7s cubic-bezier(.2,.9,.2,1) .5s forwards;
+}
+
+.intro-tagline {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font: 500 14px 'JetBrains Mono';
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: introTaglineIn .6s cubic-bezier(.2,.9,.2,1) .78s forwards;
+}
+
+@keyframes introHeadlineIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes introTaglineIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.intro-flags {
+    position: absolute;
+    inset: auto 32px 18% auto;
+    width: calc(100% - 64px);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.flag {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--muted);
+}
+
+.flag-left {
+    left: 24px;
+    top: 36%;
+}
+
+.flag-right {
+    right: 24px;
+    top: 36%;
+}
+
+.flag-label {
+    font-size: 12px;
+    letter-spacing: .16em;
+    font-weight: 700;
+    color: var(--accent-2);
+}
+
+.flag-num {
+    font-family: 'Manrope',sans-serif;
+    font-weight: 900;
+    font-size: 42px;
+    color: var(--text);
+    line-height: 0.9;
+}
+
+@media(max-width:900px) {
+    .intro-watermark {
+        font-size: clamp(4rem, 16vw, 8rem);
+        top: 12%;
+    }
+
+    .flag-num {
+        font-size: 34px;
+    }
+
+    .flag-left, .flag-right {
+        top: 48%;
+    }
+}
+
+@media(max-width:650px) {
+    .intro-watermark {
+        display: none;
+    }
+
+    .flag-left, .flag-right {
+        display: none;
+    }
+
+    .intro-headline {
+        font-size: clamp(1.8rem, 12vw, 3rem);
+    }
+    /* On small screens, show the simpler intro-name and hide the big headline to avoid duplication */
+    .intro-name {
+        display: block;
+    }
+
+    .intro-headline {
+        display: none;
+    }
+}
+
+h1, h2, h3 {
+    font-family: 'Manrope',sans-serif;
+    margin: 0;
+    letter-spacing: -.035em
+}
+
+a {
+    color: inherit
+}
+
+.mono {
+    font-family: 'JetBrains Mono',monospace
+}
+
+.wrap {
+    max-width: 1160px;
+    margin: auto;
+    padding: 0 28px
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: var(--header-bg);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line)
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0
+}
+
+.mark {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-family: 'Manrope';
+    font-weight: 800
+}
+
+    .mark a {
+        text-decoration: none;
+    }
+
+.markFooter {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-family: 'Manrope';
+    font-weight: 800
+}
+
+.mark-boxIntro {
+    width: 66px;
+    height: 66px;
+    border-radius: 11px;
+}
+
+.mark-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    /*background: linear-gradient(135deg,var(--accent),var(--accent-2));*/
+    color: var(--buttonText);
+    font-size: 12px;
+}
+
+.mark-boxFooter {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    /*background: linear-gradient(135deg,var(--accent),var(--accent-2));*/
+    color: var(--buttonText);
+    font-size: 12px;
+}
+
+.controlK {
+    color: var(--muted);
+}
+
+    .controlK kbd {
+        padding: 10px;
+        transition: background .2s, border-color .2s, transform .2s;
+    }
+
+        .controlK kbd:hover {
+            transform: translateY(-2px);
+            border: 1px solid var(--accent);
         }
+
+.controlContact {
+    color: var(--muted);
+}
+
+    .controlContact kbd {
+        padding: 10px;
+        transition: background .2s, border-color .2s, transform .2s;
     }
 
-    let saved = null;
-    try { saved = localStorage.getItem(STORAGE_KEY); } catch (err) { /* storage no disponible */ }
+        .controlContact kbd:hover {
+            transform: translateY(-2px);
+            border: 1px solid var(--accent);
+        }
 
-    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    apply(saved || (prefersLight ? 'light' : 'dark'));
+nav {
+    display: flex;
+    align-items: center;
+    gap: 28px
+}
 
-    if (toggle) {
-        toggle.addEventListener('click', function () {
-            const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            apply(next);
-            try { localStorage.setItem(STORAGE_KEY, next); } catch (err) { /* storage no disponible */ }
-        });
+.nav-utils {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+nav a.navlink {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color .2s ease, transform .2s ease;
+    font-family: 'JetBrains Mono',monospace;
+    padding: 4px 0 7px;
+}
+
+    nav a.navlink::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 999px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform .28s cubic-bezier(.22,.61,.36,1);
     }
 
-    window.applyThemeLabels = function () { apply(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'); };
-})();
-
-// Barra de progreso de scroll en el header
-(function () {
-    const bar = document.getElementById('progress-bar');
-    if (!bar) return;
-    function update() {
-        const scrollTop = window.scrollY;
-        const height = document.documentElement.scrollHeight - window.innerHeight;
-        const pct = height > 0 ? (scrollTop / height) * 100 : 0;
-        bar.style.width = pct + '%';
-    }
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    update();
-})();
-
-(function () {
-    var ITEM_SELECTOR = [
-        '.hero-eyebrow',
-        '.hero-title',
-        '.hero-grid > *',
-        '.section-head',
-        '.about-grid > div',
-        '.aboutActualmente',
-        '.tech-stack',
-        '.service',
-        '.step',
-        '.featured',
-        '.principles-head',
-        '.principle',
-        '.process-cta',
-        '.card',
-        '.contact-info',
-        '.contact-form-card'
-    ].join(',');
-
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    var observer = null;
-    if (!reduced && 'IntersectionObserver' in window) {
-        observer = new IntersectionObserver(function (entries, obs) {
-            entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in');
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    nav a.navlink:hover {
+        color: var(--accent);
+        transform: translateY(-2px);
     }
 
-    function applyReveal() {
-        document.querySelectorAll('section[data-anim]').forEach(function (section) {
-            var items = section.querySelectorAll(ITEM_SELECTOR);
-            var index = 0;
-            items.forEach(function (el) {
-                if (!el.classList.contains('anim-el')) {
-                    el.classList.add('anim-el');
-                    el.style.setProperty('--i', index);
-                    if (observer) observer.observe(el);
-                    else el.classList.add('in');
-                }
-                index++;
-            });
-        });
+        nav a.navlink:hover::after,
+        nav a.navlink:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+    nav a.navlink:focus-visible {
+        outline: none;
+        color: var(--accent);
     }
 
-    window.applyReveal = applyReveal;
+nav a.navlinkContact {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color .2s ease, transform .2s ease;
+    font-family: 'JetBrains Mono',monospace;
+    padding: 4px 0 7px;
+}
 
-    if (typeof window.renderCards === 'function') {
-        var originalRenderCards = window.renderCards;
-        window.renderCards = function () {
-            var result = originalRenderCards.apply(this, arguments);
-            applyReveal();
-            return result;
-        };
+    nav a.navlinkContact::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 999px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform .28s cubic-bezier(.22,.61,.36,1);
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyReveal);
-    } else {
-        applyReveal();
-    }
-})();
-
-(function () {
-    const banner = document.getElementById('cookie-banner');
-    if (!banner) return;
-    const STORAGE_KEY = 'lp-cookie-consent';
-    const acceptBtn = document.getElementById('cookie-accept');
-
-    let accepted = null;
-    try { accepted = localStorage.getItem(STORAGE_KEY); } catch (err) { /* storage no disponible */ }
-
-    if (!accepted) {
-        window.setTimeout(function () {
-            banner.classList.remove('hidden');
-            banner.classList.add('show');
-            document.body.classList.add('cookie-banner-visible');
-        }, 900);
+    nav a.navlinkContact:hover {
+        color: var(--accent);
+        transform: translateY(-2px);
     }
 
-    function dismiss() {
-        banner.classList.remove('show');
-        banner.classList.add('hidden');
-        document.body.classList.remove('cookie-banner-visible');
-        try { localStorage.setItem(STORAGE_KEY, '1'); } catch (err) { /* storage no disponible */ }
+.langswitch {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--ov-03)
+}
+
+    .langswitch button {
+        background: none;
+        border: 0;
+        padding: 7px 11px;
+        /*cursor: pointer;*/
+        color: var(--muted);
+        font: 500 11px 'JetBrains Mono'
     }
 
-    if (acceptBtn) acceptBtn.addEventListener('click', dismiss);
-})();
+        .langswitch button.active {
+            background: var(--accent);
+            color: var(--bg)
+        }
+/* Header wrap override when used together */
+.header-inner.wrap {
+    padding-left: 0;
+    padding-right: 0;
+}
+/* ===== Mobile nav (hamburger) ===== */
+.nav-toggle {
+    display: none;
+    position: relative;
+    z-index: 95;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--ov-04);
+    /*cursor: pointer;*/
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-right: 10px;
+}
 
+    .nav-toggle span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--text);
+        transition: transform .25s ease, opacity .2s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-toggle.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .nav-toggle.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+.nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(0,0,0,.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+}
+
+    .nav-backdrop.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+.hero {
+    padding: 110px 0 90px;
+    position: relative;
+    overflow: hidden
+}
+
+.hero-label {
+    color: var(--accent);
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr .7fr;
+    gap: 72px;
+    align-items: end
+}
+
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 22px
+}
+
+    .hero-eyebrow:before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 18px var(--accent)
+    }
+
+.hero h1 {
+    font-size: clamp(3.4rem,8vw,4.1rem);
+    line-height: .93;
+    max-width: 12ch
+}
+/* Title with image to the right */
+.hero-title {
+    display: flex;
+    align-items: center;
+}
+
+.hero-side {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+}
+
+.hero-title-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius);
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    transition: .2s ease;
+}
+
+    .hero-title-img:hover {
+        transform: translateY(-2px);
+        /*cursor: pointer;*/
+        border: 1px solid var(--accent);
+    }
+
+.hero h1 span {
+    color: var(--accent)
+}
+
+.hero-line {
+    height: 1px;
+    background: var(--line);
+    margin: 34px 0;
+    position: relative
+}
+
+    .hero-line:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 35%;
+        height: 2px;
+        background: linear-gradient(90deg,var(--accent),var(--accent-2))
+    }
+
+.hero-pitch {
+    font-size: 1.18rem;
+    color: var(--muted);
+    max-width: 52ch
+}
+
+.hero-pitch2 {
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 52ch;
+    font-style: italic;
+}
+
+.hero-meta {
+    padding: 25px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(145deg,var(--grad-hero-a),var(--grad-hero-b));
+    box-shadow: var(--shadow);
+    transition: .2s ease;
+}
+
+    .hero-meta:hover {
+        transform: translateY(-2px);
+        /*cursor: pointer;*/
+        border: 1px solid var(--accent);
+    }
+
+    .hero-meta dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 13px 18px;
+        font-size: 13px
+    }
+
+    .hero-meta dt {
+        color: var(--muted)
+    }
+
+    .hero-meta dd {
+        margin: 0
+    }
+
+.hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 25px
+}
+
+.lastName:before {
+    content: "";
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    box-shadow: 0 0 18px var(--accent)
+}
+
+.lastNameFooter {
+    margin-left: -1px !important;
+}
+
+    .lastNameFooter:before {
+        content: "";
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+        box-shadow: 0 0 18px var(--accent)
+    }
+
+.badge {
+    border: 1px solid var(--line);
+    padding: 7px 11px;
+    border-radius: 999px;
+    font: 11px 'JetBrains Mono';
+    color: var(--muted);
+    background: var(--ov-025);
+    transition: .2s ease;
+}
+
+    .badge:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        /*cursor: pointer;*/
+    }
+/* ===== Skip link (accesibilidad por teclado) ===== */
+.skip-link {
+    position: fixed;
+    top: -60px;
+    left: 12px;
+    z-index: 200;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: var(--buttonText);
+    font: 600 13px 'DM Sans',sans-serif;
+    text-decoration: none;
+    transition: top .2s ease;
+}
+
+    .skip-link:focus {
+        top: 12px;
+    }
+/* ===== Barra de progreso de scroll ===== */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    z-index: 100;
+    background: linear-gradient(90deg,var(--accent),var(--accent-2));
+    transition: width .1s linear;
+}
+/* ===== Toggle de tema ===== */
+.theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--ov-03);
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    /*cursor: pointer;*/
+    font-size: 15px;
+    transition: background .2s, border-color .2s, transform .2s;
+}
+
+    .theme-toggle:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+/* ===== CTAs del hero ===== */
+.hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.btn-primary, .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 20px;
+    border-radius: 12px;
+    font: 600 14px 'DM Sans',sans-serif;
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    /*cursor: pointer;*/
+}
+
+.btn-primary {
+    background: linear-gradient(135deg,var(--accent),var(--accent-2));
+    color: var(--buttonText);
+    border: 1px solid transparent;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px var(--accentInputShadow);
+    }
+
+.btn-ghost {
+    border: 1px solid var(--line);
+    color: var(--text);
+    background: var(--ov-025);
+}
+
+    .btn-ghost:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+/* ===== Stats del hero (derivados de datos reales) ===== */
+.hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 26px;
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+}
+
+    .hero-stats .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+        .hero-stats .stat strong {
+            font-family: 'Manrope',sans-serif;
+            font-size: 1.6rem;
+            color: var(--accent);
+        }
+
+        .hero-stats .stat span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+section {
+    padding: 92px 0
+}
+
+    section + section {
+        border-top: 1px solid var(--line)
+    }
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 45px;
+    flex-wrap: wrap
+}
+
+    .section-head h2 {
+        font-size: clamp(2rem,4vw,3rem)
+    }
+
+.section-tag {
+    font-size: 11px;
+    color: var(--muted)
+}
+
+.listoContact {
+    border-top: 1px solid var(--line);
+    text-align: center;
+    margin-top: -100px;
+    padding-top: 50px !important;
+}
+
+    .listoContact h4 {
+        font-weight: 100;
+    }
+
+    .listoContact a.navlinkContact {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        font-size: 12px;
+        color: var(--accent-2);
+        text-decoration: none;
+        color: var(--muted);
+        transition: color .2s ease, transform .2s ease;
+        font-family: 'JetBrains Mono',monospace;
+        padding: 4px 0 7px;
+    }
+
+        .listoContact a.navlinkContact::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            border-radius: 999px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform .28s cubic-bezier(.22,.61,.36,1);
+        }
+
+        .listoContact a.navlinkContact:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+.about-grid, .contact-grid {
+    display: grid;
+    grid-template-columns: .95fr 1.15fr;
+    gap: 70px
+}
+
+    .about-grid p, .contact-grid p {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 55ch;
+        margin: 0 0 18px
+    }
+
+.skillgroup {
+    margin-bottom: 25px
+}
+
+    .skillgroup h3 {
+        font-size: .9rem;
+        color: var(--accent);
+        margin-bottom: 11px
+    }
+
+    .skillgroup ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px
+    }
+
+    .skillgroup li {
+        border: 1px solid var(--line);
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--liText);
+        background: var(--ov-025);
+        transition: .2s ease;
+    }
+
+        .skillgroup li:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            /*cursor: pointer;*/
+        }
+
+.services {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.service {
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(145deg,var(--grad-service-a),var(--grad-service-b));
+    transition: transform .25s,border-color .25s,background .25s;
+    /*cursor: pointer;*/
+}
+
+    .service:hover {
+        transform: translateY(-5px);
+        border-color: var(--accentInputShadow);
+        background: var(--accentInputShadow);
+    }
+
+.service-num {
+    font: 11px 'JetBrains Mono';
+    color: var(--accent);
+    margin-bottom: 30px
+}
+
+.service h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px
+}
+
+.service p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px
+}
+
+.work-toggle {
+    display: flex;
+    gap: 7px
+}
+
+    .work-toggle button {
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 14px;
+        /*cursor: pointer;*/
+        color: var(--muted);
+        font: 11px 'JetBrains Mono';
+        transition: .2s
+    }
+
+        .work-toggle button.active, .work-toggle button:hover {
+            border-color: var(--accent);
+            color: var(--bg);
+            background: var(--accent)
+        }
+/* ===== Buscador de proyectos ===== */
+.work-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: min(100%, 520px);
+    margin: 0 0 24px auto;
+}
+
+    .work-search > .fa-search {
+        position: absolute;
+        left: 17px;
+        color: var(--muted);
+        pointer-events: none;
+        transition: color .2s ease;
+    }
+
+    .work-search input {
+        width: 100%;
+        min-height: 46px;
+        padding: 0 48px 0 44px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        outline: none;
+        background: var(--ov-035);
+        color: var(--text);
+        font: 13px 'DM Sans', sans-serif;
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+        .work-search input::placeholder {
+            color: var(--muted);
+            opacity: .85;
+        }
+
+        .work-search input:focus {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
+        }
+
+    .work-search:focus-within > .fa-search {
+        color: var(--accent);
+    }
+
+.work-search-clear {
+    position: absolute;
+    right: 7px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+    .work-search-clear:hover {
+        color: var(--text);
+        background: var(--ov-04);
+        transform: rotate(90deg);
+    }
+
+.work-search-count {
+    margin: 10px 0 16px;
+    color: var(--muted);
+    font: 500 11px 'JetBrains Mono', monospace;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+    .work-search-count[hidden],
+    .work-empty[hidden] {
+        display: none !important;
+    }
+
+.work-empty {
+    min-height: 170px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 32px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    color: var(--muted);
+    text-align: center;
+}
+
+    .work-empty > span {
+        color: var(--accent);
+        font-size: 12px;
+    }
+
+    .work-empty p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.grid-cards {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 18px;
+}
+
+    .grid-cards a {
+        text-decoration: none;
+    }
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 34px;
+}
+
+    .pagination button {
+        min-width: 38px;
+        height: 38px;
+        padding: 0 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        /*cursor: pointer;*/
+        color: var(--muted);
+        font: 12px 'JetBrains Mono';
+        transition: .2s;
+    }
+
+        .pagination button:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .pagination button.active {
+            border-color: var(--accent);
+            color: var(--bg);
+            background: var(--accent);
+            cursor: default;
+        }
+
+        .pagination button:disabled {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+@media(max-width:650px) {
+    .work-search {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+@media(max-width:480px) {
+    .pagination button {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 9px;
+        font-size: 11px;
+    }
+}
+
+.card {
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--ov-035);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform .25s,border-color .25s
+}
+
+    .card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(138,167,255,.5)
+    }
+
+.card-thumb {
+    height: 175px;
+    border-radius: 15px;
+    border: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg,var(--surface),var(--surface-2));
+}
+
+    .card-thumb img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.thumb-web-1 {
+    background: radial-gradient(circle at 25% 25%,rgba(101,230,210,.8),transparent 20%),linear-gradient(135deg,#122943,#17254a)
+}
+
+.thumb-web-2 {
+    background: radial-gradient(circle at 75% 25%,rgba(138,167,255,.75),transparent 22%),linear-gradient(135deg,#0d2430,#17294c)
+}
+
+.thumb-web-3 {
+    background: repeating-linear-gradient(0deg,rgba(138,167,255,.12) 0 1px,transparent 1px 12px),linear-gradient(145deg,#102b3c,#111c36)
+}
+
+.thumb-gd-1 {
+    background: radial-gradient(circle at 30% 30%,rgba(101,230,210,.7),transparent 20%),linear-gradient(135deg,#23334c,#182035)
+}
+
+.thumb-gd-2 {
+    background: repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 8px,transparent 8px 16px),linear-gradient(135deg,#1b2f45,#30274c)
+}
+
+.thumb-gd-3 {
+    background: linear-gradient(120deg,rgba(101,230,210,.55),transparent 35%),linear-gradient(200deg,#293651,#121b2e)
+}
+
+.card-ref {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-size: 10px;
+    color: var(--text);
+    border-radius: 5px;
+    padding: 5px;
+    border-width: 1px;
+    border-color: var(--text);
+    border-style: solid;
+    background: var(--buttonText);
+}
+
+.ticked {
+    /*cursor: pointer;*/
+}
+
+.card h3 {
+    font-size: 1.12rem
+}
+
+.card p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+}
+
+    .card-tags span {
+        font: 10px 'JetBrains Mono';
+        border: 1px solid var(--line);
+        padding: 4px 8px;
+        border-radius: 999px;
+        color: var(--muted);
+        transition: .2s ease;
+    }
+
+        .card-tags span:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+.website-preview {
+    height: 175px;
+    overflow: hidden;
+    border-radius: 15px;
+    position: relative;
+}
+
+    .website-preview iframe {
+        width: 1280px;
+        height: 800px;
+        border: 0;
+        transform: scale(0.28);
+        transform-origin: top left;
+        pointer-events: none;
+    }
+
+.process {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden
+}
+
+.step {
+    background: var(--bg-2);
+    padding: 26px;
+    /*cursor: pointer;*/
+    transition: transform .25s,border-color .25s,background .25s;
+}
+
+    .step strong {
+        font: 11px 'JetBrains Mono';
+        color: var(--accent)
+    }
+
+    .step h3 {
+        font-size: 1.05rem;
+        margin: 20px 0 7px
+    }
+
+    .step p {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0
+    }
+
+    .step:hover {
+        transform: translateY(-5px);
+        border-color: rgba(101,230,210,.45);
+        background: rgba(101,230,210,.045)
+    }
+
+.contact-grid {
+    grid-template-columns: 1.1fr .9fr;
+    align-items: start
+}
+
+.contact-cta {
+    padding: 32px;
+    border: 1px solid rgba(101,230,210,.22);
+    border-radius: var(--radius);
+    background: linear-gradient(145deg,rgba(101,230,210,.08),rgba(138,167,255,.06))
+}
+
+    .contact-cta h2 {
+        font-size: clamp(2.2rem,5vw,4rem);
+        line-height: 1
+    }
+
+    .contact-cta p {
+        margin: 20px 0
+    }
+
+.contact-links {
+    list-style: none;
+    margin: 25px 0 0;
+    padding: 0
+}
+
+    .contact-links li {
+        border-top: 1px solid var(--line)
+    }
+
+        .contact-links li:last-child {
+            border-bottom: 1px solid var(--line)
+        }
+
+    .contact-links a {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 3px;
+        text-decoration: none;
+        color: var(--linkText);
+        font-size: 1rem
+    }
+
+        .contact-links a:hover {
+            color: var(--accent);
+        }
+
+.icon {
+    padding-right: 25px;
+}
+
+.arrow {
+    color: var(--accent)
+}
+
+.contact-note {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    color: var(--muted);
+    font-size: 12px;
+    transition: .2s ease;
+}
+
+    .contact-note:hover {
+        border: 1px solid var(--accent);
+        transform: translateY(-2px);
+    }
+
+
+footer {
+    color: var(--muted);
+}
+
+.footer {
+    margin-top: 42px;
+    padding: 0 0 28px;
+    position: relative;
+}
+/*.footer::before {
+        content: "";
+        display: block;
+        height: 1px;
+        margin-bottom: 30px;
+        background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+        opacity: .65;
+    }*/
+
+.footer-cta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 18px 0 52px;
+}
+
+.footer-kicker, .footer-label {
+    display: block;
+    color: var(--accent);
+    font-size: 10px;
+    letter-spacing: .16em;
+    font-weight: 700;
+}
+
+.footer-label {
+    color: var(--accent) !important;
+}
+
+.footer-cta h2 {
+    margin: 10px 0 10px;
+    max-width: 720px;
+    color: var(--text);
+    font-size: clamp(34px, 5vw, 68px);
+    line-height: .98;
+    letter-spacing: -.045em;
+}
+
+.footer-cta p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.footer-cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+    padding: 14px 18px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    text-decoration: none;
+    font: 200 11px 'JetBrains Mono', monospace;
+    transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
+}
+
+    .footer-cta-button:hover {
+        transform: translateY(-3px);
+        background: color-mix(in srgb, var(--accent) 16%, transparent);
+        box-shadow: 0 14px 35px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+
+.footer-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(130px, .7fr) minmax(160px, .8fr);
+    gap: 50px;
+    padding: 28px 0 34px;
+    border-top: 1px solid var(--line);
+}
+
+.footer-mark {
+    display: inline-flex;
+    align-items: baseline;
+    color: var(--text);
+    text-decoration: none;
+    font: 800 31px/1 'JetBrains Mono', monospace;
+    letter-spacing: -.08em;
+    transition: transform .25s ease;
+}
+
+    .footer-mark span {
+        color: var(--accent);
+    }
+
+    .footer-mark:hover {
+        transform: translateY(-2px);
+    }
+
+.footer-brand p {
+    margin: 14px 0 16px;
+    max-width: 300px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.footer-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font: 10px 'JetBrains Mono', monospace;
+}
+
+.footer-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 10%, transparent), 0 0 14px var(--accent);
+    animation: footerPulse 2.2s ease-in-out infinite;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+}
+
+    .footer-links a {
+        position: relative;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12px;
+        transition: color .2s ease, transform .2s ease;
+    }
+
+        .footer-links a:hover {
+            color: var(--text);
+            transform: translateX(3px);
+        }
+
+.footer-socials a span {
+    color: var(--accent);
+    opacity: .8;
+}
+
+.footer-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font: 10px 'JetBrains Mono', monospace;
+}
+
+.footer-tech span {
+    color: var(--muted);
+}
+
+.footer-tech b {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.footer-top {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font: 10px 'JetBrains Mono', monospace;
+    transition: color .2s ease, transform .2s ease;
+}
+
+    .footer-top:hover {
+        color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+@keyframes footerPulse {
+    0%, 100% {
+        opacity: .7;
+        transform: scale(.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+@media (max-width: 900px) {
+    .footer-cta {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-bottom: 38px;
+    }
+
+    .footer-cta-button {
+        margin-top: 4px;
+    }
+
+    .footer-main {
+        grid-template-columns: 1fr 1fr;
+        gap: 34px 28px;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+
+    .footer-bottom {
+        grid-template-columns: 1fr auto;
+    }
+
+    .footer-top {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .footer-tech {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}
+
+@media (max-width: 560px) {
+    .footer {
+        margin-top: 28px;
+    }
+
+        .footer::before {
+            margin-bottom: 20px;
+        }
+
+    .footer-cta {
+        padding-bottom: 30px;
+    }
+
+        .footer-cta h2 {
+            font-size: clamp(34px, 12vw, 48px);
+        }
+
+    .footer-main {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .footer-brand {
+        grid-column: auto;
+    }
+
+    .footer-bottom {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .footer-top, .footer-tech {
+        grid-column: auto;
+        grid-row: auto;
+        justify-self: start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .footer-status-dot {
+        animation: none;
+    }
+
+    .footer-cta-button, .footer-mark, .footer-links a, .footer-top {
+        transition: none;
+    }
+}
+
+@media(max-width:900px) {
+    .hero-grid, .about-grid, .contact-grid {
+        grid-template-columns: 1fr
+    }
+
+    .grid-cards, .services {
+        grid-template-columns: repeat(2,1fr)
+    }
+
+    .process {
+        grid-template-columns: repeat(2,1fr)
+    }
+
+    .mark-box {
+        margin-left: 10px;
+    }
+}
+
+@media(max-width:650px) {
+    .wrap {
+        padding: 0 20px
+    }
+
+    .hero {
+        padding: 75px 0 65px
+    }
+
+    .hero-grid {
+        gap: 42px
+    }
+
+    .hero h1 {
+        font-size: clamp(3rem,16vw,3rem)
+    }
+    /* Stack hero title and image on small screens */
+    .hero-title {
+        align-items: flex-start;
+    }
+
+    .hero-side {
+        gap: 18px;
+    }
+
+    .hero-title-img {
+        width: 100%;
+        height: 220px;
+        border-radius: 14px;
+    }
+
+    section {
+        padding: 65px 0
+    }
+
+    .grid-cards, .services, .process {
+        grid-template-columns: 1fr
+    }
+
+    .step {
+        padding: 22px
+    }
+
+    .header-inner {
+        padding: 12px 0
+    }
+}
+/* ===== Drawer nav on small screens ===== */
+@media(max-width:780px) {
+    /* backdrop-filter crea un contenedor para elementos position:fixed,
+       lo que rompería el panel de navegación: lo desactivamos en mobile */
+    header {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: var(--header-bg-solid);
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-backdrop {
+        display: block;
+        touch-action: none;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(80vw,320px);
+        z-index: 70;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 96px 22px 32px;
+        background: var(--bg-2);
+        border-left: 1px solid var(--line);
+        box-shadow: -20px 0 60px rgba(0,0,0,.45);
+        clip-path: inset(0 0 0 100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: clip-path .3s ease, opacity .25s ease, visibility 0s .3s;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+        nav.open {
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
+            visibility: visible;
+            transition: clip-path .3s ease, opacity .25s ease;
+        }
+
+        nav a.navlink {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            padding: 14px 2px;
+            border-bottom: 1px solid var(--line);
+        }
+
+    .nav-utils {
+        align-self: flex-start;
+        margin-top: 22px;
+    }
+
+    .langswitch button {
+        padding: 9px 16px;
+        font-size: 12px;
+    }
+}
+/* Service detail modal */
+.service:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.service-more {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+    .service-more::after {
+        content: "\00a0+";
+        display: inline-block;
+        transition: transform .25s;
+    }
+
+.service:hover .service-more::after {
+    transform: rotate(90deg);
+}
+
+.service-modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 210;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    /* visible al instante al abrir (permite enfocar el popup) */
+    transition: opacity .32s ease, visibility 0s;
+}
+
+    .service-modal.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        /* al cerrar, espera a que termine el fade antes de ocultar */
+        transition: opacity .32s ease, visibility 0s linear .32s;
+    }
+
+.service-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+}
+
+.service-modal-content {
+    position: relative;
+    width: calc(100% - 32px);
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 34px 34px 30px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    z-index: 10;
+    transition: opacity .32s ease, transform .42s cubic-bezier(.16,1,.3,1);
+}
+
+.service-modal.hidden .service-modal-content {
+    opacity: 0;
+    transform: translateY(18px) scale(.96);
+}
+
+.service-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: 28px;
+    line-height: 1;
+    /*cursor: pointer;*/
+}
+
+    .service-modal-close:hover,
+    .service-modal-close:focus-visible {
+        color: var(--accent);
+    }
+
+.service-modal-num {
+    font: 11px 'JetBrains Mono';
+    color: var(--accent);
+    margin-bottom: 14px;
+}
+
+.service-modal-content h3 {
+    font-size: 1.6rem;
+    margin: 0 0 12px;
+}
+
+.service-modal-lead {
+    margin: 0 0 26px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.service-modal-content h4 {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.service-modal-list {
+    list-style: none;
+    margin: 0 0 26px;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+}
+
+    .service-modal-list li {
+        position: relative;
+        padding-left: 22px;
+        font-size: 14px;
+        line-height: 1.55;
+        color: var(--muted);
+    }
+
+        .service-modal-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: .72em;
+            width: 10px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+.service-modal-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+    .service-modal-tools span {
+        padding: 6px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font: 12px 'JetBrains Mono';
+        color: var(--text);
+        transition: .2s ease;
+    }
+
+        .service-modal-tools span:hover {
+            border: 1px solid var(--accent);
+            /*cursor: pointer;*/
+            transform: translateY(-2px);
+        }
+
+.service-modal-cta {
+    display: inline-block;
+}
+
+@media (max-width: 600px) {
+    .service-modal-content {
+        padding: 28px 22px 24px;
+    }
+
+        .service-modal-content h3 {
+            font-size: 1.35rem;
+        }
+}
+/* Process steps: opens the detail popup */
+.step:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -4px;
+}
+
+.step:hover .service-more::after {
+    transform: rotate(90deg);
+}
+
+.step .service-more {
+    margin-top: 16px;
+}
+/* GD modal styles */
+.gd-modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 200;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity .32s ease, visibility .32s ease;
+}
+
+    .gd-modal.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+.gd-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    opacity: 1;
+    transition: opacity .32s ease;
+}
+
+.gd-modal-content {
+    position: relative;
+    max-width: 1100px;
+    width: calc(100% - 40px);
+    background: var(--bg-2); /*var(--buttonText);*/ /*linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));*/
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    z-index: 10;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity .32s ease, transform .42s cubic-bezier(.16,1,.3,1);
+}
+
+.gd-modal.hidden .gd-modal-content {
+    opacity: 0;
+    transform: translateY(18px) scale(.94);
+}
+
+.gd-modal.hidden .gd-modal-backdrop {
+    opacity: 0;
+}
+
+.gd-modal-close {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: 28px;
+    /*cursor: pointer;*/
+    z-index: 80;
+}
+
+    .gd-modal-close:hover {
+        color: var(--accent);
+    }
+
+.gd-modal-body {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    transform: translateY(-4px);
+}
+
+    .gd-modal-body img {
+        max-width: 45%;
+        height: auto;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+    }
+
+.gd-modal-meta {
+    color: var(--muted);
+}
+
+@media(max-width:900px) {
+    .gd-modal-body {
+        flex-direction: column;
+    }
+
+        .gd-modal-body img {
+            max-width: 100%;
+        }
+
+    .gd-modal-close {
+        top: -5px;
+        right: -3px;
+        display: none;
+    }
+
+    .gd-modal-content {
+        max-height: 85%;
+        overflow-y: auto;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    html {
+        scroll-behavior: auto
+    }
+
+    * {
+        transition: none !important
+    }
+
+    .hero-line:after {
+        animation: none
+    }
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px
+}
+/* Back to top button */
+.back-to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,var(--accent),var(--accent-2));
+    color: var(--bg);
+    border: 0;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--card-shadow-hover);
+    /*cursor: pointer;*/
+    transition: transform .18s, opacity .18s, background .2s;
+    z-index: 180;
+    bottom: 20px !important;
+}
+
+    .back-to-top:hover {
+        transform: translateY(-4px);
+    }
+
+    .back-to-top.hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+    }
+
+body.cookie-banner-visible {
+    bottom: 122px;
+}
+
+@media(max-width:480px) {
+    body.cookie-banner-visible {
+        bottom: 190px;
+    }
+}
+
+@media(max-width:650px) {
+    .back-to-top {
+        bottom: 18px;
+        right: 18px;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+.cookie-banner {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 150;
+    max-width: 560px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: var(--header-bg-solid);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transform: translateY(16px) translateZ(0);
+    -webkit-transform: translateY(16px) translateZ(0);
+    will-change: transform, opacity;
+    transition: opacity .3s ease, transform .3s ease;
+}
+
+    .cookie-banner.show {
+        opacity: 1;
+        transform: translateY(0) translateZ(0);
+        -webkit-transform: translateY(0) translateZ(0);
+    }
+
+    .cookie-banner.hidden {
+        display: none;
+    }
+
+    .cookie-banner p {
+        margin: 0;
+        flex: 1 1 320px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--muted);
+    }
+
+.cookie-actions {
+    flex: 0 0 auto;
+}
+
+    .cookie-actions .btn-primary {
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+
+@media(max-width:480px) {
+    .cookie-banner {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 16px;
+    }
+
+    .cookie-actions {
+        width: 100%;
+    }
+
+        .cookie-actions .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: minmax(280px,.82fr) minmax(420px,1.18fr);
+    gap: clamp(32px,6vw,90px);
+    align-items: start
+}
+
+.contact-info {
+    min-width: 0
+}
+
+.contact-form-card {
+    position: relative;
+    padding: clamp(24px,3vw,36px);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: linear-gradient(145deg,var(--surface),var(--bg-2));
+    box-shadow: var(--shadow);
+    overflow: hidden
+}
+
+    .contact-form-card:before {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        right: -90px;
+        top: -90px;
+        border-radius: 50%;
+        background: rgba(101,230,210,.08);
+        pointer-events: none
+    }
+
+.form-heading {
+    margin-bottom: 24px
+}
+
+    .form-heading > span {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--accent);
+        font-size: 11px;
+        letter-spacing: .12em
+    }
+
+    .form-heading h3 {
+        margin: 0;
+        color: var(--text);
+        font-size: clamp(22px,2.2vw,30px)
+    }
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 17px
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px
+}
+
+    .form-field label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600
+    }
+
+    .form-field input, .form-field textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: var(--input-bg);
+        color: var(--text);
+        font: inherit;
+        outline: none;
+        transition: border-color .2s ease,box-shadow .2s ease,background .2s ease
+    }
+
+    .form-field input {
+        min-height: 46px
+    }
+
+    .form-field textarea {
+        resize: vertical;
+        min-height: 125px
+    }
+
+        .form-field input:focus, .form-field textarea:focus {
+            border-color: var(--accentInput);
+            background: var(--input-bg-focus);
+            box-shadow: 0 0 0 3px var(--accentInputShadow);
+        }
+
+.form-submit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 50px;
+    margin-top: 2px;
+    padding: 0 16px 0 19px;
+    border: 1px solid rgba(101,230,210,.45);
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--buttonText);
+    font: 700 14px "DM Sans",sans-serif;
+    /*cursor: pointer;*/
+    transition: transform .2s ease,box-shadow .2s ease
+}
+
+    .form-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px var(--accentInputShadow);
+    }
+
+    .form-submit:disabled {
+        opacity: .7;
+        cursor: progress;
+        transform: none;
+    }
+
+#errorLabel {
+    display: none;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(101,230,210,.12);
+    color: var(--text);
+    border: 1px solid rgba(101,230,210,.3);
+}
+
+    #errorLabel.is-error {
+        background: rgba(255,107,107,.12);
+        border-color: rgba(255,107,107,.35);
+    }
+
+.form-submit .mono {
+    font-size: 18px
+}
+
+@media(max-width:900px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 38px
+    }
+
+    .btn-primary, .btn-ghost, .btn-terminal {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .skill-popover {
+        display: none;
+    }
+
+    .controlK kbd {
+        display: none;
+    }
+
+    .controlContact {
+        display: inline-block !important;
+        text-align: center !important;
+    }
+
+    .navlinkContact {
+        display: inline-block !important;
+        width: 92%;
+        align-content: center;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 14px 2px !important;
+    }
+}
+
+@media(max-width:650px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 17px
+    }
+
+    .contact-form-card {
+        padding: 22px 18px;
+        border-radius: 18px
+    }
+}
+
+.error-msg {
+    display: none;
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    padding: 6px 10px;
+    background: var(--error);
+    border-left: 3px solid darkred;
+    border-radius: 4px;
+}
+
+input:invalid.touched ~ .error-msg {
+    display: block;
+}
+
+input:invalid.touched {
+    border-color: darkred;
+    outline: none;
+}
+
+textarea:invalid.touched ~ .error-msg {
+    display: block;
+}
+
+textarea:invalid.touched {
+    border-color: darkred;
+    outline: none;
+}
 /* =========================================================
-   Hero code typewriter — escribe, pausa, borra y reinicia
+   Animaciones de aparicion por seccion (scroll reveal)
+   Cada section usa data-anim="..." y JS agrega .in a sus items
    ========================================================= */
-(function () {
-    const writer = document.querySelector('[data-codewriter]');
-    if (!writer) return;
+.anim-el:not(.in) {
+    opacity: 0;
+}
 
-    const lines = [
-        'const developer = {',
-        '  name: "Leandro",',
-        '  focus: ["web", "power-platform"],',
-        '  status: "building",',
-        '};'
-    ];
+.anim-el.in {
+    animation-duration: .75s;
+    animation-timing-function: cubic-bezier(.22,.78,.3,1);
+    animation-fill-mode: backwards; /* backwards: no deja transform pegado al terminar */
+    animation-delay: calc(var(--i,0) * 90ms);
+}
+/* HERO: subida simple */
+[data-anim="rise"] .anim-el.in {
+    animation-name: revRise;
+}
+/* SOBRE MI: las columnas entran desde los costados */
+[data-anim="split"] .anim-el.in {
+    animation-name: revRise;
+}
 
-    const lineEls = Array.from(writer.querySelectorAll('.code-line'));
-    if (!lineEls.length) return;
+[data-anim="split"] .about-grid > div:first-child.in {
+    animation-name: revFromLeft;
+}
 
-    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const visibleLines = Math.min(lines.length, lineEls.length);
+[data-anim="split"] .about-grid > div:last-child.in {
+    animation-name: revFromRight;
+}
+/* SERVICIOS: las tarjetas escalan en cascada */
+[data-anim="pop"] .anim-el.in {
+    animation-name: revPop;
+    animation-duration: .6s;
+    animation-delay: calc(var(--i,0) * 75ms);
+}
+/* PROCESO: los pasos se despliegan en 3D uno detras de otro */
+[data-anim="flip"] .anim-el {
+    transform-origin: top center;
+}
 
-    // El cursor es un único elemento y se mueve al final de la línea activa.
-    const caret = document.createElement('span');
-    caret.className = 'code-caret';
-    caret.setAttribute('aria-hidden', 'true');
+    [data-anim="flip"] .anim-el.in {
+        animation-name: revFlip;
+        animation-duration: .7s;
+        animation-delay: calc(var(--i,0) * 130ms);
+    }
+/* TRABAJO: las piezas entran desenfocadas y se resuelven */
+[data-anim="blur"] .anim-el.in {
+    animation-name: revBlur;
+    animation-duration: .8s;
+    animation-delay: calc(var(--i,0) * 85ms);
+}
+/* CONTACTO: telon que se abre de abajo hacia arriba */
+[data-anim="curtain"] .anim-el.in {
+    animation-name: revCurtain;
+    animation-duration: .85s;
+    animation-delay: calc(var(--i,0) * 110ms);
+}
 
-    // Renderiza el texto manteniendo los valores entre comillas destacados.
-    function renderCode(el, value) {
-        el.textContent = '';
-        const parts = value.split(/(\"(?:[^\"\\]|\\.)*\")/g);
+@keyframes revRise {
+    from {
+        opacity: 0;
+        transform: translateY(26px);
+    }
+}
 
-        parts.forEach(function (part) {
-            if (!part) return;
-            if (part.charAt(0) === '\"' && part.charAt(part.length - 1) === '\"') {
-                const span = document.createElement('span');
-                span.className = 'code-string';
-                span.textContent = part;
-                el.appendChild(span);
-            } else {
-                el.appendChild(document.createTextNode(part));
+@keyframes revFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-48px);
+    }
+}
+
+@keyframes revFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(48px);
+    }
+}
+
+@keyframes revPop {
+    from {
+        opacity: 0;
+        transform: translateY(22px) scale(.9);
+    }
+}
+
+@keyframes revFlip {
+    from {
+        opacity: 0;
+        transform: perspective(900px) rotateX(-72deg) translateY(14px);
+    }
+}
+
+@keyframes revBlur {
+    from {
+        opacity: 0;
+        filter: blur(14px);
+        transform: translateY(30px) scale(1.03);
+    }
+}
+
+@keyframes revCurtain {
+    from {
+        opacity: 0;
+        clip-path: inset(100% 0 0 0);
+        transform: translateY(26px);
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .anim-el:not(.in), .anim-el.in {
+        opacity: 1;
+        animation: none !important;
+    }
+}
+
+@media(max-width:780px) {
+    [data-anim="split"] .about-grid > div:first-child.in,
+    [data-anim="split"] .about-grid > div:last-child.in {
+        animation-name: revRise;
+    }
+
+    [data-anim="blur"] .anim-el.in {
+        animation-name: revBlurSoft;
+    }
+}
+
+@keyframes revBlurSoft {
+    from {
+        opacity: 0;
+        filter: blur(12px);
+        transform: translateY(26px);
+    }
+}
+/* ===== Mejoras de portfolio / propuesta profesional ===== */
+.profile-strip {
+    padding: 0 0 92px;
+    border-top: 0;
+}
+
+.profile-strip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--ov-025);
+}
+
+    .profile-strip-grid > div {
+        padding: 22px 24px;
+        border-right: 1px solid var(--line);
+        /*cursor: pointer;*/
+        transition: .2s ease;
+    }
+
+        .profile-strip-grid > div:hover {
+            transform: translateY(-5px);
+            border-color: var(--accentInputShadow);
+            background: var(--accentInputShadow);
+        }
+
+        .profile-strip-grid > div:last-child {
+            border-right: 0;
+        }
+
+    .profile-strip-grid strong {
+        display: block;
+        font: 700 12px 'JetBrains Mono';
+        color: var(--accent);
+        letter-spacing: .04em;
+    }
+
+    .profile-strip-grid span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+.tech-stack {
+    margin-top: 58px;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(145deg,var(--grad-service-a),var(--grad-service-b));
+}
+
+.tech-stack-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+    .tech-stack-head span {
+        color: var(--accent);
+        font-size: 10px;
+    }
+
+    .tech-stack-head h3 {
+        font-size: 1.35rem;
+    }
+
+.tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+    .tech-list span {
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--liText);
+        background: var(--ov-025);
+        font-size: 13px;
+        transition: .2s ease;
+        /*cursor: pointer;*/
+    }
+
+        .tech-list span:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+.work-intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    margin: -15px 0 28px;
+    padding: 20px 22px;
+    border-left: 2px solid var(--accent);
+    background: var(--ov-025);
+    border-radius: 0 14px 14px 0;
+}
+
+    .work-intro p {
+        margin: 0;
+        max-width: 70ch;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+.work-cta {
+    flex: 0 0 auto;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .work-cta span {
+        color: var(--accent);
+        margin-left: 6px;
+    }
+
+.work-ctaLink {
+    color: var(--accent) !important;
+}
+
+.grid-cards .card:hover .card-thumb img {
+    transform: scale(1.04);
+}
+
+.card-thumb img {
+    transition: transform .45s cubic-bezier(.2,.7,.2,1);
+}
+
+.process {
+    position: relative;
+}
+
+.step {
+    position: relative;
+}
+
+    .step strong {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: var(--bg-2);
+    }
+
+    .step:hover strong {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+.contact-info h2 {
+    /* max-width: 10ch;*/
+}
+
+@media(max-width:900px) {
+    .profile-strip-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+        .profile-strip-grid > div:nth-child(2) {
+            border-right: 0;
+        }
+
+        .profile-strip-grid > div:nth-child(-n+2) {
+            border-bottom: 1px solid var(--line);
+        }
+}
+
+@media(max-width:650px) {
+    .profile-strip {
+        padding-bottom: 65px;
+    }
+
+    .profile-strip-grid {
+        grid-template-columns: 1fr;
+    }
+
+        .profile-strip-grid > div, .profile-strip-grid > div:nth-child(2) {
+            border-right: 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+            .profile-strip-grid > div:last-child {
+                border-bottom: 0;
             }
-        });
+
+    .tech-stack {
+        padding: 22px;
+        margin-top: 42px;
     }
 
-    function clearLines() {
-        lineEls.forEach(function (el) {
-            el.textContent = '';
-            el.classList.remove('is-typing', 'is-done');
-        });
-        if (caret.parentNode) caret.parentNode.removeChild(caret);
+    .work-intro {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+#sobre-mi {
+    background: var(--surface);
+}
+
+#servicios {
+    background: var(--surface2);
+}
+
+#proceso {
+    background: var(--surface);
+}
+
+#trabajo {
+    background: var(--surface2);
+}
+
+#contacto {
+    background: var(--surface);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    html, body {
+        /*cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 3 L5 25 L11 19 L15 28 L19 26 L15 17 L24 17 Z' fill='%2307111f' stroke='%2365e6d2' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 8 L9 19' stroke='%23ffffff' stroke-width='1' opacity='.75'/%3E%3C/svg%3E") 5 3, auto;*/
+        cursor: none;
     }
 
-    function showFinal() {
-        clearLines();
-        lineEls.forEach(function (el, i) {
-            if (i < visibleLines) renderCode(el, lines[i]);
-        });
+    a, button, [role="button"], input[type="submit"],
+    input[type="button"], summary, label[for],
+    .card, .service, .step, .hero-title-img, .badge,
+    .skillgroup li, .theme-toggle, .nav-toggle {
+        /*cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 3 L5 25 L11 19 L15 28 L19 26 L15 17 L24 17 Z' fill='%2365e6d2' stroke='%2307111f' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 8 L9 19' stroke='%2307111f' stroke-width='1' opacity='.65'/%3E%3C/svg%3E") 5 3, pointer;*/
+        cursor: none;
     }
 
-    if (reduced) {
-        showFinal();
-        return;
+    input, textarea, [contenteditable="true"] {
+        cursor: text;
     }
 
-    let cancelled = false;
-    let runId = 0;
-
-    function sleep(ms) {
-        return new Promise(function (resolve) { window.setTimeout(resolve, ms); });
+    button:disabled, [aria-disabled="true"] {
+        cursor: not-allowed;
     }
-
-    async function typeRun() {
-        const currentRun = ++runId;
-        clearLines();
-
-        for (let i = 0; i < visibleLines; i++) {
-            if (cancelled || currentRun !== runId) return;
-            const el = lineEls[i];
-            el.classList.add('is-typing');
-            el.appendChild(caret);
-
-            const text = lines[i];
-            let typed = '';
-            for (let j = 0; j < text.length; j++) {
-                if (cancelled || currentRun !== runId) return;
-                typed += text[j];
-                renderCode(el, typed);
-                el.appendChild(caret);
-                await sleep(22 + Math.random() * 28);
-            }
-
-            el.classList.remove('is-typing');
-            el.classList.add('is-done');
-            await sleep(120);
-        }
-
-        if (cancelled || currentRun !== runId) return;
-        await sleep(1800);
-
-        // Borrado desde la última línea, manteniendo el cursor pegado al texto.
-        for (let i = visibleLines - 1; i >= 0; i--) {
-            if (cancelled || currentRun !== runId) return;
-            const el = lineEls[i];
-            el.classList.remove('is-done');
-            el.classList.add('is-typing');
-            el.appendChild(caret);
-
-            let currentText = lines[i];
-            while (currentText.length) {
-                currentText = currentText.slice(0, -1);
-                renderCode(el, currentText);
-                el.appendChild(caret);
-                await sleep(14 + Math.random() * 18);
-            }
-
-            el.classList.remove('is-typing');
-            await sleep(90);
-        }
-
-        if (caret.parentNode) caret.parentNode.removeChild(caret);
-        await sleep(500);
-        if (!cancelled) typeRun();
-    }
-
-    typeRun();
-
-    document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-            cancelled = true;
-            runId++;
-        } else if (cancelled) {
-            cancelled = false;
-            typeRun();
-        }
-    });
-})();
-
+}
 /* =========================================================
-   Custom cursor
+   CUSTOM CURSOR — inspired by modern developer portfolios
    ========================================================= */
-(function () {
-    var finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!finePointer || reduced) return;
+@media (hover: hover) and (pointer: fine) {
+    html.has-custom-cursor,
+    html.has-custom-cursor body {
+        cursor: none !important;
+    }
 
-    var dot = document.createElement('div');
-    var ring = document.createElement('div');
-    dot.className = 'cursor-dot';
-    ring.className = 'cursor-ring';
-    dot.setAttribute('aria-hidden', 'true');
-    ring.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(dot);
-    document.body.appendChild(ring);
-    document.documentElement.classList.add('has-custom-cursor');
-
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    var active = true;
-
-    function move(e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        dot.style.transform = 'translate3d(' + mouseX + 'px,' + mouseY + 'px,0)';
-        if (!document.body.classList.contains('cursor-ready')) {
-            document.body.classList.add('cursor-ready');
+        html.has-custom-cursor a,
+        html.has-custom-cursor button,
+        html.has-custom-cursor [role="button"],
+        html.has-custom-cursor input,
+        html.has-custom-cursor textarea,
+        html.has-custom-cursor select,
+        html.has-custom-cursor label {
+            cursor: none !important;
         }
+
+    .cursor-dot,
+    .cursor-ring {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9999;
+        pointer-events: none;
+        border-radius: 50%;
+        opacity: 0;
+        transform: translate3d(-100px,-100px,0);
+        will-change: transform, width, height, opacity;
     }
 
-    function animate() {
-        ringX += (mouseX - ringX) * 0.18;
-        ringY += (mouseY - ringY) * 0.18;
-        ring.style.transform = 'translate3d(' + ringX + 'px,' + ringY + 'px,0)';
-        if (active) requestAnimationFrame(animate);
+    .cursor-dot {
+        width: 7px;
+        height: 7px;
+        margin: -3.5px 0 0 -3.5px;
+        background: var(--accent);
+        box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 55%, transparent);
+        transition: transform .12s ease, opacity .2s ease;
     }
 
-    document.addEventListener('mousemove', move, { passive: true });
-    document.addEventListener('mouseenter', function () {
-        active = true;
-        document.body.classList.remove('cursor-hidden');
-        requestAnimationFrame(animate);
-    });
-    document.addEventListener('mouseleave', function () {
-        active = false;
-        document.body.classList.add('cursor-hidden');
-    });
+    .cursor-ring {
+        width: 34px;
+        height: 34px;
+        margin: -17px 0 0 -17px;
+        border: 1px solid color-mix(in srgb, var(--accent) 72%, white);
+        background: color-mix(in srgb, var(--accent) 5%, transparent);
+        transition: width .22s cubic-bezier(.2,.8,.2,1), height .22s cubic-bezier(.2,.8,.2,1), margin .22s cubic-bezier(.2,.8,.2,1), border-color .22s ease, background .22s ease, opacity .2s ease;
+    }
 
-    document.addEventListener('mouseover', function (e) {
-        var target = e.target.closest && e.target.closest(
-            'a, button, [role="button"], input, textarea, select, label, .card, .service, .step, .hero-title-img, .badge'
-        );
-        document.body.classList.toggle('cursor-hover', !!target);
-    }, { passive: true });
+    body.cursor-ready .cursor-dot,
+    body.cursor-ready .cursor-ring {
+        opacity: 1;
+    }
 
-    document.addEventListener('mousedown', function () {
-        document.body.classList.add('cursor-click');
-    });
-    document.addEventListener('mouseup', function () {
-        document.body.classList.remove('cursor-click');
-    });
+    body.cursor-hover .cursor-ring {
+        width: 54px;
+        height: 54px;
+        margin: -27px 0 0 -27px;
+        border-color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 9%, transparent);
+    }
 
-    requestAnimationFrame(animate);
-})();
+    body.cursor-click .cursor-ring {
+        width: 25px;
+        height: 25px;
+        margin: -12.5px 0 0 -12.5px;
+    }
 
+    body.cursor-hidden .cursor-dot,
+    body.cursor-hidden .cursor-ring {
+        opacity: 0;
+    }
+}
 /* =========================================================
-   Premium interaction pack: palette, terminal, share, copy,
-   magnetic controls, skill interactions and easter egg.
+   HERO CODE EDITOR
    ========================================================= */
-(function () {
-    var palette = document.getElementById('command-palette');
-    var paletteInput = document.getElementById('command-input');
-    var paletteList = document.getElementById('command-list');
-    var paletteOpen = document.getElementById('command-open');
-    var terminal = document.getElementById('terminal-modal');
-    var terminalOpen = document.getElementById('terminal-open');
-    var terminalInput = document.getElementById('terminal-input');
-    var terminalOutput = document.getElementById('terminal-output');
-    var commands = [
-        { label: { es: 'Ir a Inicio', en: 'Go to Home' }, icon: 'fa-home', action: function () { go('#hero') } },
-        { label: { es: 'Ir a Sobre mí', en: 'Go to About' }, icon: 'fa-user', action: function () { go('#sobre-mi') } },
-        { label: { es: 'Ver Servicios', en: 'View Services' }, icon: 'fa-cubes', action: function () { go('#servicios') } },
-        { label: { es: 'Ver Trabajo', en: 'View Work' }, icon: 'fa-th-large', action: function () { go('#trabajo') } },
-        { label: { es: 'Ir a Contacto', en: 'Go to Contact' }, icon: 'fa-envelope', action: function () { go('#contacto') } },
-        { label: { es: 'Abrir Terminal', en: 'Open Terminal' }, icon: 'fa-terminal', action: function () { openTerminal() } },
-        { label: { es: 'Cambiar tema', en: 'Toggle theme' }, icon: 'fa-adjust', action: function () { document.getElementById('theme-toggle')?.click() } },
-        { label: { es: 'Cambiar idioma', en: 'Switch language' }, icon: 'fa-language', action: function () { setLang(currentLang === 'es' ? 'en' : 'es') } },
-        { label: { es: 'Compartir portfolio', en: 'Share portfolio' }, icon: 'fa-share-alt', action: function () { sharePortfolio() } },
-        { label: { es: 'Copiar email', en: 'Copy email' }, icon: 'fa-copy', action: function () { copyEmail() } }
-    ];
-    var activeIndex = 0;
-    function t(key) { return (translations[currentLang] || translations.es)[key] || key }
-    function go(sel) { closePalette(); if (typeof window.showRoute === 'function') window.showRoute(sel); var el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
-    function renderCommands(filter) {
-        if (!paletteList) return;
-        var q = (filter || '').trim().toLocaleLowerCase();
-        var visible = commands.filter(function (c) { return c.label[currentLang].toLocaleLowerCase().includes(q) });
-        paletteList.innerHTML = '';
-        visible.forEach(function (c, i) {
-            var b = document.createElement('button'); b.type = 'button'; b.className = 'command-item' + (i === activeIndex ? ' active' : '');
-            b.innerHTML = '<i class="fa ' + c.icon + '"></i><span>' + c.label[currentLang] + '</span>' + (i < 9 ? '<span class="command-key">' + (i + 1) + '</span>' : '');
-            b.addEventListener('click', c.action); paletteList.appendChild(b);
-        });
-        if (activeIndex >= visible.length) activeIndex = Math.max(0, visible.length - 1);
+.hero-code {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: linear-gradient(145deg, var(--surface-2), var(--bg-2));
+    box-shadow: var(--shadow);
+    transition: .2s;
+}
+
+    .hero-code:hover {
+        transform: translateY(-2px);
+        border: 1px solid var(--accent);
     }
-    function openPalette() { if (!palette) return; palette.classList.remove('hidden'); palette.setAttribute('aria-hidden', 'false'); activeIndex = 0; renderCommands(paletteInput?.value); setTimeout(function () { paletteInput?.focus() }, 20) }
-    function closePalette() { if (!palette) return; palette.classList.add('hidden'); palette.setAttribute('aria-hidden', 'true') }
-    function openTerminal() {
-        if (!terminal) return;
-        terminal.classList.remove('hidden');
-        terminal.setAttribute('aria-hidden', 'false');
-        try {
-            // Avoid printing welcome twice: check if a welcome line (in any language) already exists
-            if (terminalOutput.innerText == "") print(t('terminalWelcome'), 'muted');
-        } catch (e) { if (!terminalOutput?.children.length) print(t('terminalWelcome'), 'muted'); }
-        setTimeout(function () { terminalInput?.focus() }, 20);
+
+    .hero-code::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.045) 45%, transparent 62%);
+        transform: translateX(-110%);
+        animation: codeSheen 5.5s ease-in-out infinite;
     }
-    function closeTerminal() { if (!terminal) return; terminal.classList.add('hidden'); terminal.setAttribute('aria-hidden', 'true') }
-    function print(value, kind) { if (!terminalOutput) return; var line = document.createElement('div'); line.className = 'terminal-line ' + (kind || ''); line.textContent = value; terminalOutput.appendChild(line); terminalOutput.scrollTop = terminalOutput.scrollHeight }
-    function runCommand(raw) {
-        var cmd = (raw || '').trim().toLocaleLowerCase(); if (!cmd) return;
-        print('visitor@portfolio:~$ ' + raw, 'cmd');
-        if (cmd === 'help') print(t('terminalHelp'), 'muted');
-        else if (cmd === 'about') print(t('terminalAbout'));
-        else if (cmd === 'projects') print(t('terminalProjects') + projects.length, 'good');
-        else if (cmd === 'skills') print(t('terminalSkills'));
-        else if (cmd === 'contact') print(t('terminalContact'));
-        else if (cmd === 'clear') { terminalOutput.innerHTML = ''; return }
-        else if (cmd === 'theme') print(t('terminalTheme'), 'muted');
-        else if (cmd === 'theme light') { document.documentElement.setAttribute('data-theme', 'light'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: light', 'good') }
-        else if (cmd === 'theme dark') { document.documentElement.removeAttribute('data-theme'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: dark', 'good') }
-        else if (cmd === 'work' || cmd === 'portfolio') { closeTerminal(); go('#trabajo') }
-        else if (cmd === 'contact-me') { closeTerminal(); go('#contacto') }
-        else print(t('terminalUnknown'), 'muted');
+
+.hero-code-bar {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--ov-04);
+}
+
+.hero-code-dots {
+    display: flex;
+    gap: 5px;
+}
+
+    .hero-code-dots i {
+        width: 7px;
+        height: 7px;
+        display: block;
+        border-radius: 50%;
+        background: var(--muted);
+        opacity: .55;
     }
-    if (paletteOpen) paletteOpen.addEventListener('click', openPalette);
-    if (terminalOpen) terminalOpen.addEventListener('click', openTerminal);
-    document.querySelectorAll('[data-command-close]').forEach(function (el) { el.addEventListener('click', closePalette) });
-    document.querySelectorAll('[data-terminal-close]').forEach(function (el) { el.addEventListener('click', closeTerminal) });
-    paletteInput && paletteInput.addEventListener('input', function () { activeIndex = 0; renderCommands(this.value) });
-    paletteInput && paletteInput.addEventListener('keydown', function (e) {
-        var items = paletteList ? Array.from(paletteList.querySelectorAll('.command-item')) : [];
-        if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(activeIndex + 1, items.length - 1); renderCommands(this.value) }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); renderCommands(this.value) }
-        else if (e.key === 'Enter') { e.preventDefault(); items[activeIndex]?.click() }
-        else if (e.key === 'Escape') closePalette();
-    });
-    terminal && terminal.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            e.preventDefault();
-            e.stopPropagation();
-            closeTerminal();
-            // Return to the Command Window after the current key event finishes.
-            setTimeout(function () { try { openPalette(); } catch (err) { } }, 0);
+
+        .hero-code-dots i:nth-child(3) {
+            background: var(--accent);
         }
-    });
-    document.getElementById('terminal-form')?.addEventListener('submit', function (e) { e.preventDefault(); runCommand(terminalInput.value); terminalInput.value = '' });
-    document.addEventListener('keydown', function (e) {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palette?.classList.contains('hidden') ? openPalette() : closePalette() }
-        if (e.key === 'Escape') { closePalette(); closeTerminal() }
-    });
-    window.addEventListener('scroll', function () { if (!palette?.classList.contains('hidden')) closePalette() }, { passive: true });
-    window._portfolioOpenPalette = openPalette;
-    window._portfolioOpenTerminal = openTerminal;
 
-    // Skills: tooltip contextual al pasar/focalizar.
-    var skillInfo = {
-        web: { es: 'Interfaces, sitios y aplicaciones web responsive.', en: 'Responsive interfaces, websites and web applications.' },
-        power: { es: 'Apps, automatizaciones y soluciones conectadas con Power Platform.', en: 'Apps, automations and connected solutions with Power Platform.' },
-        design: { es: 'Interfaces y piezas visuales con foco en claridad y consistencia.', en: 'Interfaces and visual pieces focused on clarity and consistency.' }
-    };
-    document.querySelectorAll('.skillgroup-interactive').forEach(function (skill) {
-        var key = skill.getAttribute('data-skill');
-        var pop = document.createElement('span');
-        pop.className = 'skill-popover';
-        skill.appendChild(pop);
-        function update() { pop.textContent = skillInfo[key]?.[currentLang] || '' }
-        update();
-        skill.addEventListener('mouseenter', update);
-        skill.addEventListener('focus', update);
-    });
-})();
+.hero-code-file {
+    flex: 1;
+    font-size: 10px;
+    color: var(--muted);
+}
 
-(function () {
-    var toast;
-    function showToast(message) {
-        if (!toast) { toast = document.createElement('div'); toast.className = 'toast-premium'; document.body.appendChild(toast) }
-        toast.textContent = message; toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(function () { toast.classList.remove('show') }, 1800)
+.hero-code-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+    .hero-code-status b {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 10px var(--accent);
+        animation: codePulse 1.2s ease-in-out infinite;
     }
-    window.copyEmail = function () {
-        var email = 'leandro.pignatta@live.com';
-        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(email).then(function () { showToast((translations[currentLang] || translations.es).copiedEmail) }) }
-        else { var ta = document.createElement('textarea'); ta.value = email; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast((translations[currentLang] || translations.es).copiedEmail) } catch (e) { } ta.remove() }
-    };
-    document.getElementById('copy-email')?.addEventListener('click', copyEmail);
-    window.sharePortfolio = function () {
-        var data = { title: document.title, text: 'Leandro Carlos Pignatta — Portfolio', url: window.location.href };
-        if (navigator.share) { navigator.share(data).then(function () { showToast((translations[currentLang] || translations.es).sharedPortfolio) }).catch(function () { }) }
-        else if (navigator.clipboard) { navigator.clipboard.writeText(window.location.href).then(function () { showToast((translations[currentLang] || translations.es).sharedPortfolio) }) }
-        else showToast(window.location.href);
-    };
-    document.getElementById('share-portfolio')?.addEventListener('click', sharePortfolio);
-})();
 
-/* Magnetic buttons: subtle effect on fine pointers only. */
-(function () {
-    if (!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches)) return;
-    if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-    document.querySelectorAll('.btn-primary,.btn-ghost,.btn-terminal,.share-button,.theme-toggle').forEach(function (el) {
-        el.addEventListener('mousemove', function (e) { var r = el.getBoundingClientRect(), x = (e.clientX - (r.left + r.width / 2)) / r.width, y = (e.clientY - (r.top + r.height / 2)) / r.height; el.style.transform = 'translate(' + x * 7 + 'px,' + y * 5 + 'px)' });
-        el.addEventListener('mouseleave', function () { el.style.transform = '' })
-    });
-})();
+.hero-code-body {
+    min-height: 172px;
+    padding: 17px 14px 18px;
+    font-size: 10px;
+    line-height: 2.05;
+    white-space: nowrap;
+}
 
-/* Konami-style easter egg. */
-(function () {
-    var code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], i = 0;
-    document.addEventListener('keydown', function (e) { if (e.key === code[i]) { i++; if (i === code.length) { i = 0; document.body.classList.add('easter-egg'); setTimeout(function () { document.body.classList.remove('easter-egg') }, 4200) } } else { i = e.key === code[0] ? 1 : 0 } })
-})();
+.code-line {
+    min-height: 20px;
+    opacity: 1;
+    white-space: pre;
+}
 
+    .code-line::before {
+        content: attr(data-code-line);
+        display: inline-block;
+        width: 25px;
+        margin-right: 7px;
+        color: var(--muted);
+        opacity: .45;
+        user-select: none;
+    }
+
+.code-indent {
+    padding-left: 14px;
+}
+
+.code-string {
+    color: var(--accent);
+}
+
+.code-caret {
+    display: inline-block;
+    width: 1px;
+    height: 12px;
+    margin-left: 1px;
+    vertical-align: -2px;
+    background: var(--accent);
+    box-shadow: 0 0 7px color-mix(in srgb, var(--accent) 70%, transparent);
+    animation: codeCaret .8s steps(1,end) infinite;
+}
+
+.code-line.is-typing .code-caret {
+    animation-duration: .55s;
+}
+
+@keyframes codeCaret {
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes codePulse {
+    50% {
+        opacity: .35;
+        transform: scale(.7);
+    }
+}
+
+@keyframes codeSheen {
+    0%, 65%, 100% {
+        transform: translateX(-110%);
+    }
+
+    82% {
+        transform: translateX(110%);
+    }
+}
+
+@media (max-width: 900px) {
+    .hero-code-body {
+        min-height: 155px;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 650px) {
+    .hero-code {
+        /*display: none;*/
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-code::after,
+    .hero-code-status b,
+    .code-line,
+    .code-caret {
+        animation: none !important;
+    }
+
+    .code-line {
+        opacity: 1;
+    }
+}
+
+.hero-grid > :first-child > .hero-meta {
+    margin-top: 26px;
+}
+
+@media (max-width: 900px) {
+    .hero-grid > :first-child > .hero-meta {
+        margin-top: 24px;
+    }
+}
+/* Fix: mantener visible la paginación de proyectos en pantallas móviles.
+   El selector específico evita que las reglas del menú responsive afecten
+   al nav de la galería. */
+@media (max-width: 900px) {
+    /* La paginación es un nav independiente del menú mobile.
+       Resetear las propiedades del drawer para que no herede
+       position: fixed, clip-path, width, padding, etc. */
+    #cards-pagination.pagination {
+        display: flex !important;
+        position: relative !important;
+        inset: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        max-width: 100%;
+        min-height: 38px;
+        height: auto;
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 28px auto 0;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        border-left: 0;
+        box-shadow: none;
+        clip-path: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        overflow: visible;
+        overscroll-behavior: auto;
+        z-index: 2;
+        transition: none;
+    }
+
+        #cards-pagination.pagination button {
+            display: inline-flex;
+            flex: 0 0 auto;
+            visibility: visible;
+        }
+}
+
+@media (max-width: 480px) {
+    #cards-pagination.pagination {
+        gap: 6px;
+        padding: 0 4px;
+    }
+
+        #cards-pagination.pagination button {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 9px;
+            font-size: 11px;
+        }
+}
 /* =========================================================
-   Premium footer enhancement
-   Builds the footer from the current JS so it stays in sync
-   with the active language, sharing, theme and back-to-top UX.
+   PREMIUM INTERACTIONS
    ========================================================= */
-(function () {
-    function initPremiumFooter() {
-        var footer = document.querySelector('footer.footer');
-        if (!footer || footer.dataset.premiumReady === '1') return;
-        footer.dataset.premiumReady = '1';
+.hero-status-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px
+}
 
-        var cssId = 'premium-footer-runtime-css';
-        if (!document.getElementById(cssId)) {
-            var style = document.createElement('style');
-            style.id = cssId;
-            style.textContent = `
-                
-                .footer-premium .footer-cta{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding-bottom:42px}
-                .footer-premium .footer-kicker{margin:0 0 12px;color:var(--accent);font:11px/1.2 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
-                .footer-premium .footer-title{margin:0;max-width:780px;font-size:clamp(34px,6vw,78px);line-height:.95;letter-spacing:-.045em}
-                .footer-premium .footer-title span{color:var(--accent)}
-                .footer-premium .footer-cta-button{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;padding:14px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-weight:0;transition:transform .25s ease,border-color .25s ease,background .25s ease}
-                .footer-premium .footer-cta-button:hover{transform:translateY(-3px);border-color:var(--accent);background:var(--surface-2)}
-                .footer-premium .footer-main{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:28px;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-                .footer-premium .footer-brand{font-size:15px;color:var(--muted);line-height:1.7}
-                .footer-premium .footer-logo{display:inline-block;margin-bottom:10px;color:var(--text);font:700 25px/1 'JetBrains Mono',monospace;letter-spacing:-.06em;text-decoration:none}
-                .footer-premium .footer-logo b{color:var(--accent)}
-                .footer-premium .footer-label{display:block;margin-bottom:12px;color:var(--muted);font:10px/1.2 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
-                .footer-premium .footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-                .footer-premium .footer-links a{position:relative;color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s ease,transform .2s ease}
-                .footer-premium .footer-links a:hover{color:var(--accent);transform:translateX(4px)}
-                .footer-premium .footer-socials{display:flex;flex-wrap:wrap;gap:8px}
-                .footer-premium .footer-socials a{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;color:var(--muted);text-decoration:none;transition:transform .2s ease,color .2s ease,border-color .2s ease}
-                .footer-premium .footer-socials a:hover{transform:translateY(-3px);color:var(--accent);border-color:var(--accent)}
-                .footer-premium .footer-status{display:flex;align-items:center;gap:8px;color:var(--muted);font:10px/1.4 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
-                .footer-premium .footer-status-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 12%,transparent);animation:footerPulse 2s ease-in-out infinite}
-                .footer-premium .footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-top:18px;color:var(--muted);font:10px/1.5 'JetBrains Mono',monospace}
-                .footer-premium .footer-bottom-actions{display:flex;align-items:center;gap:14px}
-                .footer-premium .footer-share{border:0;background:transparent;color:var(--muted);font:inherit;cursor:pointer;padding:0;transition:color .2s ease}
-                .footer-premium .footer-share:hover{color:var(--accent)}
-                .footer-premium .footer-top{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--text);cursor:pointer;transition:transform .2s ease,border-color .2s ease,color .2s ease}
-                .footer-premium .footer-top:hover{transform:translateY(-3px);border-color:var(--accent);color:var(--accent)}
-                @keyframes footerPulse{0%,100%{opacity:.65;transform:scale(.9)}50%{opacity:1;transform:scale(1)}}
-                @media (max-width:900px){.footer-premium .footer-cta{align-items:flex-start;flex-direction:column}.footer-premium .footer-main{grid-template-columns:repeat(2,minmax(0,1fr))}}
-                @media (max-width:560px){.footer-premium .footer-main{grid-template-columns:1fr}.footer-premium .footer-bottom{align-items:flex-start;flex-direction:column}.footer-premium .footer-title{font-size:clamp(34px,12vw,58px)}}
-                @media (prefers-reduced-motion:reduce){.footer-premium .footer-status-dot{animation:none}.footer-premium *{scroll-behavior:auto!important;transition:none!important}}
-            `;
-            document.head.appendChild(style);
-        }
+.availability-pill, .share-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 7px 11px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--ov-025);
+    color: var(--muted);
+    transition: .2s ease;
+    font: 11px 'JetBrains Mono',monospace
+}
 
-        footer.classList.add('footer-premium');
-        footer.innerHTML = `           
-            <div class="footer-main">
-                <div class="footer-brand">
-                     <div class="markFooter"><a class="footer-logo" href="#hero" aria-label="Leandro Pignatta"><img class="mark-boxFooter" src="Images/favicon.png" /></a> <span data-i18n="nameShort" class="nameShort">Leandro</span><span class="lastNameFooter nameShort"> Pignatta</span></div>
-                    <p data-footer-key="description">Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.</p>
-                </div>
-                <div>
-                    <span class="footer-label navigationLabel" data-footer-key="navLabel">Navegación</span>
-                    <nav class="footer-links" aria-label="Footer navigation">
-                        <a href="#hero" data-footer-key="home">Inicio</a>
-                        <a href="#sobre-mi" data-footer-key="about">Sobre mí</a>
-                        <a href="#servicios" data-footer-key="services">Servicios</a>
-                        <a href="#trabajo" data-footer-key="work">Trabajo</a>
-                        <a href="#contacto" data-footer-key="contact">Contacto</a>
-                    </nav>
-                </div>
-                <div>
-                    <span class="footer-label" data-footer-key="socialLabel">Conectemos</span>
-                    <div class="footer-socials">
-                        <a href="https://www.linkedin.com/in/leandro-carlos-pignatta-8379b017/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
-                        <a href="https://github.com/Pigi86/" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa fa-github"></i></a>
-                        <a href="mailto:leandro.pignatta@live.com" aria-label="Email"><i class="fa fa-envelope"></i></a>
-                        <a href="https://www.instagram.com/lea.pigi86/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
-                    </div>
-                    <div class="footer-status" style="margin-top:18px"><span class="footer-status-dot"></span><span data-footer-key="status">STATUS: </span><span style="color: var(--accent)">ONLINE</span></div>
-                    <br><a class="footer-cta-button" href="#contacto" data-footer-key="cta">Hablemos <span aria-hidden="true">↗</span></a>
-                </div>
-                <div class="footer-brand">
-                    <span class="footer-label" data-footer-key="availabilityLabel">Disponibilidad</span>
-                    <p data-footer-key="availability">Disponible para nuevos proyectos, colaboraciones y oportunidades profesionales.</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span>© <span class="footer-year"></span> Leandro Carlos Pignatta — <span data-footer-key="rights">Todos los derechos reservados.</span></span>
-                <div class="footer-bottom-actions">
-                    <button class="footer-share" type="button" data-footer-key="share">Compartir portfolio</button>                    
-                </div>
-            </div>
-        `;
-
-        footer.querySelector('.footer-year').textContent = new Date().getFullYear();
-
-        function updateFooterLanguage() {
-            var es = currentLang !== 'en';
-            var labels = es ? {
-                kicker: '01 / CONTACTO', title: 'Construyamos algo <span>juntos.</span>', cta: 'Hablemos <span aria-hidden="true">↗</span>',
-                description: 'Desarrollo web, Power Platform y diseño para crear soluciones digitales claras, funcionales y profesionales.',
-                navLabel: 'Navegación', home: 'Inicio', about: 'Sobre mí', services: 'Servicios', work: 'Trabajo', contact: 'Contacto',
-                socialLabel: 'Conectemos', status: 'STATUS: ', availabilityLabel: 'Disponibilidad',
-                availability: 'Disponible para nuevos proyectos, colaboraciones y oportunidades profesionales.', rights: 'Todos los derechos reservados.', share: 'Compartir portfolio'
-            } : {
-                kicker: '01 / CONTACT', title: 'Let’s build something <span>together.</span>', cta: 'Let’s talk <span aria-hidden="true">↗</span>',
-                description: 'Web development, Power Platform and design for clear, functional and professional digital solutions.',
-                navLabel: 'Navigation', home: 'Home', about: 'About me', services: 'Services', work: 'Work', contact: 'Contact',
-                socialLabel: 'Connect', status: 'STATUS: ', availabilityLabel: 'Availability',
-                availability: 'Available for new projects, collaborations and professional opportunities.', rights: 'All rights reserved.', share: 'Share portfolio'
-            };
-            footer.querySelectorAll('[data-footer-key]').forEach(function (el) {
-                var key = el.getAttribute('data-footer-key');
-                if (labels[key] != null) el.innerHTML = labels[key];
-            });
-        }
-        updateFooterLanguage();
-        window.addEventListener('lp:langchange', updateFooterLanguage);
-
-        footer.querySelectorAll('a[href^="#"]').forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                var target = document.querySelector(link.getAttribute('href'));
-                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-            });
-        });
-        footer.querySelector('.footer-share')?.addEventListener('click', function () {
-            if (typeof window.sharePortfolio === 'function') window.sharePortfolio();
-        });
-        footer.querySelector('.footer-top')?.addEventListener('click', function () {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+    .availability-pill:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        color: var(--accent)
     }
 
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPremiumFooter);
-    else initPremiumFooter();
-})();
+.availability-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    animation: availabilityPulse 1.8s ease-in-out infinite
+}
 
+.share-button {
+    cursor: pointer;
+    transition: .2s ease;
+    color: var(--text)
+}
+
+    .share-button:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        color: var(--accent)
+    }
+
+@keyframes availabilityPulse {
+    50% {
+        opacity: .35;
+        transform: scale(.72)
+    }
+}
+
+.btn-terminal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 17px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--ov-025);
+    color: var(--text);
+    font: 600 13px 'DM Sans',sans-serif;
+    cursor: pointer;
+    transition: .2s ease
+}
+
+    .btn-terminal:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px var(--accentInputShadow)
+    }
+
+.skillgroup-interactive {
+    position: relative;
+    cursor: default;
+    transition: transform .22s ease,border-color .22s ease,background .22s ease
+}
+
+    .skillgroup-interactive:hover, .skillgroup-interactive:focus-visible {
+        transform: translateY(-3px);
+        border-color: var(--accent);
+        background: var(--ov-025);
+        outline: none
+    }
+
+    .skillgroup-interactive::after {
+        content: '↗';
+        position: absolute;
+        top: 15px;
+        right: 17px;
+        color: var(--accent);
+        font: 12px 'JetBrains Mono';
+        opacity: .45;
+        transition: .2s
+    }
+
+    .skillgroup-interactive:hover::after, .skillgroup-interactive:focus-visible::after {
+        opacity: 1;
+        transform: translate(2px,-2px)
+    }
+/* Command palette */
+.command-palette, .terminal-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: grid;
+    place-items: start center;
+    padding: 12vh 18px 30px;
+    opacity: 1;
+    transition: opacity .2s ease
+}
+
+    .command-palette.hidden, .terminal-modal.hidden {
+        display: none
+    }
+
+.command-backdrop, .terminal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3,8,18,.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px)
+}
+
+.command-dialog {
+    position: relative;
+    width: min(680px,100%);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--header-bg-solid);
+    box-shadow: 0 30px 90px rgba(0,0,0,.38);
+    animation: paletteIn .22s ease
+}
+
+.command-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: .08em
+}
+
+.command-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--line)
+}
+
+    .command-input-wrap i {
+        color: var(--accent)
+    }
+
+    .command-input-wrap input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--text);
+        font: 15px 'DM Sans',sans-serif
+    }
+
+.command-list {
+    max-height: 360px;
+    overflow: auto;
+    padding: 8px
+}
+
+.command-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 13px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    font: 13px 'DM Sans',sans-serif
+}
+
+    .command-item:hover, .command-item.active {
+        background: var(--ov-04);
+        color: var(--accent)
+    }
+
+    .command-item i {
+        width: 20px;
+        text-align: center;
+        color: var(--muted)
+    }
+
+    .command-item .command-key {
+        margin-left: auto;
+        color: var(--muted);
+        font: 10px 'JetBrains Mono'
+    }
+
+.command-foot {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 11px 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font: 10px 'JetBrains Mono'
+}
+
+kbd {
+    padding: 3px 6px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--ov-025);
+    font: 10px 'JetBrains Mono'
+}
+
+@keyframes paletteIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px) scale(.985)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+/* Terminal */
+.terminal-modal {
+    place-items: center;
+    padding: 20px
+}
+
+.terminal-window {
+    position: relative;
+    width: min(760px,100%);
+    max-height: min(620px,82vh);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 17px;
+    background: var(--header-bg-solid);
+    color: var(--text);
+    box-shadow: 0 35px 100px rgba(0,0,0,.45);
+    animation: paletteIn .22s ease
+}
+
+.terminal-bar {
+    height: 43px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: var(--ov-04);
+    color: var(--muted);
+    font-size: 10px
+}
+
+    .terminal-bar .terminal-dots {
+        display: flex;
+        gap: 5px
+    }
+
+.terminal-dots i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #68768a
+}
+
+    .terminal-dots i:nth-child(3) {
+        background: var(--accent)
+    }
+
+.terminal-bar button {
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+    color: #8ea0b8;
+    font-size: 21px;
+    cursor: pointer
+}
+
+.terminal-output {
+    flex: 1;
+    min-height: 300px;
+    overflow: auto;
+    padding: 18px;
+    font: 12px/1.8 'JetBrains Mono',monospace;
+    white-space: pre-wrap
+}
+
+.terminal-line {
+    margin: 0
+}
+
+    .terminal-line .cmd {
+        color: var(--accent)
+    }
+
+    .terminal-line .muted {
+        color: #7e90a8
+    }
+
+    .terminal-line .good {
+        color: #8ee7a5
+    }
+
+.terminal-form {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255,255,255,.08)
+}
+
+.terminal-prompt {
+    color: var(--accent);
+    font-size: 11px;
+    white-space: nowrap
+}
+
+.terminal-form input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font: 12px 'JetBrains Mono'
+}
+/* Share/copy feedback */
+.copy-email {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--ov-025);
+    color: var(--muted);
+    cursor: pointer;
+    transition: .2s
+}
+
+    .copy-email:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-2px)
+    }
+
+.contact-email-row {
+    display: flex !important;
+    align-items: center;
+    gap: 7px
+}
+
+    .contact-email-row > a {
+        flex: 1
+    }
+
+.toast-premium {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    z-index: 600;
+    transform: translate(-50%,16px);
+    padding: 11px 15px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--header-bg-solid);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    font: 12px 'JetBrains Mono';
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s ease
+}
+
+    .toast-premium.show {
+        opacity: 1;
+        transform: translate(-50%,0)
+    }
+
+@media(max-width:650px) {
+    .hero-status-row {
+        align-items: stretch
+    }
+
+    .availability-pill, .share-button {
+        width: 100%;
+        justify-content: center
+    }
+
+    .btn-terminal {
+        width: 100%;
+        justify-content: center
+    }
+
+    .command-palette, .terminal-modal {
+        padding: 6vh 10px 15px
+    }
+
+    .command-list {
+        max-height: 45vh
+    }
+
+    .command-foot {
+        display: none
+    }
+
+    .terminal-window {
+        max-height: 88vh
+    }
+
+    .terminal-output {
+        min-height: 260px;
+        padding: 14px
+    }
+
+    .terminal-form {
+        padding: 11px 12px
+    }
+
+    .terminal-prompt {
+        font-size: 9px
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .availability-dot {
+        animation: none
+    }
+
+    .command-dialog, .terminal-window {
+        animation: none
+    }
+}
+/* Easter egg: activado con la secuencia Konami */
+body.easter-egg::before {
+    content: 'SYSTEM MODE // 1986';
+    position: fixed;
+    inset: 0;
+    z-index: 700;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    font: 700 clamp(22px,5vw,54px) 'JetBrains Mono',monospace;
+    color: var(--accent);
+    letter-spacing: .08em;
+    text-shadow: 0 0 28px var(--accent);
+    animation: easterFlash .8s ease-in-out infinite alternate
+}
+
+body.easter-egg::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 699;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg,transparent 0 3px,color-mix(in srgb,var(--accent) 7%,transparent) 4px);
+    animation: easterScan .16s linear infinite
+}
+
+@keyframes easterFlash {
+    from {
+        opacity: .55;
+        transform: scale(.98)
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.02)
+    }
+}
+
+@keyframes easterScan {
+    to {
+        transform: translateY(4px)
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    body.easter-egg::before, body.easter-egg::after {
+        animation: none
+    }
+}
+
+.skillgroup-interactive .skill-popover {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 10px;
+    padding: 7px 9px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--header-bg-solid);
+    color: var(--muted);
+    font: 10px/1.4 'JetBrains Mono';
+    opacity: 0;
+    transform: translateY(5px);
+    pointer-events: none;
+    transition: .2s ease;
+    box-shadow: var(--shadow)
+}
+
+.skillgroup-interactive:hover .skill-popover, .skillgroup-interactive:focus-visible .skill-popover {
+    opacity: 1;
+    transform: none
+}
+
+.aboutActualmente {
+    color: var(--muted);
+    position: relative;
+    top: -45px;
+}
+
+.nameShort {
+    color: var(--text);
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+@media(max-width:650px) {
+    .skillgroup-interactive .skill-popover {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        margin-top: 10px;
+        opacity: 1;
+        transform: none
+    }
+}
 /* =========================================================
-   Router de secciones
-   Todas las secciones de <main> arrancan ocultas y solo se
-   muestra la que visita el usuario (según el hash de la URL).
-   Sin hash -> se muestra el inicio (#hero).
+   MODERN WORKSTATION
    ========================================================= */
-(function () {
-    var sections = Array.from(document.querySelectorAll('main > section'));
-    var routes = Object.create(null);
-    sections.forEach(function (s) {
-        var key = s.getAttribute('data-route') || s.id;
-        if (!key) return;
-        (routes[key] = routes[key] || []).push(s);
-    });
-    
-    var navLinks = Array.from(document.querySelectorAll('#site-nav a.navlink'));
-    var current = null;
+.workspace-showcase {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(240px, .72fr) minmax(0, 1.28fr);
+    gap: clamp(30px, 5vw, 72px);
+    align-items: center;
+    margin: 56px 0 26px;
+    padding: clamp(28px, 4vw, 44px);
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius) + 4px);
+    overflow: hidden;
+    background: radial-gradient(circle at 80% 50%, rgba(101,230,210,.08), transparent 34%), linear-gradient(135deg, var(--grad-hero-a), var(--grad-hero-b));
+    box-shadow: var(--shadow);
+    isolation: isolate;
+}
 
-    function normalize(id) { return id === 'top' ? 'hero' : id; }
-
-    function show(key, scrollTop) {
-        if (!routes[key]) return false;
-        if (current !== key) {
-            sections.forEach(function (s) { s.classList.remove('is-active'); });
-            routes[key].forEach(function (s) { s.classList.add('is-active'); });
-            current = key;
-            navLinks.forEach(function (a) {
-                var on = a.getAttribute('href') === '#' + key;
-                a.classList.toggle('active', on);
-                if (on) a.setAttribute('aria-current', 'page');
-                else a.removeAttribute('aria-current');
-            });
-            // El layout cambió: avisa a lo que depende del tamaño (canvas 3D, barra de progreso)
-            requestAnimationFrame(function () { window.dispatchEvent(new Event('resize')); });
-        }
-        if (scrollTop) window.scrollTo({ top: 0, behavior: 'instant' });
-        return true;
+    .workspace-showcase::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent 0 49.8%, var(--line) 50%, transparent 50.2%), linear-gradient(0deg, transparent 0 49.8%, var(--line) 50%, transparent 50.2%);
+        background-size: 72px 72px;
+        opacity: .18;
+        mask-image: radial-gradient(circle at 70% 50%, #000, transparent 70%);
     }
 
-    function apply(scrollTop) {
-        var id = '';
-        try { id = decodeURIComponent(location.hash.replace(/^#/, '')); } catch (e) { id = location.hash.replace(/^#/, ''); }
-        id = normalize(id);
-        if (!id) { show('hero', scrollTop); return; }
-        if (routes[id]) { show(id, scrollTop); return; }
-        // hash que no es una sección (ej. #main-content): no cambia la vista actual
-        if (!current) show('hero', false);
+.workspace-copy,
+.modern-workstation {
+    position: relative;
+    z-index: 2;
+}
+
+.modern-workstation {
+    top: 0px;
+}
+
+.workspace-copy {
+    max-width: 360px;
+}
+
+.workspace-kicker {
+    display: inline-flex;
+    margin-bottom: 13px;
+    color: var(--accent);
+    font-size: 11px;
+}
+
+.workspace-copy h3 {
+    margin: 0 0 12px;
+    font-size: clamp(1.65rem, 3vw, 2.35rem);
+    line-height: 1.05;
+}
+
+.workspace-copy p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 34rem;
+}
+
+.workspace-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+    .workspace-metrics span {
+        min-width: 84px;
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: var(--ov-03);
+        transition: .2s ease;
     }
 
-    // API pública: usada por la paleta de comandos y la terminal
-    window.showRoute = function (hash) {
-        var id = normalize(String(hash).replace(/^#/, ''));
-        if (!routes[id]) return false;
-        if (location.hash !== '#' + id) {
-            try { history.pushState(null, '', '#' + id); } catch (e) { location.hash = id; }
+        .workspace-metrics span:hover {
+            transform: translateY(-2px);
+            border: 1px solid var(--accent);
         }
-        show(id, true);
-        return true;
-    };
 
-    // Cualquier link interno (#sobre-mi, #contacto...) cambia de sección.
-    // Va en fase de captura para que la sección ya sea visible cuando
-    // otros handlers (ej. el del footer) hagan scrollIntoView.
-    document.addEventListener('click', function (e) {
-        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        var a = e.target.closest && e.target.closest('a[href^="#"]');
-        if (!a) return;
-        var href = a.getAttribute('href');
-        if (!href || href.length < 2) return;
-        if (routes[normalize(href.slice(1))]) {
-            e.preventDefault();
-            window.showRoute(href);
+    .workspace-metrics b,
+    .workspace-metrics small {
+        display: block;
+    }
+
+    .workspace-metrics b {
+        font: 800 16px 'Manrope', sans-serif;
+        color: var(--text);
+    }
+
+    .workspace-metrics small {
+        margin-top: 2px;
+        color: var(--muted);
+        font: 9px 'JetBrains Mono', monospace;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+.modern-workstation {
+    min-height: 350px;
+    display: grid;
+    place-items: center;
+    perspective: 1200px;
+}
+
+.workstation-glow {
+    position: absolute;
+    width: 72%;
+    height: 58%;
+    top: 13%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(101,230,210,.18), transparent 68%);
+    filter: blur(14px);
+    animation: workstationPulse 4s ease-in-out infinite;
+}
+
+.monitor-wrap {
+    position: relative;
+    width: min(560px, 92%);
+    transform-style: preserve-3d;
+    transition: transform .25s ease-out;
+    z-index: 3;
+}
+
+.monitor {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    padding: 8px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, #202b3b, #080d15 70%);
+    border: 1px solid rgba(255,255,255,.16);
+    box-shadow: 0 30px 60px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.12);
+    transform-style: preserve-3d;
+}
+
+    .monitor::after {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 16px;
+        pointer-events: none;
+        border: 1px solid rgba(255,255,255,.05);
+    }
+
+.monitor-camera {
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    width: 7px;
+    height: 4px;
+    border-radius: 999px;
+    transform: translateX(-50%);
+    background: #0b111a;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.12);
+    z-index: 5;
+}
+
+.monitor-frame {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #07111c;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+}
+
+.monitor-topbar {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 13px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    background: rgba(255,255,255,.025);
+}
+
+.monitor-brand {
+    color: #8b9aab;
+    font: 700 9px 'JetBrains Mono', monospace;
+    letter-spacing: .12em;
+}
+
+.monitor-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #cfe7df;
+    font: 700 8px 'JetBrains Mono', monospace;
+    letter-spacing: .12em;
+}
+
+    .monitor-live i {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 12px var(--accent);
+        animation: liveBlink 1.7s ease-in-out infinite;
+    }
+
+.monitor-screen {
+    position: relative;
+    height: calc(100% - 34px);
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    overflow: hidden;
+    background: radial-gradient(circle at 72% 28%, rgba(138,167,255,.14), transparent 25%), radial-gradient(circle at 50% 90%, rgba(101,230,210,.08), transparent 30%), #08131f;
+}
+
+.screen-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 11px;
+    padding-top: 18px;
+    border-right: 1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,.018);
+}
+
+.screen-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 3px;
+    background: #334253;
+}
+
+    .screen-dot.active {
+        background: var(--accent);
+        box-shadow: 0 0 12px rgba(101,230,210,.6);
+    }
+
+.screen-content {
+    position: relative;
+    padding: clamp(18px, 4vw, 34px);
+}
+
+.screen-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #8294a8;
+    font-size: 9px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+}
+
+    .screen-heading b {
+        color: var(--accent-2);
+        font: 700 10px 'JetBrains Mono', monospace;
+    }
+
+.screen-code {
+    display: grid;
+    gap: 8px;
+    margin-top: 20px;
+    color: #c8d5e3;
+    font: 500 clamp(9px, 1.3vw, 12px)/1.5 'JetBrains Mono', monospace;
+}
+
+    .screen-code span {
+        opacity: 0;
+        transform: translateX(-8px);
+        animation: codeLineIn .55s ease forwards;
+    }
+
+        .screen-code span:nth-child(1) {
+            animation-delay: .35s;
         }
-    }, true);
 
-    window.addEventListener('hashchange', function () { apply(true); });
-    window.addEventListener('popstate', function () { apply(true); });
+        .screen-code span:nth-child(2) {
+            animation-delay: .55s;
+        }
 
-    apply(false);
-})();
+        .screen-code span:nth-child(3) {
+            animation-delay: .75s;
+        }
+
+        .screen-code span:nth-child(4) {
+            animation-delay: .95s;
+        }
+
+        .screen-code span:nth-child(5) {
+            animation-delay: 1.15s;
+        }
+
+    .screen-code i {
+        color: #8aa7ff;
+        font-style: normal;
+    }
+
+    .screen-code em {
+        color: #65e6d2;
+        font-style: normal;
+    }
+
+    .screen-code strong {
+        color: #f2d38a;
+        font-weight: 500;
+    }
+
+    .screen-code q {
+        color: #c99cff;
+        quotes: '"' '"';
+    }
+
+.screen-progress {
+    position: absolute;
+    left: clamp(18px, 4vw, 34px);
+    right: clamp(18px, 4vw, 34px);
+    bottom: 19px;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+}
+
+    .screen-progress span {
+        display: block;
+        width: 42%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        animation: progressLoad 2.8s ease-in-out infinite;
+    }
+
+.screen-orbit {
+    position: absolute;
+    width: 170px;
+    height: 170px;
+    border: 1px solid rgba(101,230,210,.15);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.orbit-one {
+    right: -72px;
+    top: -78px;
+    animation: orbitSpin 13s linear infinite;
+}
+
+.orbit-two {
+    right: -35px;
+    top: -40px;
+    width: 98px;
+    height: 98px;
+    border-color: rgba(138,167,255,.18);
+    animation: orbitSpin 9s linear infinite reverse;
+}
+
+.monitor-neck {
+    position: absolute;
+    left: 50%;
+    bottom: -38px;
+    width: 58px;
+    height: 42px;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #0a111a, #263243 50%, #0a111a);
+    border: 1px solid rgba(255,255,255,.1);
+    border-top: 0;
+}
+
+.monitor-base {
+    position: absolute;
+    left: 50%;
+    bottom: -50px;
+    width: 170px;
+    height: 16px;
+    transform: translateX(-50%);
+    border-radius: 50% 50% 9px 9px;
+    background: linear-gradient(180deg, #273345, #0a1018);
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 14px 20px rgba(0,0,0,.24);
+}
+
+.desk {
+    position: absolute;
+    width: 94%;
+    height: 42px;
+    left: 3%;
+    bottom: 5px;
+    transform: translateY(64px);
+    border-radius: 9px;
+    background: linear-gradient(180deg, #1a2533, #0b1119);
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 20px 30px rgba(0,0,0,.28);
+}
+
+.keyboard {
+    position: absolute;
+    left: 18%;
+    top: -12px;
+    width: 48%;
+    height: 25px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3px;
+    padding: 4px;
+    border-radius: 7px;
+    background: #0a1018;
+    border: 1px solid rgba(255,255,255,.11);
+    transform: perspective(100px) rotateX(55deg);
+    transform-origin: bottom center;
+}
+
+    .keyboard span {
+        display: block;
+        min-width: 0;
+        border-radius: 2px;
+        background: linear-gradient(180deg, #3a4656, #17212d);
+    }
+
+.mouse-device {
+    position: absolute;
+    right: 17%;
+    top: -9px;
+    width: 27px;
+    height: 36px;
+    border-radius: 48% 48% 45% 45%;
+    background: linear-gradient(135deg, #344153, #0c131d);
+    border: 1px solid rgba(255,255,255,.12);
+    transform: rotate(-10deg);
+}
+
+    .mouse-device::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 7px;
+        width: 2px;
+        height: 7px;
+        transform: translateX(-50%);
+        border-radius: 2px;
+        background: var(--accent);
+        box-shadow: 0 0 7px var(--accent);
+    }
+
+.desk-light {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: -1px;
+    height: 2px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+    opacity: .75;
+    filter: blur(.2px);
+}
+
+.workspace-float {
+    position: absolute;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--surface) 84%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    color: var(--text);
+    font: 700 8px 'JetBrains Mono', monospace;
+    letter-spacing: .1em;
+    animation: floatTag 3.5s ease-in-out infinite;
+}
+
+    .workspace-float i {
+        color: var(--accent);
+        font-size: 10px;
+    }
+
+.workspace-float-one {
+    top: 9%;
+    right: 1%;
+}
+
+.workspace-float-two {
+    bottom: 9%;
+    left: 1%;
+    animation-delay: -1.7s;
+}
+
+@keyframes workstationPulse {
+    0%, 100% {
+        transform: scale(.92);
+        opacity: .65;
+    }
+
+    50% {
+        transform: scale(1.04);
+        opacity: 1;
+    }
+}
+
+@keyframes liveBlink {
+    0%, 100% {
+        opacity: .55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes codeLineIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes progressLoad {
+    0% {
+        transform: translateX(-115%);
+    }
+
+    45%, 70% {
+        transform: translateX(105%);
+    }
+
+    100% {
+        transform: translateX(240%);
+    }
+}
+
+@keyframes orbitSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes floatTag {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+@media (max-width: 900px) {
+    .workspace-showcase {
+        grid-template-columns: 1fr;
+    }
+
+    .workspace-copy {
+        max-width: none;
+    }
+
+    .modern-workstation {
+        min-height: 320px;
+    }
+}
+
+@media (max-width: 650px) {
+    .workspace-showcase {
+        margin-top: 40px;
+        padding: 22px 16px 34px;
+        gap: 28px;
+    }
+
+    .modern-workstation {
+        min-height: 255px;
+    }
+
+    .monitor-wrap {
+        width: 100%;
+    }
+
+    .workspace-float {
+        transform: scale(.88);
+    }
+
+    .workspace-float-one {
+        right: -3px;
+    }
+
+    .workspace-float-two {
+        left: -3px;
+    }
+
+    .desk {
+        transform: translateY(48px);
+    }
+
+    .monitor-neck {
+        bottom: -29px;
+        height: 33px;
+    }
+
+    .monitor-base {
+        bottom: -39px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .workstation-glow,
+    .monitor-live i,
+    .screen-code span,
+    .screen-progress span,
+    .screen-orbit,
+    .workspace-float {
+        animation: none !important;
+    }
+
+    .monitor-wrap {
+        transition: none;
+    }
+}
+/* =========================================================
+   Three.js / GLTF interactive workstation
+   ========================================================= */
+.modern-workstation-3d {
+    position: relative;
+    min-height: 390px;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+    perspective: 1400px;
+}
+
+    .modern-workstation-3d .workstation-glow {
+        z-index: 0;
+        width: 76%;
+        height: 64%;
+        top: 22%;
+        pointer-events: none;
+    }
+
+.three-workstation-canvas {
+    position: absolute;
+    inset: -22px -24px -12px;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 24px;
+}
+
+    .three-workstation-canvas canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+.three-workstation-overlay {
+    position: absolute;
+    top: 14px;
+    right: 12px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.three-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    border: 1px solid rgba(101,230,210,.24);
+    border-radius: 999px;
+    background: rgba(15,32,53,.68);
+    backdrop-filter: blur(12px);
+    color: var(--muted);
+    font: 600 8px/1 'JetBrains Mono', monospace;
+    letter-spacing: .12em;
+}
+
+    .three-status i {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 10px var(--accent);
+        animation: threeStatusPulse 1.8s ease-in-out infinite;
+    }
+
+.three-workstation-loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    transform: translate(-50%, -50%);
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(15,32,53,.82);
+    backdrop-filter: blur(14px);
+    color: var(--muted);
+    white-space: nowrap;
+    font: 500 9px/1 'JetBrains Mono', monospace;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    transition: opacity .35s ease, visibility .35s ease;
+    pointer-events: none;
+}
+
+    .three-workstation-loader.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+.three-loader-ring {
+    width: 13px;
+    height: 13px;
+    border: 1px solid rgba(101,230,210,.22);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: threeLoaderSpin .75s linear infinite;
+}
+
+@keyframes threeLoaderSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes threeStatusPulse {
+    50% {
+        opacity: .35;
+        transform: scale(.72);
+    }
+}
+
+@media (max-width: 900px) {
+    .modern-workstation-3d {
+        min-height: 340px;
+    }
+
+    .three-workstation-canvas {
+        inset: -18px -12px -8px;
+    }
+
+    .navigationLabel {
+        display: none !important;
+    }
+}
+
+@media (max-width: 650px) {
+    .modern-workstation-3d {
+        min-height: 285px;
+    }
+
+    .three-workstation-canvas {
+        inset: -8px -10px 0;
+        border-radius: 18px;
+    }
+
+    .three-workstation-overlay {
+        top: 8px;
+        right: 7px;
+    }
+
+    .three-status {
+        font-size: 7px;
+        padding: 6px 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .three-status i,
+    .three-loader-ring {
+        animation: none !important;
+    }
+}
+/* =========================================================
+   Secciones ocultas por defecto: solo se ve la activa
+   (el router de JavaScript.js agrega .is-active)
+   ========================================================= */
+main {
+    min-height: 65vh;
+}
+
+    main > section {
+        display: none;
+        border-top: 0; /* anula "section + section", que ya no aplica entre secciones ocultas */
+    }
+
+        main > section.is-active {
+            display: block;
+            animation: routeIn .45s ease;
+        }
+
+@keyframes routeIn {
+    from {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    main > section.is-active {
+        animation: none;
+    }
+}
+/* Link de navegación de la sección actual */
+nav a.navlink.active {
+    color: var(--accent);
+}
+
+    nav a.navlink.active::after {
+        transform: scaleX(1);
+    }
+/* ===== Cómo trabajo: duración, principios y CTA ===== */
+.step-time {
+    display: block;
+    margin-top: 14px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .04em;
+}
+
+.principles-head {
+    margin: 64px 0 22px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+    .principles-head span {
+        color: var(--accent);
+        font-size: 10px;
+        letter-spacing: .14em;
+    }
+
+    .principles-head h3 {
+        font-size: 1.35rem;
+    }
+
+.principles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.principle {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(145deg, var(--grad-service-a), var(--grad-service-b));
+    transition: transform .25s, border-color .25s;
+}
+
+    .principle:hover {
+        transform: translateY(-4px);
+        border-color: var(--accent);
+    }
+
+    .principle strong {
+        font-size: 11px;
+        color: var(--accent);
+    }
+
+    .principle h3 {
+        font-size: 1.02rem;
+        margin: 16px 0 7px;
+    }
+
+    .principle p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+.process-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    margin-top: 28px;
+    padding: 26px 28px;
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    background: var(--ov-025);
+}
+
+    .process-cta h3 {
+        font-size: 1.25rem;
+        margin-bottom: 6px;
+    }
+
+    .process-cta p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        max-width: 60ch;
+    }
+
+    .process-cta .btn-primary {
+        flex: 0 0 auto;
+    }
+
+@media (max-width: 900px) {
+    .principles {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .principles {
+        grid-template-columns: 1fr;
+    }
+
+    .process-cta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+/* ===== Trabajo: proyectos destacados ===== */
+.featured-projects {
+    display: grid;
+    gap: 34px;
+    margin: 0 0 56px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+}
+
+    .featured-projects[hidden] {
+        display: none;
+    }
+
+.featured {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+}
+
+    .featured:nth-child(even) .browser {
+        order: -1;
+    }
+
+.featured-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+    .featured-meta > span:first-child {
+        color: var(--accent);
+    }
+
+    .featured-meta i {
+        width: 36px;
+        height: 1px;
+        background: var(--line);
+    }
+
+    .featured-meta .featured-label {
+        color: var(--accent);
+    }
+
+.featured h3 {
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.featured-copy > p {
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 52ch;
+}
+
+.featured .card-tags {
+    margin: 0 0 24px;
+}
+
+.featured-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 22px;
+}
+
+.featured-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--text);
+    font: 0 13px 'JetBrains Mono', monospace;
+    text-decoration: none;
+    transition: color .2s ease, transform .2s ease;
+}
+
+    .featured-link:first-child {
+        color: var(--accent);
+    }
+
+    .featured-link:hover {
+        color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+.browser {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    transition: transform .25s ease, border-color .25s ease;
+}
+
+    .browser:hover {
+        transform: translateY(-4px);
+        border-color: var(--accent);
+    }
+
+    .browser:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+    }
+
+.browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 40px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--ov-04);
+}
+
+.browser-dots {
+    display: flex;
+    gap: 6px;
+}
+
+    .browser-dots i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--muted);
+        opacity: .5;
+    }
+
+.browser-url {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.browser img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top center;
+}
+
+.moreWork {
+    display: flex;
+}
+
+.workflowDiv {
+    margin-top: 50px;
+    border-top: 1px solid var(--line);
+    padding-top: 48px;
+}
+
+@media (max-width: 900px) {
+    .featured {
+        grid-template-columns: 1fr;
+    }
+
+        .featured:nth-child(even) .browser {
+            order: 0;
+        }
+
+    .featured-links .featured-link {
+        width: auto;
+    }
+}
