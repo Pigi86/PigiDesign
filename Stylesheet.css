@@ -491,6 +491,20 @@ header {
             border: 1px solid var(--accent);
         }
 
+.controlContact {
+    color: var(--muted);
+}
+
+    .controlContact kbd {
+        padding: 10px;
+        transition: background .2s, border-color .2s, transform .2s;
+    }
+
+        .controlContact kbd:hover {
+            transform: translateY(-2px);
+            border: 1px solid var(--accent);
+        }
+
 nav {
     display: flex;
     align-items: center;
@@ -542,6 +556,37 @@ nav a.navlink {
     nav a.navlink:focus-visible {
         outline: none;
         color: var(--accent);
+    }
+
+nav a.navlinkContact {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color .2s ease, transform .2s ease;
+    font-family: 'JetBrains Mono',monospace;
+    padding: 4px 0 7px;
+}
+
+    nav a.navlinkContact::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 999px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform .28s cubic-bezier(.22,.61,.36,1);
+    }
+
+    nav a.navlinkContact:hover {
+        color: var(--accent);
+        transform: translateY(-2px);
     }
 
 .langswitch {
@@ -1871,9 +1916,9 @@ footer {
         }
 
         nav a.navlink {
-            font-size: 17px;
+            font-size: 14px;
             font-weight: 500;
-            color: var(--text);
+            color: var(--muted);
             padding: 14px 2px;
             border-bottom: 1px solid var(--line);
         }
@@ -2487,6 +2532,20 @@ body.cookie-banner-visible {
 
     .controlK kbd {
         display: none;
+    }
+
+    .controlContact {
+        display: inline-block !important;
+        text-align:center !important;
+    }
+
+    .navlinkContact {
+        display: inline-block !important;
+        width: 92%;
+        align-content: center;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 14px 2px !important;
     }
 }
 
