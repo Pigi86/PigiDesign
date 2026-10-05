@@ -4897,7 +4897,9 @@ nav a.navlink.active {
 }
 
 .workflowDiv {
-    margin-top:50px;
+    margin-top: 50px;
+    border-top: 1px solid var(--line);
+    padding-top: 48px;
 }
 
 @media (max-width: 900px) {
