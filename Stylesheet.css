@@ -4893,7 +4893,11 @@ nav a.navlink.active {
 }
 
 .moreWork {
-    display:flex;
+    display: flex;
+}
+
+.workflowDiv {
+    margin-top:50px;
 }
 
 @media (max-width: 900px) {
