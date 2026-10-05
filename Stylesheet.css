@@ -483,7 +483,13 @@ header {
 
     .controlK kbd {
         padding: 10px;
+        transition: background .2s, border-color .2s, transform .2s;
     }
+
+        .controlK kbd:hover {
+            transform: translateY(-2px);
+            border: 1px solid var(--accent);
+        }
 
 nav {
     display: flex;
@@ -559,13 +565,11 @@ nav a.navlink {
             background: var(--accent);
             color: var(--bg)
         }
-
 /* Header wrap override when used together */
 .header-inner.wrap {
     padding-left: 0;
     padding-right: 0;
 }
-
 /* ===== Mobile nav (hamburger) ===== */
 .nav-toggle {
     display: none;
@@ -661,7 +665,6 @@ nav a.navlink {
     line-height: .93;
     max-width: 12ch
 }
-
 /* Title with image to the right */
 .hero-title {
     display: flex;
@@ -804,7 +807,6 @@ nav a.navlink {
         transform: translateY(-2px);
         /*cursor: pointer;*/
     }
-
 /* ===== Skip link (accesibilidad por teclado) ===== */
 .skip-link {
     position: fixed;
@@ -823,7 +825,6 @@ nav a.navlink {
     .skip-link:focus {
         top: 12px;
     }
-
 /* ===== Barra de progreso de scroll ===== */
 .progress-bar {
     position: fixed;
@@ -835,7 +836,6 @@ nav a.navlink {
     background: linear-gradient(90deg,var(--accent),var(--accent-2));
     transition: width .1s linear;
 }
-
 /* ===== Toggle de tema ===== */
 .theme-toggle {
     width: 38px;
@@ -855,7 +855,6 @@ nav a.navlink {
         border-color: var(--accent);
         transform: translateY(-2px);
     }
-
 /* ===== CTAs del hero ===== */
 .hero-cta {
     display: flex;
@@ -897,7 +896,6 @@ nav a.navlink {
         border-color: var(--accent);
         transform: translateY(-2px);
     }
-
 /* ===== Stats del hero (derivados de datos reales) ===== */
 .hero-stats {
     display: flex;
@@ -1059,7 +1057,6 @@ section {
             color: var(--bg);
             background: var(--accent)
         }
-
 /* ===== Buscador de proyectos ===== */
 .work-search {
     position: relative;
@@ -1488,7 +1485,6 @@ footer {
     padding: 0 0 28px;
     position: relative;
 }
-
 /*.footer::before {
         content: "";
         display: block;
@@ -1794,7 +1790,6 @@ footer {
     .hero h1 {
         font-size: clamp(3rem,16vw,3rem)
     }
-
     /* Stack hero title and image on small screens */
     .hero-title {
         align-items: flex-start;
@@ -1826,7 +1821,6 @@ footer {
         padding: 12px 0
     }
 }
-
 /* ===== Drawer nav on small screens ===== */
 @media(max-width:780px) {
     /* backdrop-filter crea un contenedor para elementos position:fixed,
@@ -1894,7 +1888,6 @@ footer {
         font-size: 12px;
     }
 }
-
 /* Service detail modal */
 .service:focus-visible {
     outline: 2px solid var(--accent);
@@ -2070,7 +2063,6 @@ footer {
             font-size: 1.35rem;
         }
 }
-
 /* Process steps: opens the detail popup */
 .step:focus-visible {
     outline: 2px solid var(--accent);
@@ -2084,7 +2076,6 @@ footer {
 .step .service-more {
     margin-top: 16px;
 }
-
 /* GD modal styles */
 .gd-modal {
     position: fixed;
@@ -2209,7 +2200,6 @@ footer {
     outline: 2px solid var(--accent);
     outline-offset: 3px
 }
-
 /* Back to top button */
 .back-to-top {
     position: fixed;
@@ -2540,7 +2530,6 @@ textarea:invalid.touched {
     border-color: darkred;
     outline: none;
 }
-
 /* =========================================================
    Animaciones de aparicion por seccion (scroll reveal)
    Cada section usa data-anim="..." y JS agrega .in a sus items
@@ -2555,12 +2544,10 @@ textarea:invalid.touched {
     animation-fill-mode: backwards; /* backwards: no deja transform pegado al terminar */
     animation-delay: calc(var(--i,0) * 90ms);
 }
-
 /* HERO: subida simple */
 [data-anim="rise"] .anim-el.in {
     animation-name: revRise;
 }
-
 /* SOBRE MI: las columnas entran desde los costados */
 [data-anim="split"] .anim-el.in {
     animation-name: revRise;
@@ -2573,14 +2560,12 @@ textarea:invalid.touched {
 [data-anim="split"] .about-grid > div:last-child.in {
     animation-name: revFromRight;
 }
-
 /* SERVICIOS: las tarjetas escalan en cascada */
 [data-anim="pop"] .anim-el.in {
     animation-name: revPop;
     animation-duration: .6s;
     animation-delay: calc(var(--i,0) * 75ms);
 }
-
 /* PROCESO: los pasos se despliegan en 3D uno detras de otro */
 [data-anim="flip"] .anim-el {
     transform-origin: top center;
@@ -2591,14 +2576,12 @@ textarea:invalid.touched {
         animation-duration: .7s;
         animation-delay: calc(var(--i,0) * 130ms);
     }
-
 /* TRABAJO: las piezas entran desenfocadas y se resuelven */
 [data-anim="blur"] .anim-el.in {
     animation-name: revBlur;
     animation-duration: .8s;
     animation-delay: calc(var(--i,0) * 85ms);
 }
-
 /* CONTACTO: telon que se abre de abajo hacia arriba */
 [data-anim="curtain"] .anim-el.in {
     animation-name: revCurtain;
@@ -2686,8 +2669,6 @@ textarea:invalid.touched {
         transform: translateY(26px);
     }
 }
-
-
 /* ===== Mejoras de portfolio / propuesta profesional ===== */
 .profile-strip {
     padding: 0 0 92px;
@@ -2939,7 +2920,6 @@ textarea:invalid.touched {
         cursor: not-allowed;
     }
 }
-
 /* =========================================================
    CUSTOM CURSOR — inspired by modern developer portfolios
    ========================================================= */
@@ -3014,7 +2994,6 @@ textarea:invalid.touched {
         opacity: 0;
     }
 }
-
 /* =========================================================
    HERO CODE EDITOR
    ========================================================= */
@@ -3201,8 +3180,6 @@ textarea:invalid.touched {
         margin-top: 24px;
     }
 }
-
-
 /* Fix: mantener visible la paginación de proyectos en pantallas móviles.
    El selector específico evita que las reglas del menú responsive afecten
    al nav de la galería. */
@@ -3262,8 +3239,6 @@ textarea:invalid.touched {
             font-size: 11px;
         }
 }
-
-
 /* =========================================================
    PREMIUM INTERACTIONS
    ========================================================= */
@@ -3372,7 +3347,6 @@ textarea:invalid.touched {
         opacity: 1;
         transform: translate(2px,-2px)
     }
-
 /* Command palette */
 .command-palette, .terminal-modal {
     position: fixed;
@@ -3507,7 +3481,6 @@ kbd {
         transform: none
     }
 }
-
 /* Terminal */
 .terminal-modal {
     place-items: center;
@@ -3614,7 +3587,6 @@ kbd {
     color: var(--text);
     font: 12px 'JetBrains Mono'
 }
-
 /* Share/copy feedback */
 .copy-email {
     width: 34px;
@@ -3722,7 +3694,6 @@ kbd {
         animation: none
     }
 }
-
 /* Easter egg: activado con la secuencia Konami */
 body.easter-egg::before {
     content: 'SYSTEM MODE // 1986';
@@ -3819,7 +3790,6 @@ body.easter-egg::after {
         transform: none
     }
 }
-
 /* =========================================================
    MODERN WORKSTATION
    ========================================================= */
@@ -4436,8 +4406,6 @@ body.easter-egg::after {
         transition: none;
     }
 }
-
-
 /* =========================================================
    Three.js / GLTF interactive workstation
    ========================================================= */
@@ -4594,7 +4562,6 @@ body.easter-egg::after {
         animation: none !important;
     }
 }
-
 /* =========================================================
    Secciones ocultas por defecto: solo se ve la activa
    (el router de JavaScript.js agrega .is-active)
@@ -4624,7 +4591,6 @@ main {
         animation: none;
     }
 }
-
 /* Link de navegación de la sección actual */
 nav a.navlink.active {
     color: var(--accent);
@@ -4633,7 +4599,6 @@ nav a.navlink.active {
     nav a.navlink.active::after {
         transform: scaleX(1);
     }
-
 /* ===== Cómo trabajo: duración, principios y CTA ===== */
 .step-time {
     display: block;
@@ -4741,7 +4706,6 @@ nav a.navlink.active {
         align-items: flex-start;
     }
 }
-
 /* ===== Trabajo: proyectos destacados ===== */
 .featured-projects {
     display: grid;
