@@ -631,7 +631,7 @@ nav a.navlinkContact {
     align-items: center;
     justify-content: center;
     gap: 5px;
-    margin-right:10px;
+    margin-right: 10px;
 }
 
     .nav-toggle span {
@@ -994,6 +994,49 @@ section {
     font-size: 11px;
     color: var(--muted)
 }
+
+.listoContact {
+    border-top: 1px solid var(--line);
+    text-align: center;
+    margin-top: -100px;
+    padding-top: 50px !important;
+}
+
+    .listoContact h4 {
+        font-weight: 100;
+    }
+
+    .listoContact a.navlinkContact {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        font-size: 12px;
+        color: var(--accent-2);
+        text-decoration: none;
+        color: var(--muted);
+        transition: color .2s ease, transform .2s ease;
+        font-family: 'JetBrains Mono',monospace;
+        padding: 4px 0 7px;
+    }
+
+        .listoContact a.navlinkContact::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            border-radius: 999px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform .28s cubic-bezier(.22,.61,.36,1);
+        }
+
+        .listoContact a.navlinkContact:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
 
 .about-grid, .contact-grid {
     display: grid;
@@ -2537,7 +2580,7 @@ body.cookie-banner-visible {
 
     .controlContact {
         display: inline-block !important;
-        text-align:center !important;
+        text-align: center !important;
     }
 
     .navlinkContact {
