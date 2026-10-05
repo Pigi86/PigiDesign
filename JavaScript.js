@@ -80,7 +80,7 @@ const translations = {
         navWork: "03 Trabajo",
         navServices: "02 Servicios",
         navFlow: "Proceso",
-        navContact: "04 Contacto",
+        navContact: "Contáctame",
         navMoreWork: "Más Trabajo",
         heroTitle: "Construyo experiencias digitales, desde la pantalla hasta el <span class='.hero-label'>sistema</span>.",
         strip1: "Desarrollo & interfaces",
@@ -218,7 +218,7 @@ const translations = {
         navWork: "03 Work",
         navFlow: "Workflow",
         navServices: "02 Services",
-        navContact: "04 Contact",
+        navContact: "Contact me",
         navMoreWork: "More Work",
         heroTitle: "I build digital experiences from the screen to the <span class='.hero-label'>system</span>.",
         strip1: "Development and interfaces",
@@ -801,7 +801,7 @@ function setFilter(filter, btn) {
     if (backdrop) backdrop.addEventListener('click', closeNav);
 
     // Close after tapping a link or the language switch
-    nav.querySelectorAll('a.navlink, .langswitch button, #theme-toggle').forEach(el => {
+    nav.querySelectorAll('a.navlink, a.navlinkContact, .langswitch button, #theme-toggle').forEach(el => {
         el.addEventListener('click', closeNav);
     });
 
@@ -2080,7 +2080,7 @@ inputsRequired.forEach(input => {
         if (!key) return;
         (routes[key] = routes[key] || []).push(s);
     });
-
+    
     var navLinks = Array.from(document.querySelectorAll('#site-nav a.navlink'));
     var current = null;
 
