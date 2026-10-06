@@ -82,6 +82,8 @@ const translations = {
         navFlow: "Proceso",
         navContact: "Contáctame",
         navMoreWork: "Más Trabajo",
+        heroSelectedWork: "Trabajo seleccionado",
+        heroSelectedWorkAll: "Todos los trabajos",
         heroTitle: "Construyo experiencias digitales, desde la pantalla hasta el <span class='.hero-label'>sistema</span>.",
         strip1: "Desarrollo & interfaces",
         strip2: "Apps & automatización",
@@ -222,6 +224,8 @@ const translations = {
         navServices: "<span style='color:var(--accent);padding-right:8px'>02 </span> Services",
         navContact: "Contact me",
         navMoreWork: "More Work",
+        heroSelectedWork: "Selected work",
+        heroSelectedWorkAll: "All works",
         heroTitle: "I build digital experiences from the screen to the <span class='.hero-label'>system</span>.",
         strip1: "Development and interfaces",
         strip2: "Apps & automation",
@@ -535,6 +539,61 @@ let currentFilter = 'all';
 let currentSearch = '';
 let currentPage = 1;
 const CARDS_PER_PAGE = 6;
+
+function renderSelecetedCards() {
+    const container = document.getElementById('selectedCards');
+    container.innerHTML = '';
+
+    const query = currentSearch.trim().toLocaleLowerCase();
+    const featuredVisible = !query && currentFilter !== 'gd';
+    renderFeatured(featuredVisible);
+    const filtered = projects.filter(p => {       
+        const matchesCategory = currentFilter === 'all' || p.cat === currentFilter;
+        if (!matchesCategory) return false;
+        if (!query) return true;
+
+        const searchable = [
+            p.title && p.title[currentLang],
+            p.title && p.title.es,
+            p.title && p.title.en,
+            p.desc && p.desc[currentLang],
+            p.desc && p.desc.es,
+            p.desc && p.desc.en,
+            p.ref,
+            ...(p.tags || [])
+        ].filter(Boolean).join(' ').toLocaleLowerCase();
+
+        return searchable.includes(query);
+    });
+    
+    const pageItems = filtered.slice(0, 3);    
+        
+    pageItems
+        .forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'card ticked';
+            card.setAttribute('data-cat', p.cat);
+            card.setAttribute('data-img', p.imgUrl || '');
+            card.innerHTML = `    
+    <div class="card-thumb">
+        <img src="${p.imgUrl}" alt="${p.title[currentLang]}" loading="lazy" decoding="async" width="400" height="225" />
+        <span class="card-ref mono">${p.ref}</span>
+    </div>
+    <h3>${p.title[currentLang]}</h3>
+    <p>${p.desc[currentLang]}</p>
+    <div class="card-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
+    <span class="service-more" data-i18n="serviceMore">${translations[currentLang].serviceMore}</span>
+    `;
+            // If this is a graphic design item, open modal on click
+            //if (p.cat === 'gd') {
+            card.addEventListener('click', () => {
+                openGdModal(p.imgUrl, p.title[currentLang], p.desc[currentLang], p.tags, p.url);
+            });
+            //}
+            container.appendChild(card);
+
+        });
+}
 
 function renderCards() {
     const container = document.getElementById('cards');
@@ -1214,6 +1273,7 @@ function setLang(lang) {
         }
     });
     renderCards();
+    renderSelecetedCards();
     renderHeroStats();
     renderServiceModal();
     // Notify other modules (command palette / terminal) that language changed
@@ -1260,6 +1320,7 @@ function setLang(lang) {
 })();
 
 renderCards();
+renderSelecetedCards();
 
 // Graphic-design modal handling
 const gdModal = document.getElementById('gd-modal');
