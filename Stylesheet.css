@@ -995,6 +995,26 @@ section {
     color: var(--muted)
 }
 
+.selectedWork {
+    border-top: 1px solid var(--line);
+    margin-top: -100px;
+    padding-top: 50px !important;
+}
+
+.allWork {
+    text-align: right;
+    position: relative;
+    bottom: 45px;
+}
+
+    .allWork a {
+        color: var(--muted) !important;
+    }
+
+        .allWork a:hover {
+            color: var(--accent) !important;
+        }
+
 .listoContact {
     border-top: 1px solid var(--line);
     text-align: center;
