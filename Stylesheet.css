@@ -1057,6 +1057,9 @@ section {
             color: var(--accent);
             transform: translateY(-2px);
         }
+.contactTitle3 {
+    color: var(--muted);
+}
 
 .about-grid, .contact-grid {
     display: grid;
