@@ -96,6 +96,8 @@ const translations = {
         techData: "Datos",
         techAutomation: "Apps & Automatización",
         techDesign: "Diseño",
+        blogTitle: "Blog próximamente",
+        blogP1: "Estoy trabajando en algunos artículos interesantes sobre desarrollo web, tecnología blockchain y aprendizaje automático. ¡Estad atentos para recibir contenido valioso!",
 
         techStack: "Tecnologías",
         workCta1: "Una selección de proyectos donde combino desarrollo, automatización y diseño para resolver necesidades concretas.",
@@ -210,7 +212,7 @@ const translations = {
         commandPlaceholder: "Buscar una acción...",
         openTerminal: "Abrir Terminal",
         terminalWelcome: "Terminal interactiva — escribí 'help' para ver los comandos.",
-        terminalHelp: "Comandos: about · projects · skills · contact · theme · clear · help",
+        terminalHelp: "Comandos: about · projects · skills · blog · contact · theme · clear · help",
         terminalAbout: "Leandro Pignatta — desarrollo web, Power Platform y diseño.",
         terminalProjects: "Proyectos publicados: ",
         terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · IA",
@@ -246,6 +248,8 @@ const translations = {
         techData: "Ddata",
         techAutomation: "Apps & Automation",
         techDesign: "Design",
+        blogTitle:"Blog comming soon",
+        blogP1: "I'm working on some interesting articles about web development, blockchain technology, and machine learning. Stay tuned for insightful content!",
 
         techStack: "Technologies",
         workCta1: "A selection of projects where I combine development, automation, and design to address specific needs.",
@@ -360,7 +364,7 @@ const translations = {
         commandPlaceholder: "Search an action...",
         openTerminal: "Open Terminal",
         terminalWelcome: "Interactive terminal — type 'help' to see commands.",
-        terminalHelp: "Commands: about · projects · skills · contact · theme · clear · help",
+        terminalHelp: "Commands: about · projects · skills · blog · contact · theme · clear · help",
         terminalAbout: "Leandro Pignatta — web development, Power Platform and design.",
         terminalProjects: "Published projects: ",
         terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · AI",
@@ -1880,6 +1884,7 @@ inputsRequired.forEach(input => {
         { label: { es: 'Ir a Sobre mí', en: 'Go to About' }, icon: 'fa-user', action: function () { go('#sobre-mi') } },
         { label: { es: 'Ver Servicios', en: 'View Services' }, icon: 'fa-cubes', action: function () { go('#servicios') } },
         { label: { es: 'Ver Trabajo', en: 'View Work' }, icon: 'fa-th-large', action: function () { go('#trabajo') } },
+        { label: { es: 'Ir a Blog', en: 'Go to Blog' }, icon: 'fa-rss', action: function () { go('#blog') } },
         { label: { es: 'Ir a Contacto', en: 'Go to Contact' }, icon: 'fa-envelope', action: function () { go('#contacto') } },
         { label: { es: 'Abrir Terminal', en: 'Open Terminal' }, icon: 'fa-terminal', action: function () { openTerminal() } },
         { label: { es: 'Cambiar tema', en: 'Toggle theme' }, icon: 'fa-adjust', action: function () { document.getElementById('theme-toggle')?.click() } },
@@ -1929,6 +1934,7 @@ inputsRequired.forEach(input => {
         else if (cmd === 'theme light') { document.documentElement.setAttribute('data-theme', 'light'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: light', 'good') }
         else if (cmd === 'theme dark') { document.documentElement.removeAttribute('data-theme'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: dark', 'good') }
         else if (cmd === 'work' || cmd === 'portfolio') { closeTerminal(); go('#trabajo') }
+        else if (cmd === 'blog') { closeTerminal(); go('#blog') }
         else if (cmd === 'contact-me') { closeTerminal(); go('#contacto') }
         else print(t('terminalUnknown'), 'muted');
     }
@@ -2076,11 +2082,11 @@ inputsRequired.forEach(input => {
                 </div>
                 <div>
                     <span class="footer-label navigationLabel" data-footer-key="navLabel">Navegación</span>
-                    <nav class="footer-links" aria-label="Footer navigation">
-                        <a href="#hero" data-footer-key="home">Inicio</a>
+                    <nav class="footer-links" aria-label="Footer navigation">                        
                         <a href="#sobre-mi" data-footer-key="about">Sobre mí</a>
                         <a href="#servicios" data-footer-key="services">Servicios</a>
                         <a href="#trabajo" data-footer-key="work">Trabajo</a>
+                        <a href="#blog" data-footer-key="blog">Blog</a>
                         <a href="#contacto" data-footer-key="contact">Contacto</a>
                     </nav>
                 </div>
