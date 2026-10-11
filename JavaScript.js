@@ -96,6 +96,9 @@ const translations = {
         techData: "Datos",
         techAutomation: "Apps & Automatización",
         techDesign: "Diseño",
+        skillPlatform1: "Interfaces, sitios y aplicaciones web responsive.",
+        skillPlatform2: "Apps, automatizaciones y soluciones conectadas con Power Platform.",
+        skillPlatform3: "Interfaces y piezas visuales con foco en claridad y consistencia.",
         blogTitle: "Blog próximamente",
         blogP1: "Estoy trabajando en algunos artículos interesantes sobre desarrollo web, tecnología blockchain y aprendizaje automático. ¡Estad atentos para recibir contenido valioso!",
 
@@ -165,7 +168,7 @@ const translations = {
         aboutP1: "Analista programador senior con foco en Power Platform y desarrollo web. Trabajo tanto en la construcción de aplicaciones y flujos como en la resolución del lado visual de un proyecto, desde interfaces hasta piezas de diseño gráfico.",
         aboutP2: "Este espacio reúne una selección de trabajos propios: proyectos web y piezas de diseño gráfico realizadas en distintos contextos, personales y profesionales.",
         aboutActualmente: "Actualmente",
-        aboutActualmenteP1: "Desarrollador Senior en Power Platform fulltime en Remoting Coders.",
+        aboutActualmenteP1: "<b>Desarrollador Senior en Power Platform</b> fulltime en <b>Remoting Coders</b>.",
         skillWeb: "Desarrollo web",
         skillPlatform: "Power Platform",
         skillDesign: "Diseño gráfico",
@@ -245,9 +248,12 @@ const translations = {
         techToolboxTitle: "What I build with",
         techLanguages: "Languages",
         techFrameworks: "Frameworks & Web",
-        techData: "Ddata",
+        techData: "Data",
         techAutomation: "Apps & Automation",
         techDesign: "Design",
+        skillPlatform1: "Responsive interfaces, websites and web applications.",
+        skillPlatform2: "Apps, automations and connected solutions with Power Platform.",
+        skillPlatform3: "Interfaces and visual pieces focused on clarity and consistency.",
         blogTitle:"Blog comming soon",
         blogP1: "I'm working on some interesting articles about web development, blockchain technology, and machine learning. Stay tuned for insightful content!",
 
@@ -317,7 +323,7 @@ const translations = {
         aboutP1: "Senior programmer analyst focused on Power Platform and web development. I work both on building applications and workflows and on the visual side of a project, from interfaces to graphic design pieces.",
         aboutP2: "This space gathers a selection of my own work: web projects and graphic design pieces made in different contexts, personal and professional.",
         aboutActualmente: "Currently",
-        aboutActualmenteP1: "Power Platform Senior Developer fulltime at Remoting Coders.",
+        aboutActualmenteP1: "<b>Power Platform Senior Developer</b> fulltime at <b>Remoting Coders</b>.",
         skillWeb: "Web development",
         skillPlatform: "Power Platform",
         skillDesign: "Graphic design",
@@ -1974,16 +1980,16 @@ inputsRequired.forEach(input => {
         power: { es: 'Apps, automatizaciones y soluciones conectadas con Power Platform.', en: 'Apps, automations and connected solutions with Power Platform.' },
         design: { es: 'Interfaces y piezas visuales con foco en claridad y consistencia.', en: 'Interfaces and visual pieces focused on clarity and consistency.' }
     };
-    document.querySelectorAll('.skillgroup-interactive').forEach(function (skill) {
-        var key = skill.getAttribute('data-skill');
-        var pop = document.createElement('span');
-        pop.className = 'skill-popover';
-        skill.appendChild(pop);
-        function update() { pop.textContent = skillInfo[key]?.[currentLang] || '' }
-        update();
-        skill.addEventListener('mouseenter', update);
-        skill.addEventListener('focus', update);
-    });
+    //document.querySelectorAll('.skillgroup-interactive').forEach(function (skill) {
+    //    var key = skill.getAttribute('data-skill');
+    //    var pop = document.createElement('span');
+    //    pop.className = 'skill-popover';
+    //    skill.appendChild(pop);
+    //    function update() { pop.textContent = skillInfo[key]?.[currentLang] || '' }
+    //    update();
+    //    skill.addEventListener('mouseenter', update);
+    //    skill.addEventListener('focus', update);
+    //});
 })();
 
 (function () {
