@@ -89,6 +89,14 @@ const translations = {
         strip2: "Apps & automatización",
         strip3: "Aplicaciones & backend",
         strip4: "Datos & soluciones",
+        techToolboxEyebrow: "Toolbox",
+        techToolboxTitle: "Tecnologías con las que trabajo",
+        techLanguages: "Lenguajes",
+        techFrameworks: "Frameworks & Web",
+        techData: "Datos",
+        techAutomation: "Apps & Automatización",
+        techDesign: "Diseño",
+
         techStack: "Tecnologías",
         workCta1: "Una selección de proyectos donde combino desarrollo, automatización y diseño para resolver necesidades concretas.",
         workCta2: "¿Tenés un proyecto?",
@@ -231,6 +239,14 @@ const translations = {
         strip2: "Apps & automation",
         strip3: "Applications  & backend",
         strip4: "Data and solutions",
+        techToolboxEyebrow: "Toolbox",
+        techToolboxTitle: "What I build with",
+        techLanguages: "Languages",
+        techFrameworks: "Frameworks & Web",
+        techData: "Ddata",
+        techAutomation: "Apps & Automation",
+        techDesign: "Design",
+
         techStack: "Technologies",
         workCta1: "A selection of projects where I combine development, automation, and design to address specific needs.",
         workCta2: "Do you have a project?",
@@ -547,7 +563,7 @@ function renderSelecetedCards() {
     const query = currentSearch.trim().toLocaleLowerCase();
     const featuredVisible = !query && currentFilter !== 'gd';
     renderFeatured(featuredVisible);
-    const filtered = projects.filter(p => {       
+    const filtered = projects.filter(p => {
         const matchesCategory = currentFilter === 'all' || p.cat === currentFilter;
         if (!matchesCategory) return false;
         if (!query) return true;
@@ -565,9 +581,9 @@ function renderSelecetedCards() {
 
         return searchable.includes(query);
     });
-    
-    const pageItems = filtered.slice(0, 3);    
-        
+
+    const pageItems = filtered.slice(0, 3);
+
     pageItems
         .forEach(p => {
             const card = document.createElement('div');
@@ -1552,7 +1568,9 @@ inputsRequired.forEach(input => {
         '.section-head',
         '.about-grid > div',
         '.aboutActualmente',
-        '.tech-stack',
+        '.tech-stack',        
+        '.tech-toolbox-list',
+        '.workspace-showcase',
         '.service',
         '.step',
         '.featured',
