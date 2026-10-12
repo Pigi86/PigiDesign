@@ -215,12 +215,13 @@ const translations = {
         commandPlaceholder: "Buscar una acción...",
         openTerminal: "Abrir Terminal",
         terminalWelcome: "Terminal interactiva — escribí 'help' para ver los comandos.",
-        terminalHelp: "Comandos: about · projects · skills · blog · contact · theme · clear · help",
+        terminalHelp: "Comandos: about · projects · skills · blog · contact · theme · language · clear · help",
         terminalAbout: "Leandro Pignatta — desarrollo web, Power Platform y diseño.",
         terminalProjects: "Proyectos publicados: ",
         terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · IA",
         terminalContact: "Email: leandro.pignatta@live.com",
         terminalTheme: "Usá el botón de tema o escribí 'theme light' / 'theme dark'.",
+        terminalLanguages: "Usá el botón de lenguaje o escribí 'language es' / 'language en'.",
         terminalUnknown: "Comando no reconocido. Escribí 'help'.",
         navegar: "navegar",
         ejecutar: "ejecutar",
@@ -254,7 +255,7 @@ const translations = {
         skillPlatform1: "Responsive interfaces, websites and web applications.",
         skillPlatform2: "Apps, automations and connected solutions with Power Platform.",
         skillPlatform3: "Interfaces and visual pieces focused on clarity and consistency.",
-        blogTitle:"Blog comming soon",
+        blogTitle: "Blog comming soon",
         blogP1: "I'm working on some interesting articles about web development, blockchain technology, and machine learning. Stay tuned for insightful content!",
 
         techStack: "Technologies",
@@ -370,12 +371,13 @@ const translations = {
         commandPlaceholder: "Search an action...",
         openTerminal: "Open Terminal",
         terminalWelcome: "Interactive terminal — type 'help' to see commands.",
-        terminalHelp: "Commands: about · projects · skills · blog · contact · theme · clear · help",
+        terminalHelp: "Commands: about · projects · skills · blog · contact · theme · language · clear · help",
         terminalAbout: "Leandro Pignatta — web development, Power Platform and design.",
         terminalProjects: "Published projects: ",
         terminalSkills: "Stack: HTML · CSS · JavaScript · React · Node.js · C# · .NET · Power Apps · Power Automate · SharePoint · SQL Server · AI",
         terminalContact: "Email: leandro.pignatta@live.com",
         terminalTheme: "Use the theme button or type 'theme light' / 'theme dark'.",
+        terminalLanguages: "Use the language button or type 'language es' / 'language en'.",
         terminalUnknown: "Unknown command. Type 'help'.",
         navegar: "browse",
         ejecutar: "execute",
@@ -1578,7 +1580,7 @@ inputsRequired.forEach(input => {
         '.section-head',
         '.about-grid > div',
         '.aboutActualmente',
-        '.tech-stack',        
+        '.tech-stack',
         '.tech-toolbox-list',
         '.workspace-showcase',
         '.service',
@@ -1937,6 +1939,9 @@ inputsRequired.forEach(input => {
         else if (cmd === 'contact') print(t('terminalContact'));
         else if (cmd === 'clear') { terminalOutput.innerHTML = ''; return }
         else if (cmd === 'theme') print(t('terminalTheme'), 'muted');
+        else if (cmd === 'language') print(t('terminalLanguages'), 'muted');
+        else if (cmd === 'language es') setLang('es');
+        else if (cmd === 'language en') setLang('en');
         else if (cmd === 'theme light') { document.documentElement.setAttribute('data-theme', 'light'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: light', 'good') }
         else if (cmd === 'theme dark') { document.documentElement.removeAttribute('data-theme'); window.applyThemeLabels && window.applyThemeLabels(); print('Theme: dark', 'good') }
         else if (cmd === 'work' || cmd === 'portfolio') { closeTerminal(); go('#trabajo') }
