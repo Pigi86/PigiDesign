@@ -2331,6 +2331,40 @@ inputsRequired.forEach(input => {
     }
 
     // Último artículo publicado en el home
+    var pagNav = document.getElementById('blog-pagination');
+    var PAGE_SIZE = 4; // artículos por página
+    var blogPage = 1;
+
+    function renderBlogPagination(totalPages) {
+        if (!pagNav) return;
+        pagNav.innerHTML = '';
+        if (totalPages <= 1) return;
+        var t = translations[currentLang];
+        function btn(label, page, opts) {
+            opts = opts || {};
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = label;
+            if (opts.current) { b.className = 'active'; b.setAttribute('aria-current', 'page'); }
+            if (opts.aria) b.setAttribute('aria-label', opts.aria);
+            b.disabled = !!opts.disabled;
+            b.addEventListener('click', function () { goToBlogPage(page); });
+            return b;
+        }
+        pagNav.appendChild(btn('← ' + t.pagPrev, blogPage - 1, { disabled: blogPage === 1 }));
+        for (var i = 1; i <= totalPages; i++) {
+            pagNav.appendChild(btn(String(i), i, { current: i === blogPage, aria: t.pagPage + ' ' + i }));
+        }
+        pagNav.appendChild(btn(t.pagNext + ' →', blogPage + 1, { disabled: blogPage === totalPages }));
+    }
+
+    function goToBlogPage(page) {
+        blogPage = page;
+        render();
+        var sec = document.getElementById('blog');
+        if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     var home = document.getElementById('home-blog');
     function renderLatest(all, t) {
         if (!home) return;
@@ -2354,6 +2388,7 @@ inputsRequired.forEach(input => {
         if (post) {
             var c = post[currentLang] || post.es;
             list.hidden = true;
+            if (pagNav) pagNav.innerHTML = '';
             if (intro) intro.hidden = true;
             reader.hidden = false;
             var idx = all.indexOf(post);
@@ -2372,7 +2407,7 @@ inputsRequired.forEach(input => {
                 '<p class="blog-lead">' + esc(c.excerpt) + '</p>' + tagsHtml(post.tags) +
                 '</div>' +
                 '<div class="blog-body">' + bodyHtml(c.body) + '</div>' +
-                '<nav class="blog-pager" aria-label="Blog">' + pager(newer, '← ' + t.blogNewer, 'is-newer') + pager(older, t.blogOlder + ' →', 'is-older') + '</nav>' +
+                '<div class="blog-pager" role="navigation" aria-label="Blog">' + pager(newer, '← ' + t.blogNewer, 'is-newer') + pager(older, t.blogOlder + ' →', 'is-older') + '</div>' +
                 '<a class="blog-back mono" href="#blog">← ' + t.blogBack + '</a>';
             document.title = c.title + ' · Leandro Carlos Pignatta';
             return;
@@ -2382,7 +2417,11 @@ inputsRequired.forEach(input => {
         document.title = baseTitle;
         list.hidden = false;
         if (intro) intro.hidden = false;
-        list.innerHTML = all.length ? all.map(function (p) { return cardHtml(p, t); }).join('') : '<p class="blog-empty">' + t.blogEmpty + '</p>';
+        var totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+        if (blogPage > totalPages) blogPage = totalPages;
+        var pageItems = all.slice((blogPage - 1) * PAGE_SIZE, blogPage * PAGE_SIZE);
+        list.innerHTML = pageItems.length ? pageItems.map(function (p) { return cardHtml(p, t); }).join('') : '<p class="blog-empty">' + t.blogEmpty + '</p>';
+        renderBlogPagination(totalPages);
     }
 
     reader.addEventListener('click', function (e) {
