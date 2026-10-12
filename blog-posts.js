@@ -1,5 +1,103 @@
 window.BLOG_POSTS = [
     {
+        slug: "photoshop-flujo-no-destructivo",
+        date: "2026-06-15",
+        readMin: 5,
+        icon: "fa-picture-o",
+        tags: ["Photoshop", "Diseño gráfico", "Flujo de trabajo"],
+        published: true,
+        es: {
+            title: "Photoshop: flujo de trabajo no destructivo con capas de ajuste, máscaras y objetos inteligentes",
+            excerpt: "Cómo editar sin tocar los píxeles originales para poder cambiar de opinión (o atender el cambio de un cliente) sin rehacer el trabajo.",
+            body: [
+                "Retocar una imagen directamente sobre su capa funciona hasta el día en que el cliente pide un cambio. El flujo no destructivo de Photoshop deja intacta la imagen original y hace que cada decisión se pueda editar después.",
+                "## Capas de ajuste",
+                "Una capa de ajuste (Curvas, Niveles, Tono/Saturación, entre otras) aplica su efecto sobre las capas de abajo sin modificar sus píxeles. Podés cambiar los valores, apagarla con el ojo o borrarla cuando quieras.",
+                "## Máscaras de capa",
+                "En una máscara, el **blanco muestra**, el **negro oculta** y los grises muestran de forma parcial. En lugar de borrar píxeles con la goma, pintá sobre la máscara con un pincel: si te equivocás, invertís el color y recuperás la imagen.",
+                "## Objetos inteligentes",
+                "Un objeto inteligente guarda el contenido original dentro de la capa. Podés reducirlo y volver a agrandarlo sin perder calidad, algo que no pasa con una capa de píxeles normal: al achicarla, la información descartada no se recupera. Además, los filtros aplicados sobre un objeto inteligente se convierten en **filtros inteligentes**, que siguen siendo editables.",
+                "## Límites a tener en cuenta",
+                "- El formato PSD admite hasta **30.000 píxeles por lado** y **2 GB** de tamaño.",
+                "- Para documentos más grandes existe el formato **PSB** (Large Document Format), que llega hasta 300.000 píxeles por lado.",
+                "- Trabajá en **RGB** para pantallas y convertí a **CMYK** recién al preparar un archivo para imprimir.",
+                "## Exportar sin pasos manuales",
+                "Si nombrás una capa o un grupo con una extensión, como `logo.png` o `portada.jpg`, y activás **Archivo > Generar > Recursos de imagen**, Photoshop exporta ese elemento automáticamente cada vez que lo modificás.",
+                "```\nCapas (de arriba hacia abajo)\n├─ Curvas             (capa de ajuste)\n├─ Titulo             (texto)\n├─ logo.png           (objeto inteligente, se exporta solo)\n├─ Foto + máscara     (objeto inteligente con máscara)\n└─ Fondo\n```",
+                "Con esta estructura, cambiar un color, reemplazar una foto o corregir un texto lleva segundos y no afecta al resto del diseño."
+            ]
+        },
+        en: {
+            title: "Photoshop: a non-destructive workflow with adjustment layers, masks and smart objects",
+            excerpt: "How to edit without touching the original pixels, so you can change your mind (or handle a client's change request) without redoing the work.",
+            body: [
+                "Retouching an image directly on its layer works until the day the client asks for a change. Photoshop's non-destructive workflow keeps the original image intact and makes every decision editable later.",
+                "## Adjustment layers",
+                "An adjustment layer (Curves, Levels, Hue/Saturation, among others) applies its effect to the layers below without modifying their pixels. You can change the values, hide it with the eye icon or delete it whenever you like.",
+                "## Layer masks",
+                "In a mask, **white reveals**, **black hides** and grays reveal partially. Instead of erasing pixels with the eraser, paint on the mask with a brush: if you make a mistake, invert the color and the image comes back.",
+                "## Smart objects",
+                "A smart object stores the original content inside the layer. You can shrink it and enlarge it again without losing quality, which doesn't happen with a regular pixel layer: once you scale it down, the discarded information can't be recovered. Filters applied to a smart object also become **smart filters**, which stay editable.",
+                "## Limits to keep in mind",
+                "- The PSD format supports up to **30,000 pixels per side** and **2 GB** in size.",
+                "- For larger documents there is the **PSB** format (Large Document Format), which goes up to 300,000 pixels per side.",
+                "- Work in **RGB** for screens and convert to **CMYK** only when preparing a file for print.",
+                "## Export without manual steps",
+                "If you name a layer or group with an extension, like `logo.png` or `cover.jpg`, and turn on **File > Generate > Image Assets**, Photoshop automatically exports that element every time you change it.",
+                "```\nLayers (top to bottom)\n├─ Curves             (adjustment layer)\n├─ Title              (text)\n├─ logo.png           (smart object, exports itself)\n├─ Photo + mask       (smart object with a mask)\n└─ Background\n```",
+                "With this structure, changing a color, swapping a photo or fixing a text takes seconds and doesn't affect the rest of the design."
+            ]
+        }
+    },
+    {
+        slug: "adobe-fireworks-que-aprender",
+        date: "2026-05-25",
+        readMin: 5,
+        icon: "fa-paint-brush",
+        tags: ["Adobe Fireworks", "Diseño web", "Diseño gráfico"],
+        published: true,
+        es: {
+            title: "Adobe Fireworks: qué lo hacía especial para diseñar interfaces y qué podemos aprender de él",
+            excerpt: "Una mirada a la herramienta que muchos diseñadores web usaron durante años, y a las ideas suyas que siguen vivas en las herramientas actuales.",
+            body: [
+                "Adobe Fireworks fue durante años una de las herramientas favoritas para diseñar interfaces y gráficos web. Adobe dejó de desarrollarlo en 2013, pero muchas de sus ideas siguen presentes en las herramientas de hoy.",
+                "## Un poco de historia",
+                "Fireworks nació en Macromedia y pasó a manos de Adobe cuando esta compró Macromedia en **2005**. Su última versión fue **Fireworks CS6**, de 2012, y en **2013** Adobe anunció que no seguiría desarrollándolo.",
+                "## Qué lo hacía diferente",
+                "- Combinaba **vectores y mapas de bits** en el mismo documento, sin cambiar de programa.",
+                "- Su formato nativo era **PNG**, con la información de capas y vectores guardada dentro del propio archivo.",
+                "- Un mismo archivo podía tener varias **páginas** (pantallas) y **estados**, por ejemplo un botón normal, en hover y presionado.",
+                "- Los **símbolos** permitían reutilizar elementos, y el **escalado en 9 porciones** (9-slice) permitía estirar botones y paneles sin deformar las esquinas.",
+                "- Las **porciones** (slices) y el panel de **optimización** exportaban cada parte como GIF, JPEG o PNG con la compresión elegida.",
+                "## Qué se puede aprender",
+                "Las ideas de Fireworks hoy tienen otros nombres. Conocer la equivalencia ayuda a trabajar mejor en cualquier herramienta moderna.",
+                "```\nFireworks            Herramientas actuales\nPáginas          ->  Artboards / frames\nEstados          ->  Variantes de componentes\nSímbolos         ->  Componentes\nSlices           ->  Presets de exportación\n```",
+                "Photoshop incorporó los **artboards** en la versión CC 2015, y con la opción *Generar recursos de imagen* cubre buena parte del flujo de exportación que antes resolvían los slices.",
+                "Si todavía conservás archivos de Fireworks, se ven como un PNG común en cualquier visor, pero para seguir editando sus capas y vectores hace falta el propio Fireworks."
+            ]
+        },
+        en: {
+            title: "Adobe Fireworks: what made it special for interface design and what we can learn from it",
+            excerpt: "A look at the tool many web designers used for years, and at the ideas of it that live on in today's tools.",
+            body: [
+                "Adobe Fireworks was for years one of the favorite tools for designing interfaces and web graphics. Adobe stopped developing it in 2013, but many of its ideas are still present in today's tools.",
+                "## A bit of history",
+                "Fireworks started at Macromedia and moved to Adobe when it acquired Macromedia in **2005**. Its last version was **Fireworks CS6**, released in 2012, and in **2013** Adobe announced it would not develop it any further.",
+                "## What made it different",
+                "- It combined **vectors and bitmaps** in the same document, without switching programs.",
+                "- Its native format was **PNG**, with layer and vector information stored inside the file itself.",
+                "- A single file could hold several **pages** (screens) and **states**, for example a button in its normal, hover and pressed versions.",
+                "- **Symbols** allowed reusing elements, and **9-slice scaling** let you stretch buttons and panels without distorting the corners.",
+                "- **Slices** and the **optimization** panel exported each part as GIF, JPEG or PNG with the chosen compression.",
+                "## What we can learn",
+                "Fireworks' ideas now go by other names. Knowing the equivalents helps you work better in any modern tool.",
+                "```\nFireworks            Current tools\nPages            ->  Artboards / frames\nStates           ->  Component variants\nSymbols          ->  Components\nSlices           ->  Export presets\n```",
+                "Photoshop added **artboards** in the CC 2015 release, and with its *Generate Image Assets* option it covers a good part of the export workflow that slices used to handle.",
+                "If you still have Fireworks files, they show up as a regular PNG in any viewer, but you need Fireworks itself to keep editing their layers and vectors."
+            ]
+        }
+    },
+    {
         slug: "unity-recolector-basura-object-pooling",
         date: "2026-07-27",
         readMin: 6,
