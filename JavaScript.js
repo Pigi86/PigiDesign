@@ -2513,3 +2513,113 @@ inputsRequired.forEach(input => {
     ['hashchange', 'popstate', 'routechange'].forEach(function (ev) { window.addEventListener(ev, render); });
     render();
 })();
+
+
+/* =========================================================
+   Fondo animado: red de partículas ("constelación")
+   - usa el color --accent del tema (claro/oscuro)
+   - los puntos se conectan con el cursor
+   - respeta prefers-reduced-motion y se pausa con la pestaña oculta
+   ========================================================= */
+(function () {
+    var canvas = document.getElementById('bg-canvas');
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var LINK = 130;          // distancia máxima entre puntos para unirlos
+    var MOUSE_LINK = 170;    // distancia máxima punto-cursor
+    var SPEED = 0.25;        // velocidad base de los puntos
+    var MAX_POINTS = 80;
+
+    var w = 0, h = 0, dpr = 1, pts = [], raf = 0, color = '#65e6d2';
+    var mouse = { x: -9999, y: -9999 };
+
+    function readColor() {
+        var c = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        if (c) color = c;
+        if (reduced) draw();
+    }
+
+    function spawn() {
+        return {
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - .5) * SPEED * 2,
+            vy: (Math.random() - .5) * SPEED * 2,
+            r: 1 + Math.random() * 1.2
+        };
+    }
+
+    // El router dispara 'resize' al cambiar de sección: no reconstruimos, solo ajustamos.
+    function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var n = Math.min(MAX_POINTS, Math.round(w * h / 18000));
+        while (pts.length < n) pts.push(spawn());
+        if (pts.length > n) pts.length = n;
+        pts.forEach(function (p) { p.x = Math.min(p.x, w); p.y = Math.min(p.y, h); });
+        if (reduced) draw();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        var i, j, a, b, dx, dy, d2, d;
+
+        for (i = 0; i < pts.length; i++) {
+            a = pts[i];
+            if (!reduced) {
+                a.x += a.vx; a.y += a.vy;
+                if (a.x < 0 || a.x > w) a.vx *= -1;
+                if (a.y < 0 || a.y > h) a.vy *= -1;
+            }
+            ctx.globalAlpha = .55;
+            ctx.beginPath();
+            ctx.arc(a.x, a.y, a.r, 0, 6.2832);
+            ctx.fill();
+
+            for (j = i + 1; j < pts.length; j++) {
+                b = pts[j];
+                dx = a.x - b.x; dy = a.y - b.y;
+                d2 = dx * dx + dy * dy;
+                if (d2 < LINK * LINK) {
+                    d = Math.sqrt(d2);
+                    ctx.globalAlpha = (1 - d / LINK) * .28;
+                    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+                }
+            }
+
+            dx = a.x - mouse.x; dy = a.y - mouse.y;
+            d2 = dx * dx + dy * dy;
+            if (d2 < MOUSE_LINK * MOUSE_LINK) {
+                d = Math.sqrt(d2);
+                ctx.globalAlpha = (1 - d / MOUSE_LINK) * .55;
+                ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+            }
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    function loop() { draw(); raf = requestAnimationFrame(loop); }
+    function start() { if (!raf && !reduced) raf = requestAnimationFrame(loop); }
+    function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+    document.addEventListener('mouseleave', function () { mouse.x = mouse.y = -9999; });
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+
+    // Cambio de tema: recalcula el color del acento
+    new MutationObserver(readColor).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    readColor();
+    resize();
+    start();
+})();
