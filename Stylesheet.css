@@ -5554,3 +5554,28 @@ nav a.navlink.active {
 .home-blog .blog-card p {
     max-width: 70ch;
 }
+
+
+/* ===== Blog: buscador (reutiliza el estilo del buscador de proyectos) ===== */
+.blog-search-box {
+    margin: 0 0 30px;
+}
+
+.work-search.blog-search {
+    margin: 0 0 8px;
+}
+
+.blog-search-box .work-search-count {
+    margin: 8px 0 0;
+}
+
+.blog-list .blog-empty {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 32px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    color: var(--muted);
+    text-align: center;
+    font-size: 14px;
+}
