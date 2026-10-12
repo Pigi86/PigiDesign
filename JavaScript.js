@@ -99,8 +99,8 @@ const translations = {
         skillPlatform1: "Interfaces, sitios y aplicaciones web responsive.",
         skillPlatform2: "Apps, automatizaciones y soluciones conectadas con Power Platform.",
         skillPlatform3: "Interfaces y piezas visuales con foco en claridad y consistencia.",
-        blogTitle: "Blog próximamente",
-        blogP1: "Estoy trabajando en algunos artículos interesantes sobre desarrollo web, tecnología blockchain y aprendizaje automático. ¡Estad atentos para recibir contenido valioso!",
+        blogTitle: "Blog",
+        blogP1: "Notas técnicas sobre desarrollo web, Power Platform y datos, escritas desde la práctica.",
 
         techStack: "Tecnologías",
         workCta1: "Una selección de proyectos donde combino desarrollo, automatización y diseño para resolver necesidades concretas.",
@@ -255,8 +255,8 @@ const translations = {
         skillPlatform1: "Responsive interfaces, websites and web applications.",
         skillPlatform2: "Apps, automations and connected solutions with Power Platform.",
         skillPlatform3: "Interfaces and visual pieces focused on clarity and consistency.",
-        blogTitle: "Blog comming soon",
-        blogP1: "I'm working on some interesting articles about web development, blockchain technology, and machine learning. Stay tuned for insightful content!",
+        blogTitle: "Blog",
+        blogP1: "Technical notes on web development, Power Platform and data, written from hands-on practice.",
 
         techStack: "Technologies",
         workCta1: "A selection of projects where I combine development, automation, and design to address specific needs.",
@@ -397,6 +397,26 @@ translations.en.workspaceText = "A visual representation of how code, design, da
 translations.en.workspaceCode = "Code";
 translations.en.workspaceDesign = "Design";
 translations.en.workspaceAutomation = "Automation";
+translations.es.heroLatestPost = "Último artículo del blog";
+translations.es.heroLatestPostAll = "Todos los artículos";
+translations.en.heroLatestPost = "Latest blog post";
+translations.en.heroLatestPostAll = "All articles";
+translations.es.blogCopy = "Copiar";
+translations.es.blogCopied = "¡Copiado!";
+translations.es.blogNewer = "Más reciente";
+translations.es.blogOlder = "Anterior";
+translations.en.blogCopy = "Copy";
+translations.en.blogCopied = "Copied!";
+translations.en.blogNewer = "Newer";
+translations.en.blogOlder = "Older";
+translations.es.blogRead = "Leer artículo";
+translations.es.blogBack = "Volver al blog";
+translations.es.blogMin = "min de lectura";
+translations.es.blogEmpty = "Todavía no hay artículos publicados.";
+translations.en.blogRead = "Read article";
+translations.en.blogBack = "Back to blog";
+translations.en.blogMin = "min read";
+translations.en.blogEmpty = "No articles published yet.";
 translations.es.featuredLabel = "Proyecto destacado";
 translations.es.featuredDetail = "Ver detalle";
 translations.es.featuredLive = "Visitar sitio";
@@ -1301,6 +1321,7 @@ function setLang(lang) {
         }
     });
     renderCards();
+    if (typeof window.renderBlog === 'function') window.renderBlog();
     renderSelecetedCards();
     renderHeroStats();
     renderServiceModal();
@@ -2186,7 +2207,7 @@ inputsRequired.forEach(input => {
     var navLinks = Array.from(document.querySelectorAll('#site-nav a.navlink'));
     var current = null;
 
-    function normalize(id) { return id === 'top' ? 'hero' : id; }
+    function normalize(id) { id = String(id).split('/')[0]; return id === 'top' ? 'hero' : id; }
 
     function show(key, scrollTop) {
         if (!routes[key]) return false;
@@ -2219,12 +2240,14 @@ inputsRequired.forEach(input => {
 
     // API pública: usada por la paleta de comandos y la terminal
     window.showRoute = function (hash) {
-        var id = normalize(String(hash).replace(/^#/, ''));
+        var full = String(hash).replace(/^#/, '');
+        var id = normalize(full);
         if (!routes[id]) return false;
-        if (location.hash !== '#' + id) {
-            try { history.pushState(null, '', '#' + id); } catch (e) { location.hash = id; }
+        if (location.hash !== '#' + full) {
+            try { history.pushState(null, '', '#' + full); } catch (e) { location.hash = full; }
         }
         show(id, true);
+        window.dispatchEvent(new Event('routechange'));
         return true;
     };
 
@@ -2247,4 +2270,134 @@ inputsRequired.forEach(input => {
     window.addEventListener('popstate', function () { apply(true); });
 
     apply(false);
+})();
+
+/* =========================================================
+   Blog: lista de artículos (blog-posts.js) y lector (#blog/slug)
+   ========================================================= */
+(function () {
+    var list = document.getElementById('blog-list');
+    var reader = document.getElementById('blog-reader');
+    var intro = document.getElementById('blog-intro');
+    if (!list || !reader) return;
+    var baseTitle = document.title;
+
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function inline(s) {
+        return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    }
+    function publishedPosts() {
+        return (window.BLOG_POSTS || []).filter(function (p) { return p.published !== false; })
+            .sort(function (a, b) { return b.date.localeCompare(a.date); });
+    }
+    function fmtDate(d) {
+        try {
+            return new Date(d + 'T12:00:00').toLocaleDateString(currentLang === 'es' ? 'es-AR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        } catch (e) { return d; }
+    }
+    function tagsHtml(tags) { return '<div class="card-tags">' + (tags || []).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>'; }
+
+    function bodyHtml(blocks) {
+        var html = '', inList = false;
+        (blocks || []).forEach(function (b) {
+            if (b.indexOf('- ') === 0) {
+                if (!inList) { html += '<ul>'; inList = true; }
+                html += '<li>' + inline(b.slice(2)) + '</li>';
+                return;
+            }
+            if (inList) { html += '</ul>'; inList = false; }
+            if (b.indexOf('```') === 0) {
+                var lang = (b.match(/^```([a-z]*)/) || [])[1] || 'code';
+                html += '<figure class="code-block"><figcaption class="mono"><span>' + esc(lang) + '</span>' +
+                    '<button type="button" class="code-copy" data-copy>' + translations[currentLang].blogCopy + '</button></figcaption>' +
+                    '<pre><code>' + esc(b.replace(/^```[a-z]*\n?/, '').replace(/\n?```$/, '')) + '</code></pre></figure>';
+            } else if (b.indexOf('## ') === 0) {
+                html += '<h3>' + inline(b.slice(3)) + '</h3>';
+            } else {
+                html += '<p>' + inline(b) + '</p>';
+            }
+        });
+        if (inList) html += '</ul>';
+        return html;
+    }
+
+    function cardHtml(p, t) {
+        var c = p[currentLang] || p.es;
+        return '<a class="blog-card" href="#blog/' + encodeURIComponent(p.slug) + '">' +
+            '<span class="blog-card-icon"><i class="fa ' + esc(p.icon || 'fa-file-text-o') + '" aria-hidden="true"></i></span>' +
+            '<div class="blog-meta mono"><span>' + fmtDate(p.date) + '</span><i></i><span>' + p.readMin + ' ' + t.blogMin + '</span></div>' +
+            '<h3>' + esc(c.title) + '</h3><p>' + esc(c.excerpt) + '</p>' + tagsHtml(p.tags) +
+            '<span class="blog-read mono">' + t.blogRead + ' →</span></a>';
+    }
+
+    // Último artículo publicado en el home
+    var home = document.getElementById('home-blog');
+    function renderLatest(all, t) {
+        if (!home) return;
+        var sec = home.closest('section');
+        if (!all.length) { home.innerHTML = ''; if (sec) sec.classList.add('is-empty'); return; }
+        if (sec) sec.classList.remove('is-empty');
+        home.innerHTML = cardHtml(all[0], t);
+    }
+
+    function render() {
+        var t = translations[currentLang];
+        var all = publishedPosts();
+        renderLatest(all, t);
+        var m = location.hash.match(/^#blog\/(.+)$/);
+        var slug = ''; if (m) { try { slug = decodeURIComponent(m[1]); } catch (e) { slug = m[1]; } }
+        var post = slug ? all.filter(function (p) { return p.slug === slug; })[0] : null;
+
+        var sec = document.getElementById('blog');
+        if (sec) sec.classList.toggle('is-reading', !!post);
+
+        if (post) {
+            var c = post[currentLang] || post.es;
+            list.hidden = true;
+            if (intro) intro.hidden = true;
+            reader.hidden = false;
+            var idx = all.indexOf(post);
+            var newer = all[idx - 1], older = all[idx + 1];
+            function pager(p, label, cls) {
+                if (!p) return '<span></span>';
+                var pc = p[currentLang] || p.es;
+                return '<a class="blog-pager-link ' + cls + '" href="#blog/' + encodeURIComponent(p.slug) + '"><span class="mono">' + label + '</span><strong>' + esc(pc.title) + '</strong></a>';
+            }
+            reader.innerHTML =
+                '<a class="blog-back mono" href="#blog">← ' + t.blogBack + '</a>' +
+                '<div class="blog-head">' +
+                '<div class="blog-head-top"><span class="blog-card-icon"><i class="fa ' + esc(post.icon || 'fa-file-text-o') + '" aria-hidden="true"></i></span>' +
+                '<div class="blog-meta mono"><span>' + fmtDate(post.date) + '</span><i></i><span>' + post.readMin + ' ' + t.blogMin + '</span></div></div>' +
+                '<h2 class="blog-title">' + esc(c.title) + '</h2>' +
+                '<p class="blog-lead">' + esc(c.excerpt) + '</p>' + tagsHtml(post.tags) +
+                '</div>' +
+                '<div class="blog-body">' + bodyHtml(c.body) + '</div>' +
+                '<nav class="blog-pager" aria-label="Blog">' + pager(newer, '← ' + t.blogNewer, 'is-newer') + pager(older, t.blogOlder + ' →', 'is-older') + '</nav>' +
+                '<a class="blog-back mono" href="#blog">← ' + t.blogBack + '</a>';
+            document.title = c.title + ' · Leandro Carlos Pignatta';
+            return;
+        }
+
+        reader.hidden = true; reader.innerHTML = '';
+        document.title = baseTitle;
+        list.hidden = false;
+        if (intro) intro.hidden = false;
+        list.innerHTML = all.length ? all.map(function (p) { return cardHtml(p, t); }).join('') : '<p class="blog-empty">' + t.blogEmpty + '</p>';
+    }
+
+    reader.addEventListener('click', function (e) {
+        var btn = e.target.closest && e.target.closest('[data-copy]');
+        if (!btn) return;
+        var code = btn.closest('.code-block').querySelector('code').textContent;
+        var done = function () {
+            btn.textContent = translations[currentLang].blogCopied;
+            btn.classList.add('is-done');
+            setTimeout(function () { btn.textContent = translations[currentLang].blogCopy; btn.classList.remove('is-done'); }, 1600);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, function () { });
+    });
+
+    window.renderBlog = render;
+    ['hashchange', 'popstate', 'routechange'].forEach(function (ev) { window.addEventListener(ev, render); });
+    render();
 })();
