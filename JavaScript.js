@@ -417,6 +417,18 @@ translations.en.blogRead = "Read article";
 translations.en.blogBack = "Back to blog";
 translations.en.blogMin = "min read";
 translations.en.blogEmpty = "No articles published yet.";
+translations.es.blogSearchLabel = "Buscar artículos";
+translations.es.blogSearchPlaceholder = "Buscar por título, tema, tecnología...";
+translations.es.blogSearchClear = "Limpiar búsqueda";
+translations.es.blogSearchEmpty = "No se encontraron artículos con esa búsqueda.";
+translations.es.blogSearchResultSingular = "artículo encontrado";
+translations.es.blogSearchResultPlural = "artículos encontrados";
+translations.en.blogSearchLabel = "Search articles";
+translations.en.blogSearchPlaceholder = "Search by title, topic, technology...";
+translations.en.blogSearchClear = "Clear search";
+translations.en.blogSearchEmpty = "No articles matched your search.";
+translations.en.blogSearchResultSingular = "article found";
+translations.en.blogSearchResultPlural = "articles found";
 translations.es.featuredLabel = "Proyecto destacado";
 translations.es.featuredDetail = "Ver detalle";
 translations.es.featuredLive = "Visitar sitio";
@@ -2335,6 +2347,36 @@ inputsRequired.forEach(input => {
     var PAGE_SIZE = 4; // artículos por página
     var blogPage = 1;
 
+    // Buscador del blog: título, resumen, tags y contenido (en ambos idiomas).
+    // Ignora mayúsculas y acentos ("automatizacion" encuentra "automatización").
+    var searchBox = document.getElementById('blog-search-box');
+    var searchInput = document.getElementById('blog-search-input');
+    var searchClear = document.getElementById('blog-search-clear');
+    var searchCount = document.getElementById('blog-search-count');
+    var blogQuery = '';
+
+    function norm(s) {
+        return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    function postHaystack(p) {
+        var parts = [p.slug].concat(p.tags || []);
+        ['es', 'en'].forEach(function (l) {
+            var c = p[l];
+            if (!c) return;
+            parts.push(c.title, c.excerpt);
+            (c.body || []).forEach(function (b) { parts.push(b); });
+        });
+        return norm(parts.join(' '));
+    }
+    function filterPosts(all) {
+        var terms = norm(blogQuery).split(/\s+/).filter(Boolean);
+        if (!terms.length) return all;
+        return all.filter(function (p) {
+            var hay = postHaystack(p);
+            return terms.every(function (term) { return hay.indexOf(term) !== -1; });
+        });
+    }
+
     function renderBlogPagination(totalPages) {
         if (!pagNav) return;
         pagNav.innerHTML = '';
@@ -2390,6 +2432,7 @@ inputsRequired.forEach(input => {
             list.hidden = true;
             if (pagNav) pagNav.innerHTML = '';
             if (intro) intro.hidden = true;
+            if (searchBox) searchBox.hidden = true;
             reader.hidden = false;
             var idx = all.indexOf(post);
             var newer = all[idx - 1], older = all[idx + 1];
@@ -2417,10 +2460,20 @@ inputsRequired.forEach(input => {
         document.title = baseTitle;
         list.hidden = false;
         if (intro) intro.hidden = false;
-        var totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+        if (searchBox) searchBox.hidden = !all.length;
+        var hasQuery = blogQuery.trim().length > 0;
+        var visible = filterPosts(all);
+        if (searchCount) {
+            searchCount.hidden = !hasQuery;
+            searchCount.textContent = hasQuery
+                ? visible.length + ' ' + (visible.length === 1 ? t.blogSearchResultSingular : t.blogSearchResultPlural)
+                : '';
+        }
+        var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
         if (blogPage > totalPages) blogPage = totalPages;
-        var pageItems = all.slice((blogPage - 1) * PAGE_SIZE, blogPage * PAGE_SIZE);
-        list.innerHTML = pageItems.length ? pageItems.map(function (p) { return cardHtml(p, t); }).join('') : '<p class="blog-empty">' + t.blogEmpty + '</p>';
+        var pageItems = visible.slice((blogPage - 1) * PAGE_SIZE, blogPage * PAGE_SIZE);
+        var emptyMsg = hasQuery ? t.blogSearchEmpty : t.blogEmpty;
+        list.innerHTML = pageItems.length ? pageItems.map(function (p) { return cardHtml(p, t); }).join('') : '<p class="blog-empty">' + emptyMsg + '</p>';
         renderBlogPagination(totalPages);
     }
 
@@ -2435,6 +2488,26 @@ inputsRequired.forEach(input => {
         };
         if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, function () { });
     });
+
+    function updateBlogSearch(value) {
+        blogQuery = value || '';
+        blogPage = 1;
+        if (searchClear) searchClear.hidden = !blogQuery.trim();
+        render();
+    }
+    if (searchInput) {
+        searchInput.addEventListener('input', function () { updateBlogSearch(this.value); });
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && searchInput.value) { searchInput.value = ''; updateBlogSearch(''); }
+        });
+    }
+    if (searchClear) {
+        searchClear.addEventListener('click', function () {
+            searchInput.value = '';
+            updateBlogSearch('');
+            searchInput.focus();
+        });
+    }
 
     window.renderBlog = render;
     ['hashchange', 'popstate', 'routechange'].forEach(function (ev) { window.addEventListener(ev, render); });
