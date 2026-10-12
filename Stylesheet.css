@@ -5579,3 +5579,20 @@ nav a.navlink.active {
     text-align: center;
     font-size: 14px;
 }
+
+
+/* ===== Fondo animado (canvas de partículas) ===== */
+#bg-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Secciones con fondo sólido: semitransparentes para que se vea el fondo animado */
+#sobre-mi,
+#contacto {
+    background: color-mix(in srgb, var(--surface) 62%, transparent);
+}
