@@ -5589,6 +5589,7 @@ nav a.navlink.active {
     height: 100%;
     z-index: -1;
     pointer-events: none;
+    opacity: 0.3;
 }
 
 /* Secciones con fondo sólido: semitransparentes para que se vea el fondo animado */
