@@ -1,5 +1,105 @@
 window.BLOG_POSTS = [
     {
+        slug: "unity-recolector-basura-object-pooling",
+        date: "2026-07-27",
+        readMin: 6,
+        icon: "fa-gamepad",
+        tags: ["Unity", "C#", "Rendimiento"],
+        published: true,
+        es: {
+            title: "Unity: cómo evitar los tirones del recolector de basura con object pooling",
+            excerpt: "Qué genera basura en C#, cómo detectarla con el Profiler y cómo reutilizar objetos con el ObjectPool que incluye Unity.",
+            body: [
+                "En un juego, un tirón de 30 ms se nota más que un promedio de 60 FPS. Muchos de esos tirones vienen del recolector de basura (GC), y casi siempre son evitables.",
+                "## Cómo funciona el GC en Unity",
+                "Los objetos de C# viven en el heap administrado. El recolector libera la memoria de los que ya no se usan y, mientras trabaja, puede frenar el juego por un instante. Desde Unity **2019.1** existe el **recolector incremental**, que reparte ese trabajo entre varios frames para reducir los picos.",
+                "Aun así, la mejor estrategia es generar menos basura en primer lugar.",
+                "## Qué genera basura",
+                "- Concatenar texto en cada frame, como `\"Puntos: \" + puntos` dentro de `Update`.",
+                "- Usar LINQ o lambdas que capturan variables en código que se ejecuta todo el tiempo.",
+                "- Hacer *boxing*: pasar un `int` o un `struct` a un parámetro de tipo `object`.",
+                "- Crear y destruir objetos constantemente con `Instantiate` y `Destroy`: balas, enemigos, efectos.",
+                "## Object pooling",
+                "En lugar de destruir un objeto, lo desactivás y lo guardás para reutilizarlo. Desde Unity **2021.1** el namespace `UnityEngine.Pool` incluye `ObjectPool<T>`, así que no hace falta escribirlo desde cero.",
+                "```csharp\nusing UnityEngine;\nusing UnityEngine.Pool;\n\npublic class BulletSpawner : MonoBehaviour\n{\n    [SerializeField] Bullet prefab;\n    ObjectPool<Bullet> pool;\n\n    void Awake()\n    {\n        pool = new ObjectPool<Bullet>(\n            () => Instantiate(prefab),\n            b => b.gameObject.SetActive(true),\n            b => b.gameObject.SetActive(false),\n            b => Destroy(b.gameObject),\n            defaultCapacity: 20,\n            maxSize: 100);\n    }\n\n    public Bullet Shoot() => pool.Get();\n    public void Return(Bullet b) => pool.Release(b);\n}\n```",
+                "Los cuatro primeros parámetros indican cómo crear el objeto, qué hacer al pedirlo, qué hacer al devolverlo y cómo destruirlo si el pool supera su tamaño máximo.",
+                "## Cómo detectarlo",
+                "- Abrí el **Profiler**, andá al módulo **CPU Usage** y mirá la columna **GC Alloc**: durante el gameplay lo ideal es que esté en 0 B por frame.",
+                "- Cacheá referencias en `Awake` o `Start` en vez de llamar a `GetComponent` en cada `Update`.",
+                "- Optimizá donde el Profiler lo indique: medir primero evita arreglar problemas que no existen."
+            ]
+        },
+        en: {
+            title: "Unity: avoiding garbage collector stutters with object pooling",
+            excerpt: "What creates garbage in C#, how to spot it with the Profiler, and how to reuse objects with Unity's built-in ObjectPool.",
+            body: [
+                "In a game, a 30 ms hitch is more noticeable than a 60 FPS average. Many of those hitches come from the garbage collector (GC), and almost all of them are avoidable.",
+                "## How the GC works in Unity",
+                "C# objects live on the managed heap. The collector frees the memory of objects that are no longer used and, while it works, it can pause the game for a moment. Since Unity **2019.1** there is an **incremental garbage collector**, which spreads that work across several frames to reduce spikes.",
+                "Even so, the best strategy is to create less garbage in the first place.",
+                "## What creates garbage",
+                "- Concatenating text every frame, like `\"Score: \" + score` inside `Update`.",
+                "- Using LINQ or lambdas that capture variables in code that runs all the time.",
+                "- *Boxing*: passing an `int` or a `struct` to an `object` parameter.",
+                "- Constantly creating and destroying objects with `Instantiate` and `Destroy`: bullets, enemies, effects.",
+                "## Object pooling",
+                "Instead of destroying an object, you deactivate it and keep it for reuse. Since Unity **2021.1** the `UnityEngine.Pool` namespace includes `ObjectPool<T>`, so you don't need to write one from scratch.",
+                "```csharp\nusing UnityEngine;\nusing UnityEngine.Pool;\n\npublic class BulletSpawner : MonoBehaviour\n{\n    [SerializeField] Bullet prefab;\n    ObjectPool<Bullet> pool;\n\n    void Awake()\n    {\n        pool = new ObjectPool<Bullet>(\n            () => Instantiate(prefab),\n            b => b.gameObject.SetActive(true),\n            b => b.gameObject.SetActive(false),\n            b => Destroy(b.gameObject),\n            defaultCapacity: 20,\n            maxSize: 100);\n    }\n\n    public Bullet Shoot() => pool.Get();\n    public void Return(Bullet b) => pool.Release(b);\n}\n```",
+                "The first four parameters define how to create the object, what to do when it's requested, what to do when it's returned, and how to destroy it if the pool exceeds its maximum size.",
+                "## How to detect it",
+                "- Open the **Profiler**, go to the **CPU Usage** module and check the **GC Alloc** column: during gameplay the ideal is 0 B per frame.",
+                "- Cache references in `Awake` or `Start` instead of calling `GetComponent` in every `Update`.",
+                "- Optimize where the Profiler points: measuring first avoids fixing problems that don't exist."
+            ]
+        }
+    },
+    {
+        slug: "unity-update-fixedupdate-lateupdate",
+        date: "2026-07-06",
+        readMin: 5,
+        icon: "fa-cubes",
+        tags: ["Unity", "C#", "Física"],
+        published: true,
+        es: {
+            title: "Unity: Update, FixedUpdate y LateUpdate, cuándo usar cada uno",
+            excerpt: "Cada método corre en un momento distinto del ciclo de Unity. Elegir bien evita movimientos entrecortados, física inestable y cámaras que tiemblan.",
+            body: [
+                "Un error muy común al empezar con Unity es poner todo el código en `Update`. Unity ejecuta distintos métodos en momentos diferentes de cada ciclo, y elegir el correcto evita movimientos entrecortados, física inestable y cámaras que tiemblan.",
+                "## Update: una vez por frame",
+                "Se llama una vez por frame, así que su frecuencia depende de los FPS. Es el lugar para leer input y mover objetos que no usan física. Multiplicá siempre el movimiento por `Time.deltaTime` (los segundos que tardó el último frame) para que la velocidad sea la misma a 30 o a 144 FPS.",
+                "## FixedUpdate: paso fijo de física",
+                "Se ejecuta a intervalos fijos: **0,02 segundos por defecto, es decir 50 veces por segundo**, sincronizado con el motor de física. Acá van las fuerzas y los cambios sobre un `Rigidbody`. Dentro de `FixedUpdate`, `Time.deltaTime` devuelve el paso fijo, por lo que el cálculo no cambia.",
+                "Si un frame tarda demasiado, `FixedUpdate` puede ejecutarse varias veces seguidas para ponerse al día, hasta el límite de **Maximum Allowed Timestep** (0,333 segundos por defecto). Ambos valores se configuran en *Project Settings > Time*.",
+                "## LateUpdate: después de todos los Update",
+                "Se llama una vez por frame, cuando todos los `Update` ya terminaron. Es el lugar ideal para una cámara que sigue a un objeto: el objetivo ya se movió y la cámara no queda un frame atrasada.",
+                "## Una regla práctica",
+                "- Leé el input en `Update` y guardalo en una variable. Si lo leés en `FixedUpdate` podés perder pulsaciones, porque no corre en todos los frames.",
+                "- Usá el valor guardado en `FixedUpdate` para mover el `Rigidbody`.",
+                "- Si un objeto con `Rigidbody` se ve entrecortado, probá activar **Interpolate** en el componente.",
+                "```csharp\npublic class PlayerMotor : MonoBehaviour\n{\n    [SerializeField] float speed = 5f;\n    [SerializeField] Rigidbody rb;\n    Vector3 input;\n\n    void Update()\n    {\n        // Input: una vez por frame\n        input = new Vector3(Input.GetAxis(\"Horizontal\"), 0f, Input.GetAxis(\"Vertical\"));\n    }\n\n    void FixedUpdate()\n    {\n        // Física: paso fijo\n        rb.MovePosition(rb.position + input * speed * Time.fixedDeltaTime);\n    }\n}\n\npublic class CameraFollow : MonoBehaviour\n{\n    [SerializeField] Transform target;\n\n    void LateUpdate()\n    {\n        transform.position = target.position + new Vector3(0f, 5f, -8f);\n    }\n}\n```"
+            ]
+        },
+        en: {
+            title: "Unity: Update, FixedUpdate and LateUpdate, when to use each one",
+            excerpt: "Each method runs at a different point in Unity's loop. Choosing well avoids jerky movement, unstable physics and shaky cameras.",
+            body: [
+                "A very common mistake when starting with Unity is putting all the code in `Update`. Unity runs different methods at different points in each cycle, and choosing the right one avoids jerky movement, unstable physics and shaky cameras.",
+                "## Update: once per frame",
+                "It's called once per frame, so its frequency depends on FPS. It's the place to read input and move objects that don't use physics. Always multiply movement by `Time.deltaTime` (the seconds the last frame took) so speed is the same at 30 or 144 FPS.",
+                "## FixedUpdate: fixed physics step",
+                "It runs at fixed intervals: **0.02 seconds by default, that is 50 times per second**, in sync with the physics engine. Forces and changes to a `Rigidbody` go here. Inside `FixedUpdate`, `Time.deltaTime` returns the fixed step, so the calculation doesn't change.",
+                "If a frame takes too long, `FixedUpdate` can run several times in a row to catch up, up to the **Maximum Allowed Timestep** limit (0.333 seconds by default). Both values are set in *Project Settings > Time*.",
+                "## LateUpdate: after every Update",
+                "It's called once per frame, after all `Update` methods have finished. It's the ideal place for a camera that follows an object: the target has already moved, so the camera doesn't lag a frame behind.",
+                "## A practical rule",
+                "- Read input in `Update` and store it in a variable. If you read it in `FixedUpdate` you can miss key presses, because it doesn't run on every frame.",
+                "- Use the stored value in `FixedUpdate` to move the `Rigidbody`.",
+                "- If an object with a `Rigidbody` looks jerky, try enabling **Interpolate** on the component.",
+                "```csharp\npublic class PlayerMotor : MonoBehaviour\n{\n    [SerializeField] float speed = 5f;\n    [SerializeField] Rigidbody rb;\n    Vector3 input;\n\n    void Update()\n    {\n        // Input: once per frame\n        input = new Vector3(Input.GetAxis(\"Horizontal\"), 0f, Input.GetAxis(\"Vertical\"));\n    }\n\n    void FixedUpdate()\n    {\n        // Physics: fixed step\n        rb.MovePosition(rb.position + input * speed * Time.fixedDeltaTime);\n    }\n}\n\npublic class CameraFollow : MonoBehaviour\n{\n    [SerializeField] Transform target;\n\n    void LateUpdate()\n    {\n        transform.position = target.position + new Vector3(0f, 5f, -8f);\n    }\n}\n```"
+            ]
+        }
+    },
+    {
         slug: "power-automate-flujos-confiables",
         date: "2026-10-10",
         readMin: 6,
