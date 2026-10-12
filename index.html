@@ -535,6 +535,21 @@
                     <h2 data-i18n="blogTitle">Blog</h2>
                 </div>
                 <p id="blog-intro" class="blog-intro" data-i18n="blogP1">Notas técnicas sobre desarrollo web, Power Platform y datos, escritas desde la práctica.</p>
+                <div id="blog-search-box" class="blog-search-box">
+                    <div class="work-search blog-search" role="search">
+                        <label class="sr-only" for="blog-search-input" data-i18n="blogSearchLabel">Buscar artículos</label>
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <input id="blog-search-input" type="search" autocomplete="off" spellcheck="false"
+                               data-i18n-placeholder="blogSearchPlaceholder"
+                               placeholder="Buscar por título, tema, tecnología..."
+                               aria-controls="blog-list" />
+                        <button id="blog-search-clear" class="work-search-clear" type="button"
+                                data-i18n-aria="blogSearchClear" aria-label="Limpiar búsqueda" hidden>
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div id="blog-search-count" class="work-search-count" role="status" aria-live="polite" hidden></div>
+                </div>
                 <div id="blog-list" class="blog-list"></div>
                 <div id="blog-pagination" class="pagination" role="navigation" aria-label="Paginación del blog"></div>
                 <article id="blog-reader" class="blog-reader" hidden></article>
