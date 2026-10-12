@@ -223,6 +223,16 @@
             </div>
         </section>
 
+        <section data-route="hero" id="home-blog-section">
+            <div class="wrap homeBlog">
+                <div class="hero-eyebrow mono" data-i18n="heroLatestPost">Último artículo del blog</div>
+                <div class="section-tag allWork mono">
+                    <a href="#blog" class="featured-link" data-i18n="heroLatestPostAll">Todos los artículos</a>
+                </div>
+                <div id="home-blog" class="home-blog"></div>
+            </div>
+        </section>
+
         <section data-route="hero">
             <div class="wrap listoContact" data-anim="split">
                 <h1 data-i18n="listoContact">
@@ -522,15 +532,11 @@
             <div class="wrap">
                 <div class="hero-eyebrow mono" data-anim="rise">04 Blog</div>
                 <div class="section-head">
-                    <h2 data-i18n="blogTitle">Blog próximamente</h2>
+                    <h2 data-i18n="blogTitle">Blog</h2>
                 </div>
-                <div class="about-grid">
-                    <div>
-                        <p data-i18n="blogP1">
-                            Estoy trabajando en algunos artículos interesantes sobre desarrollo web, tecnología blockchain y aprendizaje automático. ¡Estad atentos para recibir contenido valioso!
-                        </p>
-                    </div>
-                </div>
+                <p id="blog-intro" class="blog-intro" data-i18n="blogP1">Notas técnicas sobre desarrollo web, Power Platform y datos, escritas desde la práctica.</p>
+                <div id="blog-list" class="blog-list"></div>
+                <article id="blog-reader" class="blog-reader" hidden></article>
             </div>
         </section>
 
@@ -709,6 +715,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="blog-posts.js"></script>
     <script src="JavaScript.js"></script>
     <script type="importmap">
         {
