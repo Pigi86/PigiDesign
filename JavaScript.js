@@ -99,7 +99,7 @@ const translations = {
         skillPlatform1: "Interfaces, sitios y aplicaciones web responsive.",
         skillPlatform2: "Apps, automatizaciones y soluciones conectadas con Power Platform.",
         skillPlatform3: "Interfaces y piezas visuales con foco en claridad y consistencia.",
-        blogTitle: "Notas técnicas, soluciones reales y aprendizajes sobre desarrollo web, Power Platform y datos",
+        blogTitle: "Bitácora técnica",
         blogP1: "Notas técnicas sobre desarrollo web, Power Platform y datos, escritas desde la práctica.",
 
         techStack: "Tecnologías",
@@ -291,7 +291,7 @@ const translations = {
         skillPlatform1: "Responsive interfaces, websites and web applications.",
         skillPlatform2: "Apps, automations and connected solutions with Power Platform.",
         skillPlatform3: "Interfaces and visual pieces focused on clarity and consistency.",
-        blogTitle: "Technical notes, real-world solutions, and insights on web development, Power Platform, and data.",
+        blogTitle: "Dev Journal",
         blogP1: "Technical notes on web development, Power Platform and data, written from hands-on practice.",
 
         techStack: "Technologies",
