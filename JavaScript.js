@@ -226,6 +226,7 @@ const translations = {
         heroCtaCvLabel2: "Curriculum",
         heroCtaCvLabel3: "Abrir en una pestaña nueva",
         statProjects: "Proyectos publicados",
+        statYears: "Años de experiencia",
         statBlogs: "Blogs publicados",
         statAreas: "Áreas de especialización",
         statLangs: "Idiomas del sitio",
@@ -419,6 +420,7 @@ const translations = {
         heroCtaCvLabel2: "Resume",
         heroCtaCvLabel3: "Open in a new tab",
         statProjects: "Published projects",
+        statYears: "Years of experience",
         statBlogs: "Published blogs",
         statAreas: "Areas of expertise",
         statLangs: "Site languages",
@@ -1525,10 +1527,12 @@ function renderHeroStats() {
     const el = document.getElementById('hero-stats');
     if (!el) return;
     const totalProjects = projects.length;
+    const totalYearsWork = new Date().getFullYear() - 2009;
     const totalBlogs = window.BLOG_POSTS.length;
     const areas = new Set(projects.map(p => p.cat)).size;
     const t = translations[currentLang];
     el.innerHTML = `
+        <div class="stat" id="yearDiv"><strong data-count="${totalYearsWork}">0</strong><span>${t.statYears}</span></div>
         <div class="stat"><strong data-count="${totalProjects}">0</strong><span>${t.statProjects}</span></div>
         <div class="stat"><strong data-count="${totalBlogs}">0</strong><span>${t.statBlogs}</span></div>
         <div class="stat"><strong data-count="${areas}">0</strong><span>${t.statAreas}</span></div>
@@ -1544,7 +1548,10 @@ function renderHeroStats() {
         function tick(now) {
             const progress = Math.min(1, (now - start) / duration);
             const eased = 1 - Math.pow(1 - progress, 3);
-            node.textContent = Math.round(target * eased);
+            node.textContent = Math.round(target * eased);            
+            if (node.parentElement.id == "yearDiv") {
+                node.textContent += "+";
+            }
             if (progress < 1) requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
