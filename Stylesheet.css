@@ -5597,3 +5597,231 @@ nav a.navlink.active {
 #contacto {
     background: color-mix(in srgb, var(--surface) 62%, transparent);
 }
+
+/* ===== About: experience timeline + certificates ===== */
+.exp-timeline,
+.cert-section {
+    margin-top: 64px;
+}
+
+.timeline {
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 34px;
+    list-style: none;
+}
+
+    .timeline::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        bottom: 0;
+        left: 6px;
+        width: 2px;
+        background: linear-gradient(180deg, var(--accent), var(--line));
+        border-radius: 2px;
+    }
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 28px;
+}
+
+.timeline-dot {
+    position: absolute;
+    top: 6px;
+    left: -34px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.timeline-date {
+    margin-bottom: 10px;
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.timeline-card {
+    padding: 24px 26px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    transition: border-color .22s ease, transform .22s ease, box-shadow .22s ease;
+}
+
+    .timeline-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--accent);
+        box-shadow: 0 10px 26px rgba(0,0,0,.12);
+    }
+
+    .timeline-card h3 {
+        margin: 0 0 4px;
+        color: var(--text);
+        font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+    }
+
+.timeline-company {
+    margin-bottom: 16px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: .08em;
+}
+
+.timeline-list {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+    .timeline-list li {
+        position: relative;
+        padding-left: 20px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.55;
+    }
+
+        .timeline-list li::before {
+            content: "";
+            position: absolute;
+            top: .6em;
+            left: 0;
+            width: 8px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .timeline-list li b {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+.cert-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    transition: border-color .22s ease, transform .22s ease, box-shadow .22s ease;
+}
+
+    .cert-item:hover {
+        transform: translateY(-3px);
+        border-color: var(--accent);
+        box-shadow: 0 8px 22px rgba(0,0,0,.12);
+    }
+
+    .cert-item h3 {
+        margin: 0 0 6px;
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.4;
+    }
+
+.cert-icon {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    color: var(--accent);
+    background: var(--bg-2);
+    font-size: 17px;
+}
+
+.cert-issuer {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+:root[data-theme="light"] .timeline-card,
+:root[data-theme="light"] .cert-item {
+    background: #fff;
+}
+
+:root[data-theme="light"] .cert-icon {
+    background: #f0f3f7;
+}
+
+@media (max-width: 720px) {
+    .exp-timeline, .cert-section {
+        margin-top: 48px;
+    }
+
+    .timeline {
+        padding-left: 28px;
+    }
+
+    .timeline-dot {
+        left: -28px;
+    }
+
+    .timeline-card {
+        padding: 18px;
+    }
+
+    .timeline-list li {
+        font-size: 14px;
+    }
+
+    .cert-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .timeline-card, .cert-item {
+        transition: none;
+    }
+}
+
+/* ===== About: education & languages ===== */
+.edu-section {
+    margin-top: 64px;
+}
+
+.edu-subtitle {
+    margin: 34px 0 16px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+}
+
+:root[data-theme="light"] .edu-section .cert-item {
+    background: #fff;
+}
+
+@media (max-width: 720px) {
+    .edu-section {
+        margin-top: 48px;
+    }
+
+    .edu-subtitle {
+        margin-top: 26px;
+    }
+}
