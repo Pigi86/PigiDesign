@@ -226,6 +226,7 @@ const translations = {
         heroCtaCvLabel2: "Curriculum",
         heroCtaCvLabel3: "Abrir en una pestaña nueva",
         statProjects: "Proyectos publicados",
+        statBlogs: "Blogs publicados",
         statAreas: "Áreas de especialización",
         statLangs: "Idiomas del sitio",
         fSending: "Enviando...",
@@ -418,6 +419,7 @@ const translations = {
         heroCtaCvLabel2: "Resume",
         heroCtaCvLabel3: "Open in a new tab",
         statProjects: "Published projects",
+        statBlogs: "Published blogs",
         statAreas: "Areas of expertise",
         statLangs: "Site languages",
         fSending: "Sending...",
@@ -1523,10 +1525,12 @@ function renderHeroStats() {
     const el = document.getElementById('hero-stats');
     if (!el) return;
     const totalProjects = projects.length;
+    const totalBlogs = window.BLOG_POSTS.length;
     const areas = new Set(projects.map(p => p.cat)).size;
     const t = translations[currentLang];
     el.innerHTML = `
         <div class="stat"><strong data-count="${totalProjects}">0</strong><span>${t.statProjects}</span></div>
+        <div class="stat"><strong data-count="${totalBlogs}">0</strong><span>${t.statBlogs}</span></div>
         <div class="stat"><strong data-count="${areas}">0</strong><span>${t.statAreas}</span></div>
         <div class="stat"><strong data-count="2">0</strong><span>${t.statLangs}</span></div>
     `;
