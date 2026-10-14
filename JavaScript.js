@@ -2257,7 +2257,7 @@ inputsRequired.forEach(input => {
             } : {
                 kicker: '01 / CONTACT', title: 'Let’s build something <span>together.</span>', cta: 'Let’s talk <span aria-hidden="true">↗</span>',
                 description: 'Web development, Power Platform and design for clear, functional and professional digital solutions.',
-                navLabel: 'Navigation', home: 'Home', about: 'About me', services: 'Services', work: 'Work', contact: 'Contact',
+                navLabel: 'Navigation', home: 'Home', about: 'About', services: 'Services', work: 'Work', contact: 'Contact',
                 socialLabel: 'Connect', status: 'STATUS: ', availabilityLabel: 'Availability',
                 availability: 'Available for new projects, collaborations and professional opportunities.', rights: 'All rights reserved.', share: 'Share portfolio'
             };
