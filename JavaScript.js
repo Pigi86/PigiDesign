@@ -244,7 +244,7 @@ const translations = {
         workSearchResultSingular: "proyecto encontrado",
         workSearchResultPlural: "proyectos encontrados",
         externalButton: "Ir a sitio web",
-        availableStatus: "Disponible para nuevos proyectos",
+        availableStatus: "Freelance y consultoría, capacidad limitada",
         sharePortfolio: "Compartir portfolio",
         copyEmail: "Copiar email",
         copiedEmail: "Email copiado",
@@ -438,7 +438,7 @@ const translations = {
         workSearchResultSingular: "project found",
         workSearchResultPlural: "projects found",
         externalButton: "Go to web page",
-        availableStatus: "Available for new projects",
+        availableStatus: "Freelance and consulting, limited capacity",
         sharePortfolio: "Share portfolio",
         copyEmail: "Copy email",
         copiedEmail: "Email copied",
@@ -1548,7 +1548,7 @@ function renderHeroStats() {
         function tick(now) {
             const progress = Math.min(1, (now - start) / duration);
             const eased = 1 - Math.pow(1 - progress, 3);
-            node.textContent = Math.round(target * eased);            
+            node.textContent = Math.round(target * eased);
             if (node.parentElement.id == "yearDiv") {
                 node.textContent += "+";
             }
