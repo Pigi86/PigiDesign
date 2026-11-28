@@ -598,7 +598,7 @@ const projects = [
         imgUrl: "Images/webpage6.png"
     },
     {
-        id: 7, cat: "web", thumb: "thumb-web-3", ref: "WEB-2025-08",
+        id: 7, cat: "web", thumb: "thumb-web-3", ref: "WEB-2026-11",
         title: { es: "Clínica Nova | Salud integral", en: "Nova Clinic | Comprehensive health" },
         desc: { es: "Diseño y desarrollo web para una clínica de salud integral, creado para transmitir confianza, cercanía y facilitar el acceso de los pacientes a las distintas especialidades médicas. La arquitectura del sitio organiza de forma clara los servicios, el equipo profesional, guías útiles para la consulta, datos de ubicación y un formulario de solicitud de turnos, priorizando una navegación fluida, accesible y totalmente adaptable a dispositivos móviles.", en: "Web design and development for a comprehensive health clinic, created to convey trust, closeness and facilitate patient access to different medical specialties. The architecture of the site clearly organizes the services, the professional team, useful guides for consultation, location data and an appointment request form, prioritizing fluid, accessible navigation and fully adaptable to mobile devices." },
         tags: ["HTML", "JavaScript", "CSS", "Power Apps"],
